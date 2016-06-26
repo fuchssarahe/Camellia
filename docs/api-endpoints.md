@@ -6,48 +6,48 @@
 
 - `GET /` - loads React web app
 
+## JSON API
+
 ### Users
 
-- `GET /users/new`
-- `POST /users`
-- `PATCH /users`
+- `POST /api/users`
+- `DELETE /api/users/:id`
 
 ### Session
 
-- `GET /session/new`
-- `POST /session`
-- `DELETE /session`
+- `POST /api/session`
+- `DELETE /api/session`ß
 
-## JSON API
+### Teas
 
-### Notes
+- `GET /api/teas`
+  - Teas index/search
+  - accepts `query` query param to list teas by attribute
+- `POST /api/teas`
+- `GET /api/teas/:id`
+- `PATCH /api/teas/:id`
+- `DELETE /api/teas/:id`
 
-- `GET /api/notes`
-  - Notes index/search
-  - accepts `tag_name` query param to list notes by tag
-  - accepts pagination params (if I get there)
-- `POST /api/notes`
-- `GET /api/notes/:id`
-- `PATCH /api/notes/:id`
-- `DELETE /api/notes/:id`
+- `POST /api/teas/:id/reviews`
 
-### Notebooks
+### Reviews
 
-- `GET /api/notebooks`
-- `POST /api/notebooks`
-- `GET /api/notebooks/:id`
-- `PATCH /api/notebooks/:id`
-- `DELETE /api/notebooks/:id`
-- `GET /api/notebooks/:id/notes`
-  - index of all notes for a notebook
-  - accepts pagination params (if I get there)
+- `GET /api/reviews`
+- `PATCH /api/reviews/:id`
+- `DELETE /api/reviews/:id`
 
-### Tags
+### Owned Teas
 
-- A note's tags will be included in the note show template
-- `GET /api/tags`
-  - includes query param for typeahead suggestions
-- `POST /api/notes/:note_id/tags`: add tag to note by name
-  - if note doesn't already exist, it will be created
-- `DELETE /api/notes/:note_id/tags/:tag_name`: remove tag from note by
-  name
+- `GET /api/owned_teas/`
+  - this request calls on the teas controller, but includes ownership information
+- `POST /api/owned_teas/`
+- `PATCH /api/owned_teas/:id`
+- `DELETE /api/owned_teas/:id/`
+  - this request will delete an ownership from the db, returning the tea which corresponded to the ownership
+
+### User Follows
+
+- `GET /api/follows/`
+  - should return recent reviews from users which current user is following
+- `POST /api/follows/`
+- `DELETE /api/follow/:following_id/`
