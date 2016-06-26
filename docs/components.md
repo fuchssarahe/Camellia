@@ -7,26 +7,69 @@ associated routes, so the nesting of your bolded components must
 _**exactly**_ match the nesting of your routes.)
 
 * **App**
-  * NotebooksIndex
-    * Search
-    * NotebookIndexItem
-    * NotebookForm
-  * **NotesIndex**
-    * NoteForm
-    * NoteIndexItem
-    * **NoteDetail**
-      * NoteTags
-      * NoteEditArea
-
+  * Header
+    * SiteNav
+    * TeaSearch
+  * **Splash**
+    * SplashBanner
+    * SiteDescription
+  * **NewUser**
+    * UserForm
+    * Splash
+  * **Login**
+    * LoginForm
+    * Splash
+  * **TeasIndex**
+    * TeaIndexItem
+    * **TeaDetail**
+      * TeaOverview
+        * TeaPreferencesForUser
+      * TeaIdentifiers
+      * TeaDetailedInfo
+      * TeaSteepInfo
+        * TeaSteepDetail
+      * ReviewsIndex
+        * ReviewIndexItem
+          * ReviewHeader
+      * ReviewForm
+      * **TeaForm**
+  * **Dashboard**
+    * UserOverview
+      * User Information
+    * TeasIndex
+      * TeaIndexItem
+    * TeasIndex
+      * TeaIndexItem
+    * ReviewsIndex
+      * ReviewIndexItem
+        * ReviewHeader
+  * **RegionsIndex**
+    * RegionIndexItem
+  * **TeaTypeIndex**
+    * TeaTypeIndexItem
+  * **BrowseOptions**
+    * BrowseBanner
+    * ReviewsIndex
+      * ReviewIndexItem
+        * ReviewHeader
+    * RegionsIndex
+      * RegionIndexItem
+    * TeaTypeIndex
+      * TeaTypeIndexItem
+  * **OwnershipIndex**
+    * OwnedTeaIndexItem
 
 ## Routes
 
 * **component:** `App` **path:** `/`
-  * **component:** `NotesIndex` **path:** index
-  * **component:** `NotesIndex` **path:** `notebooks/:notebookId`
-    * **component:** `NoteDetail` **path:** `notes/:noteId`
-  * **component:** `NotesIndex` **path:** none
-    * **component:** `NoteDetail` **path:** `notes/:noteId`
-
-For Routes that have no `notebookId`, `NotesIndex` will render all
-notes.
+  * **component:** `Splash` **path:** index
+  * **component:** `NewUser` **path:** `new-user`
+  * **component:** `Login` **path:** `login`
+  * **component:** `Dashboard` **path:** `dashboard`
+  * **component:** `TeasIndex` **path:** `teas`
+    * **component:** `TeaDetail` **path:** `teas/:teaId`
+      * **component:** `TeaForm` **path:** `edit`
+  * **component:** `RegionsIndex` **path:** `regions`
+  * **component:** `TeaTypeIndex` **path:** `tea-types`
+  * **component:** `BrowseOptions` **path:** `explore`
+  * **component:** `OwnershipIndex` **path:** `my-teas`

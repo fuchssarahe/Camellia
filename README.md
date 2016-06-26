@@ -6,24 +6,26 @@
 
 ## Minimum Viable Product
 
-FresherNote is a web application inspired by Evernote that will be build using Ruby on Rails and React.js.  By the end of Week 9, this app will, at a minimum, satisfy the following criteria:
+Camellia is a web application built using Ruby on Rails and React.js, meant for reviewing teas and managing personal tea inventories. The underlying structure of the application is inspired by Couchsurfing.  
+
+At a minimum, this app will satisfy the following criteria:
 
 - [ ] Hosting on Heroku
 - [ ] New account creation, login, and guest/demo login
 - [ ] A production README, replacing this README (**NB**: check out the [sample production README](docs/production_readme.md) -- you'll write this later)
-- [ ] Notes
+- [ ] Teas
   - [ ] Smooth, bug-free navigation
   - [ ] Adequate seed data to demonstrate the site's features
   - [ ] Adequate CSS styling
-- [ ] Notebooks for organizing notes
+- [ ] Reviews
   - [ ] Smooth, bug-free navigation
   - [ ] Adequate seed data to demonstrate the site's features
   - [ ] Adequate CSS styling
-- [ ] Tags for notes
+- [ ] Tea Search [By origin region, type, and popularity]
   - [ ] Smooth, bug-free navigation
   - [ ] Adequate seed data to demonstrate the site's features
   - [ ] Adequate CSS styling
-- [ ] Rich Text Editing of notes
+- [ ] Inventory
   - [ ] Smooth, bug-free navigation
   - [ ] Adequate seed data to demonstrate the site's features
   - [ ] Adequate CSS styling
