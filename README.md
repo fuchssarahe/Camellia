@@ -155,6 +155,7 @@ user interface.
 - [ ] Recording tea consumption + stats
 - [ ] Where to buy
 - [ ] Steep preferences (gaiwan vs british)
+- [ ] Company profiles
 - [ ] User profiles
 - [ ] Pagination for search results
 - [ ] Multiple sessions
