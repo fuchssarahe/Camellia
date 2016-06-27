@@ -45,7 +45,7 @@ At a minimum, this app will satisfy the following criteria:
 
 ## Implementation Timeline
 
-### Phase 1: Backend setup and Front End User Authentication (1.5 days, W1 Tu 6pm)
+### Phase 1: Backend setup and Front End User Authentication (1 days, W1 T 6pm)
 
 **Objective:** Functioning rails project with Authentication
 
@@ -58,7 +58,7 @@ At a minimum, this app will satisfy the following criteria:
   - [ ] `LoginForm`
 - [ ] blank landing page after signin
 
-### Phase 2: Teas Model, API, and basic APIUtil (1.5 days, W1 Th 12pm)
+### Phase 2: Teas Model, API, and basic APIUtil (1 day, W1 W 6pm)
 
 **Objective:** Teas can be created and read through the API.
 
@@ -70,7 +70,7 @@ At a minimum, this app will satisfy the following criteria:
 - [ ] setup `APIUtil` to interact with the API
 - [ ] test out API interaction in the console.
 
-### Phase 3: Tea Flux Architecture and Router (2 days, W1 F 6pm)
+### Phase 3: Tea Flux Architecture and Router (2 days, W2 F 6pm)
 
 **Objective:** Teas can be read through the
 user interface.
@@ -89,7 +89,7 @@ user interface.
   - [ ] `TeaSteepInfo`
   - [ ] `TeaSteepDetail`
 
-### Phase 4: Start Styling (1 days, W2 M 12pm)
+### Phase 4: Start Styling (1 days, W2 M 6pm)
 
 **Objective:** Existing pages (including signup/signin) will look good.
 
@@ -97,7 +97,7 @@ user interface.
 - [ ] position elements on the page
 - [ ] add basic colors & styles
 
-### Phase 5: Type Ahead Search (1.5 days, W2 Tu 12pm)
+### Phase 5: Type Ahead Search (1 days, W2 T 6pm)
 
 **Objective:** User will have the ability to search for teas by name/description, by region, or by type.
 
@@ -112,7 +112,7 @@ user interface.
   - [ ] `SearchBarSuggestionIndex`
   - [ ] `SearchSuggestionItem`
 
-### Phase 6: Ownerships (0.5 day, W2 Tu 12pm)
+### Phase 6: Ownerships (0.5 day, W2 W 12pm)
 
 **Objective:** Ownerships belong to a tea and a user. An inventory of ownerships will appear as a list of teas on the dashboard for the user.  
 
@@ -135,7 +135,7 @@ user interface.
   - [ ] `ReviewForm`
 - Use CSS to style new views
 
-### Phase 8: Follows (0.5 days, W2 Th 12pm)
+### Phase 8: Follows (0.5 days, W2 Th 6pm)
 
 **Objective:** Follows belong to a follower and a followed user. Reviews which are posted by followed users will appear in an index on the follower's dashboard.  
 
@@ -145,7 +145,7 @@ user interface.
 
 ### Phase 9: Styling Cleanup and Seeding (1 day, W2 F 6pm)
 
-**objective:** Make the site feel more cohesive.
+**Objective:** Make the site feel more cohesive.
 
 - [ ] Get feedback on my UI from others
 - [ ] Refactor HTML classes & CSS rules
