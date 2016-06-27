@@ -25,8 +25,6 @@
   - accepts `query` query param to list teas by attribute
 - `POST /api/teas`
 - `GET /api/teas/:id`
-<!-- - `PATCH /api/teas/:id` -->
-<!-- - `DELETE /api/teas/:id` -->
 
 - `POST /api/teas/:id/reviews`
 

@@ -1,6 +1,6 @@
 # Camellia
 
-[Heroku link][heroku] 
+[Heroku link][heroku]
 
 [heroku]: http://www.herokuapp.com
 
@@ -45,44 +45,51 @@ At a minimum, this app will satisfy the following criteria:
 
 ## Implementation Timeline
 
-### Phase 1: Backend setup and Front End User Authentication (1 day, W1 Tu 6pm)
+### Phase 1: Backend setup and Front End User Authentication (1.5 days, W1 Tu 6pm)
 
 **Objective:** Functioning rails project with Authentication
 
-- [ ] create new project
+- [X] create new project
 - [ ] create `User` model
 - [ ] authentication
-- [ ] user signup/signin pages
+- [ ] Splash page - user signup/signin modals
+  - [ ] setup Webpack & Flux scaffold for
+  - [ ] `UserForm`
+  - [ ] `LoginForm`
 - [ ] blank landing page after signin
 
-### Phase 2: Notes Model, API, and basic APIUtil (1.5 days, W1 Th 12pm)
+### Phase 2: Teas Model, API, and basic APIUtil (1.5 days, W1 Th 12pm)
 
-**Objective:** Notes can be created, read, edited and destroyed through
-the API.
+**Objective:** Teas can be created and read through the API.
 
-- [ ] create `Note` model
+- [ ] create `Tea` model
 - [ ] seed the database with a small amount of test data
-- [ ] CRUD API for notes (`NotesController`)
-- [ ] jBuilder views for notes
+- [ ] CRUD API for teas (`TeasController`)
+- [ ] jBuilder views for teas
 - [ ] setup Webpack & Flux scaffold
 - [ ] setup `APIUtil` to interact with the API
 - [ ] test out API interaction in the console.
 
-### Phase 3: Flux Architecture and Router (1.5 days, W1 F 6pm)
+### Phase 3: Tea Flux Architecture and Router (2 days, W1 F 6pm)
 
-**Objective:** Notes can be created, read, edited and destroyed with the
+**Objective:** Teas can be read through the
 user interface.
 
 - [ ] setup the flux loop with skeleton files
 - [ ] setup React Router
-- implement each note component, building out the flux loop as needed.
-  - [ ] `NotesIndex`
-  - [ ] `NoteIndexItem`
-  - [ ] `NoteForm`
-- [ ] save Notes to the DB when the form loses focus or is left idle
-  after editing.
+- implement each tea component, building out the flux loop as needed.
+  - [ ] `TeasIndex`
+  - [ ] `TeaIndexItem`
+  - [ ] `TeaForm`
+  - [ ] `TeaDetail`
+  - [ ] `TeaOverview`
+  - [ ] `TeaPreferencesForUser`
+  - [ ] `TeaIdentifiers`
+  - [ ] `TeaDetailedInfo`
+  - [ ] `TeaSteepInfo`
+  - [ ] `TeaSteepDetail`
 
-### Phase 4: Start Styling (0.5 days, W2 M 12pm)
+### Phase 4: Start Styling (1 days, W2 M 12pm)
 
 **Objective:** Existing pages (including signup/signin) will look good.
 
@@ -90,58 +97,70 @@ user interface.
 - [ ] position elements on the page
 - [ ] add basic colors & styles
 
-### Phase 5: Notebooks (1 day, W2 Tu 12pm)
+### Phase 5: Type Ahead Search (1.5 days, W2 Tu 12pm)
 
-**Objective:** Notes belong to Notebooks, and can be viewed by notebook.
+**Objective:** User will have the ability to search for teas by name/description, by region, or by type.
 
-- [ ] create `Notebook` model
 - build out API, Flux loop, and components for:
-  - [ ] Notebook CRUD
-  - [ ] adding notes requires a notebook
-  - [ ] moving notes to a different notebook
-  - [ ] viewing notes by notebook
+  - [ ] `RegionsIndex`
+  - [ ] `RegionIndexItem`
+  - [ ] `TeaTypesIndex`
+  - [ ] `TeaTypeIndexItem`
+- Use CSS to style new views
+- Implement search suggestions
+  - [ ] `SearchBar`
+  - [ ] `SearchBarSuggestionIndex`
+  - [ ] `SearchSuggestionItem`
+
+### Phase 6: Ownerships (0.5 day, W2 Tu 12pm)
+
+**Objective:** Ownerships belong to a tea and a user. An inventory of ownerships will appear as a list of teas on the dashboard for the user.  
+
+- [ ] create `Ownership` model
+- build out API, Flux loop, and components for:
+  - [ ] `OwnershipForm`
+  - [ ] `OwnershipIndex`
+  - [ ] `OwnedTeaIndexItem`
 - Use CSS to style new views
 
-Phase 3 adds organization to the Notes. Notes belong to a Notebook,
-which has its own `Index` view.
+### Phase 7: Reviews (1 days, W2 Th 12pm)
 
-### Phase 6: Tags (1 days, W2 Th 12pm)
+**Objective:** Reviews belong to a tea and a user. Review information for a tea appears in the tea profile. The current user's review appears in the left-hand panel of the tea profile.
 
-**Objective:** Notes can be tagged with multiple tags, and tags are searchable.
-
-- [ ] create `Tag` model and join table
+- [ ] create `Review` model
 - build out API, Flux loop, and components for:
-  - [ ] fetching tags for notebook
-  - [ ] adding tags to notebook
-  - [ ] creating tags while adding to notebooks
-  - [ ] searching notebooks by tag
-- [ ] Style new elements
+  - [ ] `ReviewsIndex`
+  - [ ] `ReviewIndexItem`
+  - [ ] `ReviewHeader`
+  - [ ] `ReviewForm`
+- Use CSS to style new views
 
-### Phase 7: Allow Complex Styling in Notes (0.5 days, W2 Th 6pm)
+### Phase 8: Follows (0.5 days, W2 Th 12pm)
 
-**objective:** Enable complex styling of notes.
+**Objective:** Follows belong to a follower and a followed user. Reviews which are posted by followed users will appear in an index on the follower's dashboard.  
 
-- [ ] Integrate `react-quill` (based on Quill.js).
-- [ ] Use Rails helpers to sanitize HTML before rendering.
-- [ ] Style the new Quill elements.
+- [ ] create `Follow` model
+- [ ] include follow buttons inside the `ReviewIndexItem`
+- Use CSS to style new views
 
-### Phase 8: Styling Cleanup and Seeding (1 day, W2 F 6pm)
+### Phase 9: Styling Cleanup and Seeding (1 day, W2 F 6pm)
 
-**objective:** Make the site feel more cohesive and awesome.
+**objective:** Make the site feel more cohesive.
 
 - [ ] Get feedback on my UI from others
 - [ ] Refactor HTML classes & CSS rules
 - [ ] Add modals, transitions, and other styling flourishes.
 
 ### Bonus Features (TBD)
-- [ ] Search through notes for blocks of text
-- [ ] Pagination / infinite scroll for Notes Index
-- [ ] Set reminders on notes
-- [ ] Changelogs for Notes
+- [ ] Recording tea consumption + stats
+- [ ] Where to buy
+- [ ] Steep preferences (gaiwan vs british)
+- [ ] User profiles
+- [ ] Pagination for search results
 - [ ] Multiple sessions
 
-[phase-one]: docs/phases/phase1.md
+<!-- [phase-one]: docs/phases/phase1.md
 [phase-two]: docs/phases/phase2.md
 [phase-three]: docs/phases/phase3.md
 [phase-four]: docs/phases/phase4.md
-[phase-five]: docs/phases/phase5.md
+[phase-five]: docs/phases/phase5.md -->
