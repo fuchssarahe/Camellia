@@ -6,7 +6,7 @@
 
 ## Minimum Viable Product
 
-Camellia is a web application built using Ruby on Rails and React.js, meant for reviewing teas and managing personal tea inventories. The underlying structure of the application is inspired by Couchsurfing.  
+Camellia is a web application built using Ruby on Rails and React.js, meant for reviewing teas and managing personal tea inventories. The underlying structure of the application is inspired by [Couchsurfing](https://www.couchsurfing.com/).  
 
 At a minimum, this app will satisfy the following criteria:
 
