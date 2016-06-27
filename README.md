@@ -13,7 +13,6 @@ At a minimum, this app will satisfy the following criteria:
 - [ ] Hosting on Heroku
 - [ ] New account creation, login, and guest/demo login
 - [ ] A production README
-<!-- replacing this README (**NB**: check out the [sample production README](docs/production_readme.md) -- you'll write this later) -->
 - [ ] Teas (as "spots")
   - [ ] Smooth, bug-free navigation
   - [ ] Adequate seed data to demonstrate the site's features
