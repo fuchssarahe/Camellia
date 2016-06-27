@@ -30,7 +30,7 @@ what you'll need to do.
 
 * `createUser`
   0. invoked from `UserForm`
-  0. `POST /api/users`
+  0. `POST /api/users` is called
   0. `receiveCurrentUser` session response is set as the callback
 
 ### Store Listeners
@@ -41,20 +41,46 @@ what you'll need to do.
 
 ### Reviews API Request Actions
 
-* fetchReviews
+* `fetchReviews`
   0. invoked from `ReviewsIndex` on willMount with query params (date specific, tea specific, and followed users specific)
   0. `GET /api/reviews` is called, passing params.
   0. `receiveReviews` is set as the callback.
 
+* `createReview`
+  0. invoked from `ReviewForm` on
+  0. `POST /api/teas/:id/reviews` is called
+  0. `receiveSingleReview` is set as the callback
+
+* `updateReview`
+  0. invoked from `ReviewForm` `onSubmit`
+  0. `POST /api/reviews` is called.
+  0. `receiveSingleReview` is set as the callback.
+
+* `removeReview`
+  0. invoked from delete review button (in review list item) `onClick`
+  0. `DELETE /api/reviews/:id` is called.
+  0. `removeReview` is set as the callback.
+
+
 ### Reviews API Response Actions
 
-* receiveReviews
+* `receiveReviews`
+  0. invoked from an API callback
+  0. `Reviews` store updates `_reviews` and emits change
+
+* `receiveSingleReview`
+  0. invoked from a API callback
+  0. `Reviews` store updates `_reviews` and emits change
+
+* `removeReview`
   0. invoked from an API callback
   0. `Reviews` store updates `_reviews` and emits change
 
 ### Store Listeners
 
 * `ReviewsIndex` component listens to the `Reviews` store
+* `TeaOverview` component listens to the `Reviews` store
+* `TeaSteepInfo` component listens to the `Reviews` store (triggers TeaActions - fetchSingleTea)
 
 ## Tea Cycles
 
@@ -65,25 +91,16 @@ what you'll need to do.
   0. `GET /api/teas` is called.
   0. `receiveTeas` is set as the callback.
 
-<!-- * `createTea`
-  0. invoked from new tea button `onClick`
+* `createTea`
+  0. invoked from `TeaForm` button `onClick`
   0. `POST /api/teas` is called.
-  0. `receiveSingleTea` is set as the callback. -->
+  0. `receiveSingleTea` is set as the callback.
 
 * `fetchSingleTea`
-  0. invoked from `TeaDetail` `didMount`/`willReceiveProps`
+  0. invoked from `TeaDetail` on  `didMount`/`willReceiveProps`; invoked from `TeaSteepInfo` on changes in `Reviews` store
   0. `GET /api/teas/:id` is called.
   0. `receiveSingleTea` is set as the callback.
 
-* `updateTea`
-  0. invoked from `TeaForm` `onSubmit`
-  0. `PATCH /api/teas/:id` is called.
-  0. `receiveSingleTea` is set as the callback.
-
-* `destroyTea`
-  0. invoked from delete note button `onClick`
-  0. `DELETE /api/teas/:id` is called.
-  0. `removeTea` is set as the callback.
 
 ### Teas API Response Actions
 
@@ -95,79 +112,113 @@ what you'll need to do.
   0. invoked from an API callback.
   0. `Tea` store updates `_teas[id]` and emits change.
 
-* `removeTea`
-  0. invoked from an API callback.
-  0. `Tea` store removes `_teas[id]` and emits change.
 
 ### Store Listeners
 
 * `TeasIndex` component listens to `Tea` store.
 * `TeaDetail` component listens to `Tea` store.
 
+## Ownership Cycles
 
-## Review Cycles
+### API Request Actions
+* `fetchOwnedTeas`
+  0. invoked from `OwnedTeasIndex` on willMount
+  0. `GET /api/owned_teas` is called with query params (specific to current user).
+  0. `receiveOwnedTeas` is set as the callback.
 
-### Reviews API Request Actions
+* `createOwnership`
+  0. invoked from `OwnershipForm` create ownership button `onClick` in `TeaDetail`
+  0. `POST /api/owned_teas` is called.
+  0. `receiveSingleOwnership` is set as the callback.
 
-* `fetchReviews`
-  0. invoked from `ReviewsIndex` `didMount`/`willReceiveProps`
-  0. `GET /api/reviews` is called.
-  0. `receiveAllReviews` is set as the callback.
+* `updateOwnership`
+  0. invoked from `OwnershipForm` `onSubmit`
+  0. `PATCH /api/owned_teas/:id` is called.
+  0. `receiveSingleTea` is set as the callback.
 
-* `createReview`
-  0. invoked from new review button `onClick`
-  0. `POST /api/reviews` is called.
-  0. `receiveSingleReview` is set as the callback.
+* `deleteOwnership`
+  0. invoked from remove tea button `onClick` in `OwnedTeaIndexItem`
+  0. `DELETE /api/owned_teas/:id` is called.
+  0. `removeOwnership` is set as the callback.
 
-* `fetchSingleReview`
-  0. invoked from `ReviewDetail` `didMount`/`willReceiveProps`
-  0. `GET /api/reviews/:id` is called.
-  0. `receiveSingleReview` is set as the callback.
+### API Response Actions
 
-* `updateReview`
-  0. invoked from `ReviewForm` `onSubmit`
-  0. `POST /api/reviews` is called.
-  0. `receiveSingleReview` is set as the callback.
-
-* `destroyNotebook`
-  0. invoked from delete notebook button `onClick`
-  0. `DELETE /api/notebooks/:id` is called.
-  0. `removeNotebook` is set as the callback.
-
-### Reviews API Response Actions
-
-* `receiveReviews`
+* `receiveOwnedTeas`
   0. invoked from an API callback.
-  0. `Review` store updates `_reviews` and emits change.
+  0. `OwnedTea` store updates `_teas` and emits change.
 
-* `receiveSingleReview`
+* `receiveSingleOwnership`
   0. invoked from an API callback.
-  0. `Review` store updates `_reviews[id]` and emits change.
+  0. `OwnedTea` store updates `_teas[id]` and emits change.
 
-* `removeReview`
+* `removeOwnership`
   0. invoked from an API callback.
-  0. `Review` store removes `_reviews[id]` and emits change.
+  0. `OwnedTea` store removes `_teas[id]` and emits change.
 
 ### Store Listeners
 
-* `NotebooksIndex` component listens to `Notebook` store.
+* `OwnedTeasIndex` listens to the `OwnedTeas` store
 
 
 ## SearchSuggestion Cycles
 
+### API Request Actions
+
 * `fetchSearchSuggestions`
-  0. invoked from `NoteSearchBar` `onChange` when there is text
-  0. `GET /api/notes` is called with `text` param.
+  0. invoked from `SearchBar` `onInput`
+  0. `GET /api/teas` (or `GET /api/tea-regions` or `GET /api/tea-types`) is called with `query` param.
   0. `receiveSearchSuggestions` is set as the callback.
+
+### API Response Actions
 
 * `receiveSearchSuggestions`
   0. invoked from an API callback.
   0. `SearchSuggestion` store updates `_suggestions` and emits change.
 
+### API-less Actions
+
 * `removeSearchSuggestions`
-  0. invoked from `NoteSearchBar` `onChange` when empty
+  0. invoked from `NoteSearchBar` `onChange` when empty or `onBlur`
   0. `SearchSuggestion` store resets `_suggestions` and emits change.
 
 ### Store Listeners
 
-* `SearchBarSuggestions` component listens to `SearchSuggestion` store.
+* `SearchBarSuggestionIndex` component listens to `SearchSuggestion` store.
+
+## Tea-Regions Cycles
+
+* `fetchAllRegions`
+  0. invoked from `RegionsIndex` on willMount
+  0. `GET /api/tea-regions` is called.
+  0. `receiveAllRegions` is set as the callback.
+
+### API Request Actions
+
+* `receiveAllRegions`
+  0. invoked from an API callback.
+  0. `TeaRegions` store updates `_regions` and emits change.
+
+### API Response Actions
+
+### Store Listeners
+
+* `RegionsIndex` listens to the `TeaRegions` store
+
+
+## Tea-Types Cycles
+
+### API Request Actions
+
+* `fetchAllTeaTypes`
+  0. invoked from `TeaTypesIndex` on willMount
+  0. `GET /api/tea-types` is called.
+  0. `receiveAllTeaTypes` is set as the callback.
+
+### API Response Actions
+
+* `receiveAllTeaTypes`
+  0. invoked from an API callback.
+  0. `TeaTypes` store updates `_types` and emits change.
+
+### Store Listeners
+  * `TeaTypesIndex` listens to the `TeaTypes` store

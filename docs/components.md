@@ -9,7 +9,9 @@ _**exactly**_ match the nesting of your routes.)
 * **App**
   * Header
     * SiteNav
-    * TeaSearch
+    * SearchBar
+      * SearchBarSuggestionIndex
+        * SearchSuggestionItem
   * **Splash**
     * SplashBanner
     * SiteDescription
@@ -21,9 +23,12 @@ _**exactly**_ match the nesting of your routes.)
     * Splash
   * **TeasIndex**
     * TeaIndexItem
+    * TeaForm
     * **TeaDetail**
       * TeaOverview
         * TeaPreferencesForUser
+          * OwnershipForm
+        * ReviewForm
       * TeaIdentifiers
       * TeaDetailedInfo
       * TeaSteepInfo
@@ -38,8 +43,8 @@ _**exactly**_ match the nesting of your routes.)
       * User Information
     * TeasIndex
       * TeaIndexItem
-    * TeasIndex
-      * TeaIndexItem
+    * OwnedTeasIndex
+      * OwnedTeaIndexItem
     * ReviewsIndex
       * ReviewIndexItem
         * ReviewHeader
