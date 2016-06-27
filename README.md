@@ -12,20 +12,21 @@ At a minimum, this app will satisfy the following criteria:
 
 - [ ] Hosting on Heroku
 - [ ] New account creation, login, and guest/demo login
-- [ ] A production README, replacing this README (**NB**: check out the [sample production README](docs/production_readme.md) -- you'll write this later)
-- [ ] Teas
+- [ ] A production README
+<!-- replacing this README (**NB**: check out the [sample production README](docs/production_readme.md) -- you'll write this later) -->
+- [ ] Teas (as "spots")
   - [ ] Smooth, bug-free navigation
   - [ ] Adequate seed data to demonstrate the site's features
   - [ ] Adequate CSS styling
-- [ ] Reviews
+- [ ] Reviews (as "reviews")
   - [ ] Smooth, bug-free navigation
   - [ ] Adequate seed data to demonstrate the site's features
   - [ ] Adequate CSS styling
-- [ ] Tea Search [By origin region, type, and popularity]
+- [ ] Tea Search [By origin region, type, and popularity] (as "spot search")
   - [ ] Smooth, bug-free navigation
   - [ ] Adequate seed data to demonstrate the site's features
   - [ ] Adequate CSS styling
-- [ ] Inventory
+- [ ] Inventory (as "bookings")
   - [ ] Smooth, bug-free navigation
   - [ ] Adequate seed data to demonstrate the site's features
   - [ ] Adequate CSS styling
