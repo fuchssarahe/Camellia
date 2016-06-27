@@ -1,22 +1,22 @@
 # View Wireframes
 
-## New User
-![new-user]
+## Landing Page
+![Splash]
 
-## New Session
-![new-session]
+## Browse/Explore
+![Explore]
 
-## NotesIndex / NoteIndexItem / NoteForm
-![notes]
+## TeasIndex and Search Results
+![SearchResults]
 
-## NotebooksIndex / NotebookIndexItem
-![notebooks]
+## User Dashboard
+![Dashboard]
 
-## NotebookForm
-![notebook-form]
+## Tea Profile
+![TeaProfile]
 
-[new-user]: ./wireframes/new_user.png
-[new-session]: ./wireframes/new_session.png
-[notes]: ./wireframes/root_notes.png
-[notebooks]: ./wireframes/root_notebooks.png
-[notebook-form]: ./wireframes/notebook_form.png
+[Splash]: ./wireframes/Splash.png
+[Explore]: ./wireframes/Explore.png
+[SearchResults]: ./wireframes/SearchResults.png
+[Dashboard]: ./wireframes/Dashboard.png
+[TeaProfile]: ./wireframes/TeaProfile.png
