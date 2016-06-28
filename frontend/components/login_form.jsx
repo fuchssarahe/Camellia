@@ -8,7 +8,7 @@ const LoginForm = React.createClass({
   },
 
   componentDidMount: function () {
-    SessionStore.addListener(this._onChange);
+    this.listener = SessionStore.addListener(this._onChange);
   },
 
   _onChange: function () {
@@ -23,6 +23,10 @@ const LoginForm = React.createClass({
 
   _handleFormChange: function (event, property) {
     this.setState({[property]: event.target.value})
+  },
+
+  componentWillUnmount: function () {
+    this.listener.remove();
   },
 
   render: function () {

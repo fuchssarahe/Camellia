@@ -26002,7 +26002,7 @@
 	  },
 	
 	  componentDidMount: function componentDidMount() {
-	    SessionStore.addListener(this._onChange);
+	    this.listener = SessionStore.addListener(this._onChange);
 	  },
 	
 	  _onChange: function _onChange() {
@@ -26017,6 +26017,10 @@
 	
 	  _handleFormChange: function _handleFormChange(event, property) {
 	    this.setState(_defineProperty({}, property, event.target.value));
+	  },
+	
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.listener.remove();
 	  },
 	
 	  render: function render() {
@@ -32862,22 +32866,24 @@
 	
 	var Dispatcher = __webpack_require__(251),
 	    SessionConstants = __webpack_require__(255),
-	    SessionApiUtil = __webpack_require__(256);
+	    SessionApiUtil = __webpack_require__(256),
+	    ErrorActions = __webpack_require__(258);
 	
 	var SessionActions = {
 	  signup: function signup(user) {
-	    SessionApiUtil.createUser(user, this.receiveCurrentUser, this.errorCallback);
+	    SessionApiUtil.createUser(user, this.receiveCurrentUser, ErrorActions.setErrors);
 	  },
 	
 	  login: function login(user) {
-	    SessionApiUtil.createSession(user, this.receiveCurrentUser, this.errorCallback);
+	    SessionApiUtil.createSession(user, this.receiveCurrentUser, ErrorActions.setErrors);
 	  },
 	
 	  logout: function logout() {
-	    SessionApiUtil.destroySession(this.receiveEmptyUser, this.errorCallback);
+	    SessionApiUtil.destroySession(this.receiveEmptyUser, ErrorActions.setErrors);
 	  },
 	
 	  receiveCurrentUser: function receiveCurrentUser(user) {
+	    ErrorActions.clearErrors();
 	    var payload = {
 	      actionType: SessionConstants.LOGIN,
 	      user: user
@@ -32886,16 +32892,12 @@
 	  },
 	
 	  receiveEmptyUser: function receiveEmptyUser(emptyUser) {
+	    ErrorActions.clearErrors();
 	    var payload = {
 	      actionType: SessionConstants.LOGOUT,
 	      user: emptyUser
 	    };
 	    Dispatcher.dispatch(payload);
-	  },
-	
-	  errorCallback: function errorCallback(resp) {
-	    console.log('errors!');
-	    console.log(resp);
 	  }
 	};
 	
@@ -32927,7 +32929,9 @@
 	      url: 'api/users',
 	      data: { user: user },
 	      success: callback,
-	      error: errorCallback
+	      error: function error(resp) {
+	        return errorCallback('signup', resp);
+	      }
 	    });
 	  },
 	
@@ -32937,7 +32941,9 @@
 	      url: 'api/session',
 	      data: { user: user },
 	      success: callback,
-	      error: errorCallback
+	      error: function error(resp) {
+	        return errorCallback('login', resp);
+	      }
 	    });
 	  },
 	
@@ -32946,7 +32952,9 @@
 	      type: 'DELETE',
 	      url: 'api/session',
 	      success: callback,
-	      error: errorCallback
+	      error: function error(resp) {
+	        return errorCallback('logout', resp);
+	      }
 	    });
 	  }
 	
@@ -32974,7 +32982,7 @@
 	  },
 	
 	  componentDidMount: function componentDidMount() {
-	    SessionStore.addListener(this._onChange);
+	    this.listener = SessionStore.addListener(this._onChange);
 	  },
 	
 	  _onChange: function _onChange() {
@@ -32989,6 +32997,10 @@
 	
 	  _handleFormChange: function _handleFormChange(event, property) {
 	    this.setState(_defineProperty({}, property, event.target.value));
+	  },
+	
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.listener.remove();
 	  },
 	
 	  render: function render() {
@@ -33018,6 +33030,49 @@
 	});
 	
 	module.exports = LoginForm;
+
+/***/ },
+/* 258 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var ErrorConstants = __webpack_require__(259),
+	    Dispatcher = __webpack_require__(251);
+	
+	var ErrorActions = {
+	  setErrors: function setErrors(form, error) {
+	    window.e = error;
+	    var payload = {
+	      actionType: ErrorConstants.SET_ERRORS,
+	      form: form,
+	      errors: error.responseJSON
+	    };
+	    Dispatcher.dispatch(payload);
+	  },
+	
+	  clearErrors: function clearErrors() {
+	    var payload = {
+	      actionType: ErrorConstants.CLEAR_ERRORS
+	    };
+	    Dispatcher.dispatch(payload);
+	  }
+	};
+	
+	module.exports = ErrorActions;
+
+/***/ },
+/* 259 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var ErrorConstants = {
+	  SET_ERRORS: 'SET_ERRORS',
+	  CLEAR_ERRORS: 'CLEAR_ERRORS'
+	};
+	
+	module.exports = ErrorConstants;
 
 /***/ }
 /******/ ]);
