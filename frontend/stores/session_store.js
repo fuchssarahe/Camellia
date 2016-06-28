@@ -1,4 +1,5 @@
 const Store = require('flux/utils').Store,
+      SessionConstants = require('../constants/session_constants'),
       Dispatcher = require('../dispatcher/dispatcher');
 
 const SessionStore = new Store(Dispatcher);
@@ -34,5 +35,8 @@ SessionStore.currentUser = function () {
 };
 
 SessionStore.isUserLoggedIn = function () {
-  _currentUser.id ? true : false
+  return _currentUser.username ? true : false
 };
+
+
+module.exports = SessionStore;
