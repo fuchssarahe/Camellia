@@ -55,7 +55,7 @@
 	var router = React.createElement(_reactRouter.Router, { path: '/', component: App });
 	
 	$(function () {
-	  return ReactDOM.render(React.createElement(
+	  ReactDOM.render(React.createElement(
 	    'div',
 	    null,
 	    'Hello from react-dom'

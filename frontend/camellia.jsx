@@ -12,5 +12,5 @@ $(
   () => { ReactDOM.render(
     <div>Hello from react-dom</div>,
     document.getElementById('root')
-  )};
+  ) }
 );
