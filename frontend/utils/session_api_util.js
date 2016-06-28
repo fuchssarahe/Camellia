@@ -1,28 +1,33 @@
 const SessionApiUtil = {
-  getCurrentUser: function (callback) {
+  createUser: function (user, callback, errorCallback) {
     $.ajax({
-      type: 'GET',
-      url: 'api/session',
-      success: callback
-    });
+      type: 'POST',
+      url: 'api/users',
+      data: {user: user},
+      success: callback,
+      error: errorCallback
+    })
   },
 
-  createSession: function (user, callback) {
+  createSession: function (user, callback, errorCallback) {
     $.ajax({
       type: 'POST',
       url: 'api/session',
       data: { user: user },
-      success: callback
-    });
+      success: callback,
+      error: errorCallback
+    })
   },
 
-  destroySession: function (callback) {
+  destroySession: function (callback, errorCallback) {
     $.ajax({
       type: 'DELETE',
       url: 'api/session',
-      success: callback
-    });
+      success: callback,
+      error: errorCallback
+    })
   }
+
 };
 
 module.exports = SessionApiUtil;
