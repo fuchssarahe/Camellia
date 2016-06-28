@@ -5,7 +5,7 @@ column name   | data type | details
 --------------|-----------|-----------------------
 id            | integer   | not null, primary key
 name          | string    | not null, unique
-description   | text      | 
+description   | text      |
 type          | string    | not null, indexed
 region        | string    | not null, indexed
 steep_time    | integer   | not null
