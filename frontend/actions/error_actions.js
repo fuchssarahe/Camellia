@@ -3,7 +3,6 @@ const ErrorConstants = require('../constants/error_constants'),
 
 const ErrorActions = {
   setErrors: function (form, error) {
-    window.e = error;
     const payload = {
       actionType: ErrorConstants.SET_ERRORS,
       form: form,

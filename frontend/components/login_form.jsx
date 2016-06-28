@@ -1,20 +1,28 @@
 const React = require('react'),
       SessionStore = require('../stores/session_store'),
+      ErrorStore = window.store = require('../stores/errors_store'),
       SessionActions = require('../actions/session_actions');
 
 const LoginForm = React.createClass({
   getInitialState: function () {
-    return {username: '', password: ''};
+    return { username: '', password: '', errors: {} };
   },
 
   componentDidMount: function () {
     this.listener = SessionStore.addListener(this._onChange);
+    this.errorListener = ErrorStore.addListener(this._onErrors);
   },
 
   _onChange: function () {
     if ( SessionStore.isUserLoggedIn() ) {
       window.location.hash = '/';
     }
+  },
+
+  _onErrors: function () {
+    if (ErrorStore.form() === 'login') {
+      this.setState({errors: ErrorStore.formErrors('login') });
+    };
   },
 
   _handleSubmit: function () {
@@ -27,12 +35,23 @@ const LoginForm = React.createClass({
 
   componentWillUnmount: function () {
     this.listener.remove();
+    this.errorListener.remove();
   },
 
   render: function () {
+
+    window.er = this.state.errors;
+
     return (
       <div>
         <h1>Login!</h1>
+        <ul>{
+          Object.keys(this.state.errors).map( (field) => {
+            return <li key={field}>{field + ' : ' + this.state.errors[field].reduce( (accum = "", error) => {
+              return accum + error;
+            })}</li>
+          })
+        }</ul>
         <form onSubmit={this._handleSubmit} >
            <input type="text" onChange={event => this._handleFormChange(event, 'username')} value={this.state.username} />
            <input type="password" onChange={event => this._handleFormChange(event, 'password')} value={this.state.password} />
