@@ -25947,7 +25947,16 @@
 	var App = React.createClass({
 	  displayName: 'App',
 	
+	  _navToSignup: function _navToSignup() {
+	    window.location.hash = '/signup';
+	  },
+	
+	  _navToLogin: function _navToLogin() {
+	    window.location.hash = '/login';
+	  },
+	
 	  render: function render() {
+	
 	    return React.createElement(
 	      'div',
 	      null,
@@ -25955,6 +25964,16 @@
 	        'h1',
 	        null,
 	        'Hellow from app'
+	      ),
+	      React.createElement(
+	        'button',
+	        { onClick: this._navToSignup },
+	        'Sign Up'
+	      ),
+	      React.createElement(
+	        'button',
+	        { onClick: this._navToLogin },
+	        'Login'
 	      ),
 	      this.props.children
 	    );
@@ -32965,7 +32984,6 @@
 	  },
 	
 	  _handleSubmit: function _handleSubmit() {
-	    console.log(this.state);
 	    SessionActions.login(this.state);
 	  },
 	

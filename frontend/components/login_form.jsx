@@ -18,7 +18,6 @@ const LoginForm = React.createClass({
   },
 
   _handleSubmit: function () {
-    console.log(this.state);
     SessionActions.login(this.state)
   },
 
