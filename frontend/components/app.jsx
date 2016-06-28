@@ -2,7 +2,11 @@ const React = require('react');
 
 const App = React.createClass({
   render: function () {
-    return (<div>Hellow from app</div>)
+    return (
+      <div>
+        <h1>Hellow from app</h1>
+        {this.props.children}
+      </div>)
   }
 });
 
