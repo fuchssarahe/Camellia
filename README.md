@@ -20,8 +20,8 @@ At a minimum, this app will satisfy the following criteria:
   - [ ] search for by tea name
   - [ ] search bar is easily accessible from the header of any page
   - [ ] search yields an index of teas and minimal details like rating and type
-- [ ] Inventory
-  - [ ] users can add teas to their personal Inventory
+- [ ] Tea Inventory
+  - [ ] users can add teas to their personal inventory
   - [ ] owned teas will appear on the dashboard for the user
   - [ ] owned teas aren't visible to other users
 - [ ] Reviews
@@ -76,7 +76,7 @@ user interface.
 
 - [ ] setup the flux loop with skeleton files
 - [ ] setup React Router
-- implement each tea component, building out the flux loop as needed.
+- [ ] implement each tea component, building out the flux loop as needed.
   - [ ] `TeasIndex`
   - [ ] `TeaIndexItem`
   - [ ] `TeaForm`
@@ -89,8 +89,8 @@ user interface.
 
 **Objective:** User will have the ability to search for teas by name/description, by region, or by type.
 
-- Use CSS to style new views
-- Implement search suggestions
+- [ ] Use CSS to style new views
+- [ ] Implement search suggestions
   - [ ] `SearchBar`
   - [ ] `SearchBarSuggestionIndex`
   - [ ] `SearchSuggestionItem`
@@ -100,23 +100,23 @@ user interface.
 **Objective:** Ownerships belong to a tea and a user. An inventory of ownerships will appear as a list of teas on the dashboard for the user.  
 
 - [ ] create `Ownership` model
-- build out API, Flux loop, and components for:
+- [ ] build out API, Flux loop, and components for:
   - [ ] `OwnershipForm`
   - [ ] `OwnershipIndex`
   - [ ] `OwnedTeaIndexItem`
-- Use CSS to style new views
+- [ ] Use CSS to style new views
 
 ### Phase 6: Reviews (1 day, W2 F 6pm)
 
 **Objective:** Reviews belong to a tea and a user. Review information for a tea appears in the tea profile. The current user's review appears in the left-hand panel of the tea profile.
 
 - [ ] create `Review` model
-- build out API, Flux loop, and components for:
+- [ ] build out API, Flux loop, and components for:
   - [ ] `ReviewsIndex`
   - [ ] `ReviewIndexItem`
   - [ ] `ReviewHeader`
   - [ ] `ReviewForm`
-- Use CSS to style new views
+- [ ] Use CSS to style new views
 
 ### Bonus Features (TBD)
 - [ ] Follows
