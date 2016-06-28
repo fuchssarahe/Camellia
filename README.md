@@ -13,22 +13,21 @@ At a minimum, this app will satisfy the following criteria:
 - [ ] Hosting on Heroku
 - [ ] New account creation, login, and guest/demo login
 - [ ] A production README
-- [ ] Teas (as "spots")
-  - [ ] Smooth, bug-free navigation
-  - [ ] Adequate seed data to demonstrate the site's features
-  - [ ] Adequate CSS styling
-- [ ] Reviews (as "reviews")
-  - [ ] Smooth, bug-free navigation
-  - [ ] Adequate seed data to demonstrate the site's features
-  - [ ] Adequate CSS styling
-- [ ] Tea Search [By origin region, type, and popularity] (as "spot search")
-  - [ ] Smooth, bug-free navigation
-  - [ ] Adequate seed data to demonstrate the site's features
-  - [ ] Adequate CSS styling
-- [ ] Inventory (as "bookings")
-  - [ ] Smooth, bug-free navigation
-  - [ ] Adequate seed data to demonstrate the site's features
-  - [ ] Adequate CSS styling
+- [ ] Teas
+  - [ ] teas hold information on type, region, and steep specifications
+  - [ ] each tea has a profile page listing details and reviews
+- [ ] Tea Search
+  - [ ] search for by tea name
+  - [ ] search bar is easily accessible from the header of any page
+  - [ ] search yields an index of teas and minimal details like rating and type
+- [ ] Inventory
+  - [ ] users can add teas to their personal Inventory
+  - [ ] owned teas will appear on the dashboard for the user
+  - [ ] owned teas aren't visible to other users
+- [ ] Reviews
+  - [ ] users can review teas
+  - [ ] reviews appear on the profile for a tea
+  - [ ] user reviews are averaged into a rating for a tea
 
 ## Design Docs
 * [View Wireframes][views]
@@ -45,20 +44,20 @@ At a minimum, this app will satisfy the following criteria:
 
 ## Implementation Timeline
 
-### Phase 1: Backend setup and Front End User Authentication (1 days, W1 T 6pm)
+### Phase 1: Backend setup and Front End User Authentication (1.5 days, W1 W 12pm)
 
 **Objective:** Functioning rails project with Authentication
 
 - [X] create new project
 - [ ] create `User` model
 - [ ] authentication
-- [ ] Splash page - user signup/signin modals
+- [ ] CSS to style Splash page - user signup/signin modals
   - [ ] setup Webpack & Flux scaffold for
   - [ ] `UserForm`
   - [ ] `LoginForm`
 - [ ] blank landing page after signin
 
-### Phase 2: Teas Model, API, and basic APIUtil (1 day, W1 W 6pm)
+### Phase 2: Teas Model, API, and basic APIUtil (1 day, W1 Th 12pm)
 
 **Objective:** Teas can be created and read through the API.
 
@@ -70,7 +69,7 @@ At a minimum, this app will satisfy the following criteria:
 - [ ] setup `APIUtil` to interact with the API
 - [ ] test out API interaction in the console.
 
-### Phase 3: Tea Flux Architecture and Router (2 days, W2 F 6pm)
+### Phase 3: Tea Flux Architecture and Router (2.5 days, W2 T 6pm)
 
 **Objective:** Teas can be read through the
 user interface.
@@ -83,36 +82,20 @@ user interface.
   - [ ] `TeaForm`
   - [ ] `TeaDetail`
   - [ ] `TeaOverview`
-  - [ ] `TeaPreferencesForUser`
-  - [ ] `TeaIdentifiers`
   - [ ] `TeaDetailedInfo`
-  - [ ] `TeaSteepInfo`
-  - [ ] `TeaSteepDetail`
+- [ ] use CSS to style views
 
-### Phase 4: Start Styling (1 days, W2 M 6pm)
-
-**Objective:** Existing pages (including signup/signin) will look good.
-
-- [ ] create a basic style guide
-- [ ] position elements on the page
-- [ ] add basic colors & styles
-
-### Phase 5: Type Ahead Search (1 days, W2 T 6pm)
+### Phase 4: Type Ahead Search (1 day, W2 W 6pm)
 
 **Objective:** User will have the ability to search for teas by name/description, by region, or by type.
 
-- build out API, Flux loop, and components for:
-  - [ ] `RegionsIndex`
-  - [ ] `RegionIndexItem`
-  - [ ] `TeaTypesIndex`
-  - [ ] `TeaTypeIndexItem`
 - Use CSS to style new views
 - Implement search suggestions
   - [ ] `SearchBar`
   - [ ] `SearchBarSuggestionIndex`
   - [ ] `SearchSuggestionItem`
 
-### Phase 6: Ownerships (0.5 day, W2 W 12pm)
+### Phase 5: Ownerships (1 day, W2 Th 6pm)
 
 **Objective:** Ownerships belong to a tea and a user. An inventory of ownerships will appear as a list of teas on the dashboard for the user.  
 
@@ -123,7 +106,7 @@ user interface.
   - [ ] `OwnedTeaIndexItem`
 - Use CSS to style new views
 
-### Phase 7: Reviews (1 days, W2 Th 12pm)
+### Phase 6: Reviews (1 day, W2 F 6pm)
 
 **Objective:** Reviews belong to a tea and a user. Review information for a tea appears in the tea profile. The current user's review appears in the left-hand panel of the tea profile.
 
@@ -135,23 +118,8 @@ user interface.
   - [ ] `ReviewForm`
 - Use CSS to style new views
 
-### Phase 8: Follows (0.5 days, W2 Th 6pm)
-
-**Objective:** Follows belong to a follower and a followed user. Reviews which are posted by followed users will appear in an index on the follower's dashboard.  
-
-- [ ] create `Follow` model
-- [ ] include follow buttons inside the `ReviewIndexItem`
-- Use CSS to style new views
-
-### Phase 9: Styling Cleanup and Seeding (1 day, W2 F 6pm)
-
-**Objective:** Make the site feel more cohesive.
-
-- [ ] Get feedback on my UI from others
-- [ ] Refactor HTML classes & CSS rules
-- [ ] Add modals, transitions, and other styling flourishes.
-
 ### Bonus Features (TBD)
+- [ ] Follows
 - [ ] Recording tea consumption + stats
 - [ ] Where to buy
 - [ ] Steep preferences (gaiwan vs british)
