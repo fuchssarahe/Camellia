@@ -25992,23 +25992,31 @@
 	
 	var React = __webpack_require__(4),
 	    SessionStore = __webpack_require__(232),
+	    ErrorStore = __webpack_require__(260),
 	    SessionActions = __webpack_require__(254);
 	
 	var SignupForm = React.createClass({
 	  displayName: 'SignupForm',
 	
 	  getInitialState: function getInitialState() {
-	    return { username: '', password: '' };
+	    return { username: '', password: '', errors: {} };
 	  },
 	
 	  componentDidMount: function componentDidMount() {
 	    this.listener = SessionStore.addListener(this._onChange);
+	    this.errorListener = ErrorStore.addListener(this._onErrors);
 	  },
 	
 	  _onChange: function _onChange() {
 	    if (SessionStore.isUserLoggedIn()) {
 	      window.location.hash = '/';
 	    }
+	  },
+	
+	  _onErrors: function _onErrors() {
+	    if (ErrorStore.form() === 'signup') {
+	      this.setState({ errors: ErrorStore.formErrors('signup') });
+	    };
 	  },
 	
 	  _handleSubmit: function _handleSubmit() {
@@ -26021,6 +26029,7 @@
 	
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.listener.remove();
+	    this.errorListener.remove();
 	  },
 	
 	  render: function render() {
@@ -26033,6 +26042,22 @@
 	        'h1',
 	        null,
 	        'Sign Up!'
+	      ),
+	      React.createElement(
+	        'ul',
+	        null,
+	        Object.keys(this.state.errors).map(function (field) {
+	          return React.createElement(
+	            'li',
+	            { key: field },
+	            field + ' : ' + _this.state.errors[field].reduce(function () {
+	              var accum = arguments.length <= 0 || arguments[0] === undefined ? "" : arguments[0];
+	              var error = arguments[1];
+	
+	              return accum + error;
+	            })
+	          );
+	        })
 	      ),
 	      React.createElement(
 	        'form',
@@ -32972,23 +32997,31 @@
 	
 	var React = __webpack_require__(4),
 	    SessionStore = __webpack_require__(232),
+	    ErrorStore = window.store = __webpack_require__(260),
 	    SessionActions = __webpack_require__(254);
 	
 	var LoginForm = React.createClass({
 	  displayName: 'LoginForm',
 	
 	  getInitialState: function getInitialState() {
-	    return { username: '', password: '' };
+	    return { username: '', password: '', errors: {} };
 	  },
 	
 	  componentDidMount: function componentDidMount() {
 	    this.listener = SessionStore.addListener(this._onChange);
+	    this.errorListener = ErrorStore.addListener(this._onErrors);
 	  },
 	
 	  _onChange: function _onChange() {
 	    if (SessionStore.isUserLoggedIn()) {
 	      window.location.hash = '/';
 	    }
+	  },
+	
+	  _onErrors: function _onErrors() {
+	    if (ErrorStore.form() === 'login') {
+	      this.setState({ errors: ErrorStore.formErrors('login') });
+	    };
 	  },
 	
 	  _handleSubmit: function _handleSubmit() {
@@ -33001,10 +33034,13 @@
 	
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.listener.remove();
+	    this.errorListener.remove();
 	  },
 	
 	  render: function render() {
 	    var _this = this;
+	
+	    window.er = this.state.errors;
 	
 	    return React.createElement(
 	      'div',
@@ -33013,6 +33049,22 @@
 	        'h1',
 	        null,
 	        'Login!'
+	      ),
+	      React.createElement(
+	        'ul',
+	        null,
+	        Object.keys(this.state.errors).map(function (field) {
+	          return React.createElement(
+	            'li',
+	            { key: field },
+	            field + ' : ' + _this.state.errors[field].reduce(function () {
+	              var accum = arguments.length <= 0 || arguments[0] === undefined ? "" : arguments[0];
+	              var error = arguments[1];
+	
+	              return accum + error;
+	            })
+	          );
+	        })
 	      ),
 	      React.createElement(
 	        'form',
@@ -33042,7 +33094,6 @@
 	
 	var ErrorActions = {
 	  setErrors: function setErrors(form, error) {
-	    window.e = error;
 	    var payload = {
 	      actionType: ErrorConstants.SET_ERRORS,
 	      form: form,
@@ -33073,6 +33124,62 @@
 	};
 	
 	module.exports = ErrorConstants;
+
+/***/ },
+/* 260 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Store = __webpack_require__(233).Store,
+	    SessionConstants = __webpack_require__(255),
+	    ErrorConstants = __webpack_require__(259),
+	    Dispatcher = __webpack_require__(251);
+	
+	var ErrorsStore = new Store(Dispatcher);
+	
+	var _errors = {};
+	var _form = '';
+	
+	ErrorsStore.formErrors = function (form) {
+	  var errorsCopy = {};
+	
+	  if (_form === form) {
+	    Object.keys(_errors).map(function (field) {
+	      errorsCopy[field] = _errors[field];
+	    });
+	  }
+	  return errorsCopy;
+	};
+	
+	ErrorsStore.form = function () {
+	  return _form;
+	};
+	
+	ErrorsStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case ErrorConstants.SET_ERRORS:
+	      setErrors(payload.form, payload.errors);
+	      break;
+	    case ErrorConstants.CLEAR_ERRORS:
+	      clearErrors();
+	      break;
+	  }
+	};
+	
+	function setErrors(form, errors) {
+	  _form = form;
+	  _errors = errors;
+	  ErrorsStore.__emitChange();
+	};
+	
+	function clearErrors() {
+	  _form = '';
+	  _errors = {};
+	  ErrorsStore.__emitChange();
+	};
+	
+	module.exports = ErrorsStore;
 
 /***/ }
 /******/ ]);

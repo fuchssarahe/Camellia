@@ -1,21 +1,22 @@
 const Store = require('flux/utils').Store,
       SessionConstants = require('../constants/session_constants'),
+      ErrorConstants = require('../constants/error_constants'),
       Dispatcher = require('../dispatcher/dispatcher');
 
 const ErrorsStore = new Store(Dispatcher);
 
 let _errors = {};
-let _form;
+let _form = '';
 
 ErrorsStore.formErrors = function (form) {
+  let errorsCopy = {};
+
   if (_form === form) {
-    let errorsCopy = {};
-    return (
-      Object.keys(_errors).map( (field) => {
-        errorsCopy[field] = _errors[field];
-      })
-    )
+    Object.keys(_errors).map( (field) => {
+      errorsCopy[field] = _errors[field];
+    })
   }
+  return errorsCopy;
 };
 
 ErrorsStore.form = function () {
