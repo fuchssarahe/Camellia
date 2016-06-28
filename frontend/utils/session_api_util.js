@@ -5,7 +5,7 @@ const SessionApiUtil = {
       url: 'api/users',
       data: {user: user},
       success: callback,
-      error: errorCallback
+      error: (resp) => errorCallback('signup', resp)
     })
   },
 
@@ -15,7 +15,7 @@ const SessionApiUtil = {
       url: 'api/session',
       data: { user: user },
       success: callback,
-      error: errorCallback
+      error: (resp) => errorCallback('login', resp)
     })
   },
 
@@ -24,7 +24,7 @@ const SessionApiUtil = {
       type: 'DELETE',
       url: 'api/session',
       success: callback,
-      error: errorCallback
+      error: (resp) => errorCallback('logout', resp)
     })
   }
 

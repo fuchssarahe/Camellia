@@ -1,21 +1,23 @@
 const Dispatcher = require('../dispatcher/dispatcher'),
       SessionConstants = require('../constants/session_constants'),
-      SessionApiUtil = require('../utils/session_api_util');
+      SessionApiUtil = require('../utils/session_api_util'),
+      ErrorActions = require('./error_actions');
 
 const SessionActions = {
   signup: function (user) {
-    SessionApiUtil.createUser(user, this.receiveCurrentUser, this.errorCallback);
+    SessionApiUtil.createUser(user, this.receiveCurrentUser, ErrorActions.setErrors);
   },
 
   login: function (user) {
-    SessionApiUtil.createSession(user, this.receiveCurrentUser, this.errorCallback);
+    SessionApiUtil.createSession(user, this.receiveCurrentUser, ErrorActions.setErrors);
   },
 
   logout: function () {
-    SessionApiUtil.destroySession(this.receiveEmptyUser, this.errorCallback);
+    SessionApiUtil.destroySession(this.receiveEmptyUser, ErrorActions.setErrors);
   },
 
   receiveCurrentUser: function (user) {
+    ErrorActions.clearErrors()
     const payload = {
       actionType: SessionConstants.LOGIN,
       user: user
@@ -24,16 +26,12 @@ const SessionActions = {
   },
 
   receiveEmptyUser: function (emptyUser) {
+    ErrorActions.clearErrors()
     const payload = {
       actionType: SessionConstants.LOGOUT,
       user: emptyUser
     };
     Dispatcher.dispatch(payload);
-  },
-
-  errorCallback: function (resp) {
-    console.log('errors!');
-    console.log(resp);
   }
 };
 
