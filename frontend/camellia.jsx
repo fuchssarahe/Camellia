@@ -3,14 +3,13 @@ const React = require('react'),
       ReactDOM = require('react-dom'),
       App = require('./components/app'),
       SessionActions = require('./actions/session_actions'),
-      SignupForm = require('./components/signup_form'),
-      LoginForm = require('./components/login_form'),
+      AuthForm = require('./components/auth_form'),
       SessionStore = require('./stores/session_store');
 
 const routes =
   <Route path='/' component={App} >
-    <Route path='signup' component={SignupForm} onEnter={ensureNotLoggedIn} />
-    <Route path='login' component={LoginForm} onEnter={ensureNotLoggedIn} />
+    <Route path='signup' component={AuthForm} onEnter={ensureNotLoggedIn} />
+    <Route path='login' component={AuthForm} onEnter={ensureNotLoggedIn} />
   </Route>;
 
 $(

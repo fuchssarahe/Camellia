@@ -27,6 +27,10 @@ const App = React.createClass({
     SessionActions.logout();
   },
 
+  _loginGuest: function () {
+    SessionActions.login({username: 'guest', password: '123456'})
+  },
+
   render: function () {
 
     let greeting = 'Welcome to Camellia!';
@@ -36,16 +40,20 @@ const App = React.createClass({
       buttons = <button onClick={this._logout}>Logout!</button>;
     } else {
       buttons =
-      <div>
+      <div className='auth-buttons'>
         <button onClick={this._navToSignup}>Sign Up</button>
         <button onClick={this._navToLogin}>Login</button>
+        <button onClick={this._loginGuest}>Demo Acount</button>
       </div>
     }
 
     return (
       <div>
+        <header className="site-nav">
+          <img src="../../assets/images/camellia_logo.png" alt="Camellia Logo" />
+          {buttons}
+        </header>
         <h1>{greeting}</h1>
-        {buttons}
         {this.props.children}
       </div>)
   }
