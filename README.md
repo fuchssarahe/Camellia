@@ -10,7 +10,7 @@ Camellia is a web application built using Ruby on Rails and React.js, meant for 
 
 At a minimum, this app will satisfy the following criteria:
 
-- [ ] Hosting on Heroku
+- [x] Hosting on Heroku
 - [ ] New account creation, login, and guest/demo login
 - [ ] A production README
 - [ ] Teas
@@ -49,13 +49,14 @@ At a minimum, this app will satisfy the following criteria:
 **Objective:** Functioning rails project with Authentication
 
 - [X] create new project
-- [ ] create `User` model
-- [ ] authentication
+- [x] create `User` model
+- [x] authentication
 - [ ] CSS to style Splash page - user signup/signin modals
-  - [ ] setup Webpack & Flux scaffold for
-  - [ ] `UserForm`
-  - [ ] `LoginForm`
-- [ ] blank landing page after signin
+- [x] setup Webpack & Flux scaffold for
+  - [x] `SignupForm`
+  - [x] `LoginForm`
+- [x] blank landing page after signin
+- [ ] set up guest/demo login
 
 ### Phase 2: Teas Model, API, and basic APIUtil (1 day, W1 Th 12pm)
 
