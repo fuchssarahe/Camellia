@@ -2,10 +2,26 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
+  border-bottom: 3px solid lightgray;
+  height: 60px;
 }
 
 .auth-buttons {
-  // display: flex;
-  // flex-direction: row;
-  // justify-content: space-around;
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.site-nav li {
+  height: 60px;
+  margin: auto;
+}
+
+.site-nav img {
+  max-height: 30px;
+  width: auto;
+  // padding: 10px 20px;
 }
