@@ -1,3 +1,33 @@
 // Place all the styles related to the StaticPages controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+html, body, div {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  text-decoration: inherit;
+  vertical-align: inherit;
+  box-sizing: inherit;
+  background: transparent;
+  font-family: Lato, "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+}
+
+
+.modal input {
+  border-radius: 4px;
+  padding: 12px 8px;
+  border: 1px solid #aeb5ba;
+  display: block;
+}
+
+button {
+  border: 1px solid #aeb5ba;
+  padding: 12px 8px;
+  border-radius: 4px;
+}

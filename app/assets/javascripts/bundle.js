@@ -52,15 +52,14 @@
 	    ReactDOM = __webpack_require__(100),
 	    App = __webpack_require__(230),
 	    SessionActions = __webpack_require__(254),
-	    SignupForm = __webpack_require__(231),
-	    LoginForm = __webpack_require__(257),
+	    AuthForm = __webpack_require__(261),
 	    SessionStore = __webpack_require__(232);
 	
 	var routes = React.createElement(
 	  _reactRouter.Route,
 	  { path: '/', component: App },
-	  React.createElement(_reactRouter.Route, { path: 'signup', component: SignupForm, onEnter: ensureNotLoggedIn }),
-	  React.createElement(_reactRouter.Route, { path: 'login', component: LoginForm, onEnter: ensureNotLoggedIn })
+	  React.createElement(_reactRouter.Route, { path: 'signup', component: AuthForm, onEnter: ensureNotLoggedIn }),
+	  React.createElement(_reactRouter.Route, { path: 'login', component: AuthForm, onEnter: ensureNotLoggedIn })
 	);
 	
 	$(function () {
@@ -25992,6 +25991,10 @@
 	    SessionActions.logout();
 	  },
 	
+	  _loginGuest: function _loginGuest() {
+	    SessionActions.login({ username: 'guest', password: '123456' });
+	  },
+	
 	  render: function render() {
 	
 	    var greeting = 'Welcome to Camellia!';
@@ -26006,7 +26009,7 @@
 	    } else {
 	      buttons = React.createElement(
 	        'div',
-	        null,
+	        { className: 'auth-buttons' },
 	        React.createElement(
 	          'button',
 	          { onClick: this._navToSignup },
@@ -26016,6 +26019,11 @@
 	          'button',
 	          { onClick: this._navToLogin },
 	          'Login'
+	        ),
+	        React.createElement(
+	          'button',
+	          { onClick: this._loginGuest },
+	          'Demo Acount'
 	        )
 	      );
 	    }
@@ -26024,11 +26032,16 @@
 	      'div',
 	      null,
 	      React.createElement(
+	        'header',
+	        { className: 'site-nav' },
+	        React.createElement('img', { src: '../../assets/images/camellia_logo.png', alt: 'Camellia Logo' }),
+	        buttons
+	      ),
+	      React.createElement(
 	        'h1',
 	        null,
 	        greeting
 	      ),
-	      buttons,
 	      this.props.children
 	    );
 	  }
@@ -26037,106 +26050,7 @@
 	module.exports = App;
 
 /***/ },
-/* 231 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-	
-	var React = __webpack_require__(4),
-	    SessionStore = __webpack_require__(232),
-	    ErrorStore = __webpack_require__(260),
-	    SessionActions = __webpack_require__(254);
-	
-	var SignupForm = React.createClass({
-	  displayName: 'SignupForm',
-	
-	  getInitialState: function getInitialState() {
-	    return { username: '', password: '', errors: {} };
-	  },
-	
-	  componentDidMount: function componentDidMount() {
-	    this.listener = SessionStore.addListener(this._onChange);
-	    this.errorListener = ErrorStore.addListener(this._onErrors);
-	  },
-	
-	  _onChange: function _onChange() {
-	    if (SessionStore.isUserLoggedIn()) {
-	      window.location.hash = '/';
-	    }
-	  },
-	
-	  _onErrors: function _onErrors() {
-	    if (ErrorStore.form() === 'signup') {
-	      this.setState({ errors: ErrorStore.formErrors('signup') });
-	    };
-	  },
-	
-	  _handleSubmit: function _handleSubmit(event) {
-	    event.preventDefault();
-	    SessionActions.signup(this.state);
-	  },
-	
-	  _handleFormChange: function _handleFormChange(event, property) {
-	    this.setState(_defineProperty({}, property, event.target.value));
-	  },
-	
-	  componentWillUnmount: function componentWillUnmount() {
-	    this.listener.remove();
-	    this.errorListener.remove();
-	  },
-	
-	  render: function render() {
-	    var _this = this;
-	
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'h1',
-	        null,
-	        'Sign Up!'
-	      ),
-	      React.createElement(
-	        'ul',
-	        null,
-	        parseErrors(this.state.errors)
-	      ),
-	      React.createElement(
-	        'form',
-	        { onSubmit: this._handleSubmit },
-	        React.createElement('input', { type: 'text', onChange: function onChange(event) {
-	            return _this._handleFormChange(event, 'username');
-	          }, value: this.state.username }),
-	        React.createElement('input', { type: 'password', onChange: function onChange(event) {
-	            return _this._handleFormChange(event, 'password');
-	          }, value: this.state.password }),
-	        React.createElement('input', { type: 'submit', value: 'Sign up!' })
-	      )
-	    );
-	  }
-	});
-	
-	function parseErrors(errors) {
-	  return Object.keys(errors).map(function (field) {
-	    var parsedErrorsForField = errors[field].join(", ");
-	    if (field === 'base') return React.createElement(
-	      'li',
-	      { key: field },
-	      parsedErrorsForField
-	    );
-	    return React.createElement(
-	      'li',
-	      { key: field },
-	      field + ' ' + parsedErrorsForField
-	    );
-	  });
-	}
-	
-	module.exports = SignupForm;
-
-/***/ },
+/* 231 */,
 /* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -33048,110 +32962,7 @@
 	module.exports = SessionApiUtil;
 
 /***/ },
-/* 257 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-	
-	var React = __webpack_require__(4),
-	    SessionStore = __webpack_require__(232),
-	    ErrorStore = window.store = __webpack_require__(260),
-	    SessionActions = __webpack_require__(254);
-	
-	var LoginForm = React.createClass({
-	  displayName: 'LoginForm',
-	
-	  getInitialState: function getInitialState() {
-	    return { username: '', password: '', errors: {} };
-	  },
-	
-	  componentDidMount: function componentDidMount() {
-	    console.log('componentDidMount');
-	    this.listener = SessionStore.addListener(this._onChange);
-	    this.errorListener = ErrorStore.addListener(this._onErrors);
-	  },
-	
-	  _onChange: function _onChange() {
-	    console.log('in session update');
-	    if (SessionStore.isUserLoggedIn()) {
-	      window.location.hash = '/';
-	    }
-	  },
-	
-	  _onErrors: function _onErrors() {
-	    console.log('in error update');
-	
-	    if (ErrorStore.form() === 'login') {
-	      this.setState({ errors: ErrorStore.formErrors('login') });
-	    };
-	  },
-	
-	  _handleSubmit: function _handleSubmit(event) {
-	    event.preventDefault();
-	    SessionActions.login(this.state);
-	  },
-	
-	  _handleFormChange: function _handleFormChange(event, property) {
-	    this.setState(_defineProperty({}, property, event.target.value));
-	  },
-	
-	  componentWillUnmount: function componentWillUnmount() {
-	    this.listener.remove();
-	    this.errorListener.remove();
-	  },
-	
-	  render: function render() {
-	    var _this = this;
-	
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'h1',
-	        null,
-	        'Login!'
-	      ),
-	      React.createElement(
-	        'ul',
-	        null,
-	        parseErrors(this.state.errors)
-	      ),
-	      React.createElement(
-	        'form',
-	        { onSubmit: this._handleSubmit },
-	        React.createElement('input', { type: 'text', onChange: function onChange(event) {
-	            return _this._handleFormChange(event, 'username');
-	          }, value: this.state.username }),
-	        React.createElement('input', { type: 'password', onChange: function onChange(event) {
-	            return _this._handleFormChange(event, 'password');
-	          }, value: this.state.password }),
-	        React.createElement('input', { type: 'submit', value: 'Login!' })
-	      )
-	    );
-	  }
-	});
-	
-	function parseErrors(errors) {
-	  return Object.keys(errors).map(function (field) {
-	    var parsedErrorsForField = errors[field].join(", ");
-	    if (field === 'base') return React.createElement(
-	      'li',
-	      { key: field },
-	      parsedErrorsForField
-	    );
-	    return React.createElement(
-	      'li',
-	      { key: field },
-	      field + ' ' + parsedErrorsForField
-	    );
-	  });
-	};
-	
-	module.exports = LoginForm;
-
-/***/ },
+/* 257 */,
 /* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -33248,6 +33059,153 @@
 	};
 	
 	module.exports = ErrorsStore;
+
+/***/ },
+/* 261 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	var React = __webpack_require__(4),
+	    SessionStore = __webpack_require__(232),
+	    ErrorStore = __webpack_require__(260),
+	    SessionActions = __webpack_require__(254);
+	
+	var AuthForm = React.createClass({
+	  displayName: 'AuthForm',
+	
+	  getInitialState: function getInitialState() {
+	    return { username: '', password: '', errors: {} };
+	  },
+	
+	  componentDidMount: function componentDidMount() {
+	    this.listener = SessionStore.addListener(this._onChange);
+	    this.errorListener = ErrorStore.addListener(this._onErrors);
+	  },
+	
+	  _onChange: function _onChange() {
+	    if (SessionStore.isUserLoggedIn()) {
+	      window.location.hash = '/';
+	    }
+	  },
+	
+	  _onErrors: function _onErrors() {
+	    if (window.location.hash.includes('signup')) {
+	      if (ErrorStore.form() === 'signup') {
+	        this.setState({ errors: ErrorStore.formErrors('signup') });
+	      }
+	    } else if (window.location.hash.includes('login')) {
+	      if (ErrorStore.form() === 'login') {
+	        this.setState({ errors: ErrorStore.formErrors('login') });
+	      }
+	    }
+	  },
+	
+	  _handleSubmit: function _handleSubmit(event) {
+	    event.preventDefault();
+	    if (window.location.hash.includes('signup')) {
+	      SessionActions.signup(this.state);
+	    } else {
+	      SessionActions.login(this.state);
+	    }
+	  },
+	
+	  _handleFormChange: function _handleFormChange(event, property) {
+	    this.setState(_defineProperty({}, property, event.target.value));
+	  },
+	
+	  _closeModal: function _closeModal() {
+	    window.location.hash = '/';
+	  },
+	
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.listener.remove();
+	    this.errorListener.remove();
+	  },
+	
+	  render: function render() {
+	    var _this = this;
+	
+	    var buttonText = void 0;
+	    var h1Text = void 0;
+	    if (window.location.hash.includes('signup')) {
+	      h1Text = "Join Camellia for free!";
+	      buttonText = "Join";
+	    } else {
+	      h1Text = "Login to Camellia!";
+	      buttonText = "Login";
+	    }
+	    return React.createElement(
+	      'div',
+	      { className: 'modal' },
+	      React.createElement(
+	        'div',
+	        { className: 'modal-content' },
+	        React.createElement(
+	          'header',
+	          null,
+	          React.createElement(
+	            'div',
+	            { className: 'modal-header' },
+	            React.createElement(
+	              'h1',
+	              null,
+	              h1Text
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'modal-close fade', onClick: this._closeModal },
+	              '✕'
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          'ul',
+	          null,
+	          parseErrors(this.state.errors)
+	        ),
+	        React.createElement(
+	          'form',
+	          { onSubmit: this._handleSubmit },
+	          React.createElement('input', { type: 'text',
+	            onChange: function onChange(event) {
+	              return _this._handleFormChange(event, 'username');
+	            },
+	            value: this.state.username,
+	            placeholder: 'Username' }),
+	          React.createElement('input', { type: 'password',
+	            onChange: function onChange(event) {
+	              return _this._handleFormChange(event, 'password');
+	            },
+	            value: this.state.password,
+	            placeholder: 'Password' }),
+	          React.createElement('input', { type: 'submit', value: buttonText })
+	        )
+	      ),
+	      React.createElement('div', { className: 'modal-screen', onClick: this._closeModal })
+	    );
+	  }
+	});
+	
+	function parseErrors(errors) {
+	  return Object.keys(errors).map(function (field) {
+	    var parsedErrorsForField = errors[field].join(", ");
+	    if (field === 'base') return React.createElement(
+	      'li',
+	      { key: field },
+	      parsedErrorsForField
+	    );
+	    return React.createElement(
+	      'li',
+	      { key: field },
+	      field + ' ' + parsedErrorsForField
+	    );
+	  });
+	}
+	
+	module.exports = AuthForm;
 
 /***/ }
 /******/ ]);
