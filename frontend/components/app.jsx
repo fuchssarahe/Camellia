@@ -40,17 +40,17 @@ const App = React.createClass({
       buttons = <button onClick={this._logout}>Logout!</button>;
     } else {
       buttons =
-      <div className='auth-buttons'>
-        <button onClick={this._navToSignup}>Sign Up</button>
-        <button onClick={this._navToLogin}>Login</button>
-        <button onClick={this._loginGuest}>Demo Acount</button>
-      </div>
+      <ul className='auth-buttons'>
+        <li><button onClick={this._navToSignup}>Sign Up</button></li>
+        <li><button onClick={this._navToLogin}>Login</button></li>
+        <li><button onClick={this._loginGuest}>Demo Acount</button></li>
+      </ul>
     }
 
     return (
       <div>
         <header className="site-nav">
-          <img src="../../assets/images/camellia_logo.png" alt="Camellia Logo" />
+          <img src="https://raw.githubusercontent.com/fuchssarahe/Camellia/master/app/assets/images/camellia_logo.png" alt="Camellia Logo" />
           {buttons}
         </header>
         <h1>{greeting}</h1>

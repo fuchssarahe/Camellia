@@ -26008,22 +26008,34 @@
 	      );
 	    } else {
 	      buttons = React.createElement(
-	        'div',
+	        'ul',
 	        { className: 'auth-buttons' },
 	        React.createElement(
-	          'button',
-	          { onClick: this._navToSignup },
-	          'Sign Up'
+	          'li',
+	          null,
+	          React.createElement(
+	            'button',
+	            { onClick: this._navToSignup },
+	            'Sign Up'
+	          )
 	        ),
 	        React.createElement(
-	          'button',
-	          { onClick: this._navToLogin },
-	          'Login'
+	          'li',
+	          null,
+	          React.createElement(
+	            'button',
+	            { onClick: this._navToLogin },
+	            'Login'
+	          )
 	        ),
 	        React.createElement(
-	          'button',
-	          { onClick: this._loginGuest },
-	          'Demo Acount'
+	          'li',
+	          null,
+	          React.createElement(
+	            'button',
+	            { onClick: this._loginGuest },
+	            'Demo Acount'
+	          )
 	        )
 	      );
 	    }
@@ -26034,7 +26046,7 @@
 	      React.createElement(
 	        'header',
 	        { className: 'site-nav' },
-	        React.createElement('img', { src: '../../assets/images/camellia_logo.png', alt: 'Camellia Logo' }),
+	        React.createElement('img', { src: 'https://raw.githubusercontent.com/fuchssarahe/Camellia/master/app/assets/images/camellia_logo.png', alt: 'Camellia Logo' }),
 	        buttons
 	      ),
 	      React.createElement(
@@ -33137,6 +33149,17 @@
 	      h1Text = "Login to Camellia!";
 	      buttonText = "Login";
 	    }
+	
+	    var errors = React.createElement(
+	      'ul',
+	      { className: 'errors' },
+	      parseErrors(this.state.errors)
+	    );
+	
+	    if (Object.keys(this.state.errors).length === 0) {
+	      errors = React.createElement('div', null);
+	    }
+	
 	    return React.createElement(
 	      'div',
 	      { className: 'modal' },
@@ -33161,11 +33184,7 @@
 	            )
 	          )
 	        ),
-	        React.createElement(
-	          'ul',
-	          null,
-	          parseErrors(this.state.errors)
-	        ),
+	        errors,
 	        React.createElement(
 	          'form',
 	          { onSubmit: this._handleSubmit },
@@ -33192,15 +33211,18 @@
 	function parseErrors(errors) {
 	  return Object.keys(errors).map(function (field) {
 	    var parsedErrorsForField = errors[field].join(", ");
-	    if (field === 'base') return React.createElement(
-	      'li',
-	      { key: field },
-	      parsedErrorsForField
-	    );
+	    if (field === 'base') {
+	      return React.createElement(
+	        'li',
+	        { key: field },
+	        'Oops! ' + parsedErrorsForField[0].toUpperCase() + parsedErrorsForField.slice(1) + '!'
+	      );
+	    };
+	
 	    return React.createElement(
 	      'li',
 	      { key: field },
-	      field + ' ' + parsedErrorsForField
+	      'Oops! ' + field[0].toUpperCase() + field.slice(1) + ' ' + parsedErrorsForField + '!'
 	    );
 	  });
 	}
