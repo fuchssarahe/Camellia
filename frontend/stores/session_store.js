@@ -8,12 +8,12 @@ let _currentUser = {};
 
 function _login(user) {
   _currentUser = user;
-  SessionStore.__emitChange()
+  SessionStore.__emitChange();
 };
 
 function _logout() {
   _currentUser = {};
-  SessionStore.__emitChange()
+  SessionStore.__emitChange();
 };
 
 SessionStore.__onDispatch = function (payload) {
