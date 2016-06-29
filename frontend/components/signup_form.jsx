@@ -25,12 +25,13 @@ const SignupForm = React.createClass({
     };
   },
 
-  _handleSubmit: function () {
-    SessionActions.signup(this.state)
+  _handleSubmit: function (event) {
+    event.preventDefault();
+    SessionActions.signup(this.state);
   },
 
   _handleFormChange: function (event, property) {
-    this.setState({[property]: event.target.value})
+    this.setState({[property]: event.target.value});
   },
 
   componentWillUnmount: function () {
@@ -43,11 +44,7 @@ const SignupForm = React.createClass({
       <div>
         <h1>Sign Up!</h1>
         <ul>{
-          Object.keys(this.state.errors).map( (field) => {
-            return <li key={field}>{field + ' : ' + this.state.errors[field].reduce( (accum = "", error) => {
-              return accum + error;
-            })}</li>
-          })
+          parseErrors(this.state.errors)
         }</ul>
         <form onSubmit={this._handleSubmit} >
            <input type="text" onChange={event => this._handleFormChange(event, 'username')} value={this.state.username} />
@@ -58,5 +55,13 @@ const SignupForm = React.createClass({
     )
   }
 });
+
+function parseErrors(errors) {
+  return Object.keys(errors).map( (field) => {
+    const parsedErrorsForField = errors[field].join(", ")
+    if (field === 'base') return <li key={field}>{parsedErrorsForField}</li>;
+    return <li key={field}>{field + ' ' + parsedErrorsForField}</li>;
+  })
+}
 
 module.exports = SignupForm;
