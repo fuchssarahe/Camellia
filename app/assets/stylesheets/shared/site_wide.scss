@@ -17,14 +17,32 @@ html, body, div, ul {
   background: transparent;
   font-family: Lato, "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
 }
+
 * {
   font-size: 15px;
 }
+
 button {
   border: 1px solid #aeb5ba;
   padding: 12px 8px;
   border-radius: 4px;
   margin-left: 10px;
+  background: palegreen;
+}
+
+.submit-input {
+  background: palegreen;
+}
+
+button:hover {
+  cursor: pointer;
+  background: lightgreen;
+}
+
+.submit-input:hover {
+  cursor: pointer;
+  background: lightgreen;
+
 }
 
 .errors {

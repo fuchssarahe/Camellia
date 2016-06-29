@@ -93,7 +93,7 @@ const AuthForm = React.createClass({
                     value={this.state.password}
                     placeholder="Password"/>
 
-             <input type="submit" value={buttonText} />
+             <input type="submit" value={buttonText} className='submit-input'/>
           </form>
         </div>
         <div className="modal-screen" onClick={this._closeModal}></div>
