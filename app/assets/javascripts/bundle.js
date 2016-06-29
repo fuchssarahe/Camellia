@@ -51,8 +51,10 @@
 	var React = __webpack_require__(4),
 	    ReactDOM = __webpack_require__(100),
 	    App = __webpack_require__(230),
+	    SessionActions = __webpack_require__(254),
 	    SignupForm = __webpack_require__(231),
-	    LoginForm = __webpack_require__(257);
+	    LoginForm = __webpack_require__(257),
+	    SessionStore = __webpack_require__(232);
 	
 	var routes = React.createElement(
 	  _reactRouter.Route,
@@ -62,12 +64,22 @@
 	);
 	
 	$(function () {
+	  if (window.currentUser) {
+	    SessionActions.receiveCurrentUser(window.currentUser);
+	  }
+	
 	  ReactDOM.render(React.createElement(
 	    _reactRouter.Router,
 	    { history: _reactRouter.hashHistory },
 	    routes
 	  ), document.getElementById('root'));
 	});
+	
+	function ensureLoggedIn() {
+	  if (!SessionStore.isUserLoggedIn()) {
+	    window.location.hash = '/login';
+	  }
+	};
 
 /***/ },
 /* 1 */
@@ -25942,10 +25954,24 @@
 
 	'use strict';
 	
-	var React = __webpack_require__(4);
+	var React = __webpack_require__(4),
+	    SessionActions = __webpack_require__(254),
+	    SessionStore = __webpack_require__(232);
 	
 	var App = React.createClass({
 	  displayName: 'App',
+	
+	  getInitialState: function getInitialState() {
+	    return { currentUser: SessionStore.currentUser() };
+	  },
+	
+	  componentDidMount: function componentDidMount() {
+	    this.listener = SessionStore.addListener(this._onChange);
+	  },
+	
+	  _onChange: function _onChange() {
+	    this.setState({ currentUser: SessionStore.currentUser() });
+	  },
 	
 	  _navToSignup: function _navToSignup() {
 	    window.location.hash = '/signup';
@@ -25955,15 +25981,34 @@
 	    window.location.hash = '/login';
 	  },
 	
+	  _logout: function _logout() {
+	    SessionActions.logout();
+	  },
+	
 	  render: function render() {
 	
+	    var greeting = 'Hello from app';
+	    var button = "";
+	    if (SessionStore.isUserLoggedIn()) {
+	      greeting = 'Hello, ' + this.state.currentUser.username + "!";
+	      button = React.createElement(
+	        'button',
+	        { onClick: this._logout },
+	        'Logout!'
+	      );
+	    }
 	    return React.createElement(
 	      'div',
 	      null,
 	      React.createElement(
 	        'h1',
 	        null,
-	        'Hellow from app'
+	        greeting
+	      ),
+	      React.createElement(
+	        'div',
+	        null,
+	        button
 	      ),
 	      React.createElement(
 	        'button',
