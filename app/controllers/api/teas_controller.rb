@@ -20,7 +20,7 @@ class Api::TeasController < ApplicationController
 
   private
   def tea_params
-    params.require(:tea).permit(:id, :name, :description, :type, :region, :steep_time, :temperature, :leaf_quantity, :leaf_density, :retailer)
+    params.require(:tea).permit(:id, :name, :description, :tea_type, :region, :steep_time, :temperature, :leaf_quantity, :leaf_density, :retailer)
   end
 
 end

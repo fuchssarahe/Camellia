@@ -51,7 +51,7 @@ At a minimum, this app will satisfy the following criteria:
 - [X] create new project
 - [x] create `User` model
 - [x] authentication
-- [-] CSS to style Splash page - user signup/signin modals
+- [x] CSS to style Splash page - user signup/signin modals
 - [x] setup Webpack & Flux scaffold for
   - [x] `SignupForm`
   - [x] `LoginForm`
@@ -62,9 +62,9 @@ At a minimum, this app will satisfy the following criteria:
 
 **Objective:** Teas can be created and read through the API.
 
-- [ ] create `Tea` model
-- [ ] seed the database with a small amount of test data
-- [ ] CRUD API for teas (`TeasController`)
+- [x] create `Tea` model
+- [x] seed the database with a small amount of test data
+- [x] CRUD API for teas (`TeasController`)
 - [ ] jBuilder views for teas
 - [ ] setup Webpack & Flux scaffold
 - [ ] setup `APIUtil` to interact with the API

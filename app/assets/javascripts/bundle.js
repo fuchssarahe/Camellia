@@ -33200,7 +33200,7 @@
 	            },
 	            value: this.state.password,
 	            placeholder: 'Password' }),
-	          React.createElement('input', { type: 'submit', value: buttonText })
+	          React.createElement('input', { type: 'submit', value: buttonText, className: 'submit-input' })
 	        )
 	      ),
 	      React.createElement('div', { className: 'modal-screen', onClick: this._closeModal })
