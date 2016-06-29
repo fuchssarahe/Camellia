@@ -9,17 +9,21 @@ const LoginForm = React.createClass({
   },
 
   componentDidMount: function () {
+    console.log('componentDidMount');
     this.listener = SessionStore.addListener(this._onChange);
     this.errorListener = ErrorStore.addListener(this._onErrors);
   },
 
   _onChange: function () {
+    console.log('in session update');
     if ( SessionStore.isUserLoggedIn() ) {
       window.location.hash = '/';
     }
   },
 
   _onErrors: function () {
+    console.log('in error update');
+
     if (ErrorStore.form() === 'login') {
       this.setState({errors: ErrorStore.formErrors('login') });
     };
@@ -39,8 +43,6 @@ const LoginForm = React.createClass({
   },
 
   render: function () {
-
-    window.er = this.state.errors;
 
     return (
       <div>

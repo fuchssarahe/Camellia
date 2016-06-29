@@ -59,8 +59,8 @@
 	var routes = React.createElement(
 	  _reactRouter.Route,
 	  { path: '/', component: App },
-	  React.createElement(_reactRouter.Route, { path: 'signup', component: SignupForm }),
-	  React.createElement(_reactRouter.Route, { path: 'login', component: LoginForm })
+	  React.createElement(_reactRouter.Route, { path: 'signup', component: SignupForm, onEnter: ensureNotLoggedIn }),
+	  React.createElement(_reactRouter.Route, { path: 'login', component: LoginForm, onEnter: ensureNotLoggedIn })
 	);
 	
 	$(function () {
@@ -78,6 +78,13 @@
 	function ensureLoggedIn() {
 	  if (!SessionStore.isUserLoggedIn()) {
 	    window.location.hash = '/login';
+	  }
+	};
+	
+	function ensureNotLoggedIn() {
+	  if (SessionStore.isUserLoggedIn()) {
+	    console.log('about to update hash');
+	    window.location.hash = '/';
 	  }
 	};
 
@@ -25987,16 +25994,32 @@
 	
 	  render: function render() {
 	
-	    var greeting = 'Hello from app';
-	    var button = "";
+	    var greeting = 'Welcome to Camellia!';
+	    var buttons = "";
 	    if (SessionStore.isUserLoggedIn()) {
 	      greeting = 'Hello, ' + this.state.currentUser.username + "!";
-	      button = React.createElement(
+	      buttons = React.createElement(
 	        'button',
 	        { onClick: this._logout },
 	        'Logout!'
 	      );
+	    } else {
+	      buttons = React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'button',
+	          { onClick: this._navToSignup },
+	          'Sign Up'
+	        ),
+	        React.createElement(
+	          'button',
+	          { onClick: this._navToLogin },
+	          'Login'
+	        )
+	      );
 	    }
+	
 	    return React.createElement(
 	      'div',
 	      null,
@@ -26005,21 +26028,7 @@
 	        null,
 	        greeting
 	      ),
-	      React.createElement(
-	        'div',
-	        null,
-	        button
-	      ),
-	      React.createElement(
-	        'button',
-	        { onClick: this._navToSignup },
-	        'Sign Up'
-	      ),
-	      React.createElement(
-	        'button',
-	        { onClick: this._navToLogin },
-	        'Login'
-	      ),
+	      buttons,
 	      this.props.children
 	    );
 	  }
@@ -33053,17 +33062,21 @@
 	  },
 	
 	  componentDidMount: function componentDidMount() {
+	    console.log('componentDidMount');
 	    this.listener = SessionStore.addListener(this._onChange);
 	    this.errorListener = ErrorStore.addListener(this._onErrors);
 	  },
 	
 	  _onChange: function _onChange() {
+	    console.log('in session update');
 	    if (SessionStore.isUserLoggedIn()) {
 	      window.location.hash = '/';
 	    }
 	  },
 	
 	  _onErrors: function _onErrors() {
+	    console.log('in error update');
+	
 	    if (ErrorStore.form() === 'login') {
 	      this.setState({ errors: ErrorStore.formErrors('login') });
 	    };
@@ -33084,8 +33097,6 @@
 	
 	  render: function render() {
 	    var _this = this;
-	
-	    window.er = this.state.errors;
 	
 	    return React.createElement(
 	      'div',

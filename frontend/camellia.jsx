@@ -9,8 +9,8 @@ const React = require('react'),
 
 const routes =
   <Route path='/' component={App} >
-    <Route path='signup' component={SignupForm} />
-    <Route path='login' component={LoginForm} />
+    <Route path='signup' component={SignupForm} onEnter={ensureNotLoggedIn} />
+    <Route path='login' component={LoginForm} onEnter={ensureNotLoggedIn} />
   </Route>;
 
 $(
@@ -28,5 +28,12 @@ $(
 function ensureLoggedIn() {
   if (!SessionStore.isUserLoggedIn()) {
     window.location.hash = '/login'
+  }
+};
+
+function ensureNotLoggedIn() {
+  if (SessionStore.isUserLoggedIn()) {
+    console.log('about to update hash');
+    window.location.hash = '/'
   }
 };

@@ -29,20 +29,23 @@ const App = React.createClass({
 
   render: function () {
 
-    let greeting = 'Hello from app';
-    let button = "";
+    let greeting = 'Welcome to Camellia!';
+    let buttons = "";
     if (SessionStore.isUserLoggedIn()) {
       greeting = `Hello, ` + this.state.currentUser.username + "!";
-      button = <button onClick={this._logout}>Logout!</button>;
+      buttons = <button onClick={this._logout}>Logout!</button>;
+    } else {
+      buttons =
+      <div>
+        <button onClick={this._navToSignup}>Sign Up</button>
+        <button onClick={this._navToLogin}>Login</button>
+      </div>
     }
+
     return (
       <div>
         <h1>{greeting}</h1>
-        <div>
-          {button}
-        </div>
-        <button onClick={this._navToSignup}>Sign Up</button>
-        <button onClick={this._navToLogin}>Login</button>
+        {buttons}
         {this.props.children}
       </div>)
   }
