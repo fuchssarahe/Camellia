@@ -37,7 +37,7 @@ const App = React.createClass({
     let buttons = "";
     if (SessionStore.isUserLoggedIn()) {
       greeting = `Hello, ` + this.state.currentUser.username + "!";
-      buttons = <button onClick={this._logout}>Logout!</button>;
+      buttons = <button className='auth-buttons' onClick={this._logout}>Logout!</button>;
     } else {
       buttons =
       <ul className='auth-buttons'>

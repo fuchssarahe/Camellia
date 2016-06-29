@@ -26003,7 +26003,7 @@
 	      greeting = 'Hello, ' + this.state.currentUser.username + "!";
 	      buttons = React.createElement(
 	        'button',
-	        { onClick: this._logout },
+	        { className: 'auth-buttons', onClick: this._logout },
 	        'Logout!'
 	      );
 	    } else {

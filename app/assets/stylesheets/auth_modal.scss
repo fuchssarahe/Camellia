@@ -13,13 +13,12 @@
   font-weight: normal;
 }
 
-.modal input {
-  border: 1px solid #aeb5ba;
-  width: 100%;
-}
 
 .modal form {
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: middle;
+  margin: 20px;
 }
 
 .modal header {
@@ -27,6 +26,14 @@
   border: none;
   padding: 20px 20px;
   color: #929ead;
+}
+
+.modal input {
+  border-radius: 4px;
+  padding: 12px 8px;
+  border: 1px solid #aeb5ba;
+  display: block;
+  margin-bottom: 20px;
 }
 
 .modal-screen {
@@ -63,9 +70,7 @@
  max-width: 450px;
 }
 
-
 .modal-close {
-  // position: absolute;
   top: 10px;
   right: 20px;
   font-size: 28px;
