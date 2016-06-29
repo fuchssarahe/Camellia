@@ -29,7 +29,8 @@ const LoginForm = React.createClass({
     };
   },
 
-  _handleSubmit: function () {
+  _handleSubmit: function (event) {
+    event.preventDefault();
     SessionActions.login(this.state)
   },
 
@@ -48,11 +49,7 @@ const LoginForm = React.createClass({
       <div>
         <h1>Login!</h1>
         <ul>{
-          Object.keys(this.state.errors).map( (field) => {
-            return <li key={field}>{field + ' : ' + this.state.errors[field].reduce( (accum = "", error) => {
-              return accum + error;
-            })}</li>
-          })
+          parseErrors(this.state.errors)
         }</ul>
         <form onSubmit={this._handleSubmit} >
            <input type="text" onChange={event => this._handleFormChange(event, 'username')} value={this.state.username} />
@@ -63,5 +60,13 @@ const LoginForm = React.createClass({
     )
   }
 });
+
+function parseErrors(errors) {
+  return Object.keys(errors).map( (field) => {
+    const parsedErrorsForField = errors[field].join(", ")
+    if (field === 'base') return <li key={field}>{parsedErrorsForField}</li>;
+    return <li key={field}>{field + ' ' + parsedErrorsForField}</li>;
+  })
+};
 
 module.exports = LoginForm;

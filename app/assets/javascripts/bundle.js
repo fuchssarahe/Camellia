@@ -26073,7 +26073,8 @@
 	    };
 	  },
 	
-	  _handleSubmit: function _handleSubmit() {
+	  _handleSubmit: function _handleSubmit(event) {
+	    event.preventDefault();
 	    SessionActions.signup(this.state);
 	  },
 	
@@ -26100,18 +26101,7 @@
 	      React.createElement(
 	        'ul',
 	        null,
-	        Object.keys(this.state.errors).map(function (field) {
-	          return React.createElement(
-	            'li',
-	            { key: field },
-	            field + ' : ' + _this.state.errors[field].reduce(function () {
-	              var accum = arguments.length <= 0 || arguments[0] === undefined ? "" : arguments[0];
-	              var error = arguments[1];
-	
-	              return accum + error;
-	            })
-	          );
-	        })
+	        parseErrors(this.state.errors)
 	      ),
 	      React.createElement(
 	        'form',
@@ -26127,6 +26117,22 @@
 	    );
 	  }
 	});
+	
+	function parseErrors(errors) {
+	  return Object.keys(errors).map(function (field) {
+	    var parsedErrorsForField = errors[field].join(", ");
+	    if (field === 'base') return React.createElement(
+	      'li',
+	      { key: field },
+	      parsedErrorsForField
+	    );
+	    return React.createElement(
+	      'li',
+	      { key: field },
+	      field + ' ' + parsedErrorsForField
+	    );
+	  });
+	}
 	
 	module.exports = SignupForm;
 
@@ -33082,7 +33088,8 @@
 	    };
 	  },
 	
-	  _handleSubmit: function _handleSubmit() {
+	  _handleSubmit: function _handleSubmit(event) {
+	    event.preventDefault();
 	    SessionActions.login(this.state);
 	  },
 	
@@ -33109,18 +33116,7 @@
 	      React.createElement(
 	        'ul',
 	        null,
-	        Object.keys(this.state.errors).map(function (field) {
-	          return React.createElement(
-	            'li',
-	            { key: field },
-	            field + ' : ' + _this.state.errors[field].reduce(function () {
-	              var accum = arguments.length <= 0 || arguments[0] === undefined ? "" : arguments[0];
-	              var error = arguments[1];
-	
-	              return accum + error;
-	            })
-	          );
-	        })
+	        parseErrors(this.state.errors)
 	      ),
 	      React.createElement(
 	        'form',
@@ -33136,6 +33132,22 @@
 	    );
 	  }
 	});
+	
+	function parseErrors(errors) {
+	  return Object.keys(errors).map(function (field) {
+	    var parsedErrorsForField = errors[field].join(", ");
+	    if (field === 'base') return React.createElement(
+	      'li',
+	      { key: field },
+	      parsedErrorsForField
+	    );
+	    return React.createElement(
+	      'li',
+	      { key: field },
+	      field + ' ' + parsedErrorsForField
+	    );
+	  });
+	};
 	
 	module.exports = LoginForm;
 
