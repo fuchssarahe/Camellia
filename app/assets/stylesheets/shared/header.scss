@@ -5,23 +5,22 @@
   align-items: center;
   border-bottom: 3px solid lightgray;
   height: 60px;
+  padding: 0 20px;
 }
 
 .auth-buttons {
   list-style: none;
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
 }
 
 .site-nav li {
   height: 60px;
   margin: auto;
+  display: flex;
+  align-items: center;
 }
 
 .site-nav img {
   max-height: 30px;
   width: auto;
-  // padding: 10px 20px;
 }

@@ -11,10 +11,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160628185709) do
+ActiveRecord::Schema.define(version: 20160629212923) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "teas", force: :cascade do |t|
+    t.string   "name",                          null: false
+    t.text     "description",                   null: false
+    t.string   "type",                          null: false
+    t.string   "region",                        null: false
+    t.integer  "steep_time",                    null: false
+    t.integer  "temperature",                   null: false
+    t.integer  "leaf_quantity",                 null: false
+    t.integer  "leaf_density",                  null: false
+    t.boolean  "retailer",      default: false, null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
+  add_index "teas", ["name"], name: "index_teas_on_name", unique: true, using: :btree
+  add_index "teas", ["region"], name: "index_teas_on_region", using: :btree
+  add_index "teas", ["type"], name: "index_teas_on_type", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "session_token",   null: false
