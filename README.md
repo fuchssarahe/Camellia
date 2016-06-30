@@ -65,7 +65,7 @@ At a minimum, this app will satisfy the following criteria:
 - [x] create `Tea` model
 - [x] seed the database with a small amount of test data
 - [x] CRUD API for teas (`TeasController`)
-- [ ] jBuilder views for teas
+- [x] jBuilder views for teas
 - [ ] setup Webpack & Flux scaffold
 - [ ] setup `APIUtil` to interact with the API
 - [ ] test out API interaction in the console.

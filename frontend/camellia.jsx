@@ -4,7 +4,9 @@ const React = require('react'),
       App = require('./components/app'),
       SessionActions = require('./actions/session_actions'),
       AuthForm = require('./components/auth_form'),
-      SessionStore = require('./stores/session_store');
+      SessionStore = require('./stores/session_store'),
+      TeaStore = window.store = require('./stores/tea_store'),
+      TeaActions = window.actions = require('./actions/tea_actions');
 
 const routes =
   <Route path='/' component={App} >
