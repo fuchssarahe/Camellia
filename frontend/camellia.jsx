@@ -5,13 +5,18 @@ const React = require('react'),
       SessionActions = require('./actions/session_actions'),
       AuthForm = require('./components/auth_form'),
       SessionStore = require('./stores/session_store'),
-      TeaIndex = require('./components/tea_index');
+      TeaIndex = require('./components/tea_index'),
+      TeaShow = require('./components/tea_show'),
+      TeaForm = require('./components/tea_form');
 
 const routes =
   <Route path='/' component={App} >
     <Route path='signup' component={AuthForm} onEnter={ensureNotLoggedIn} />
     <Route path='login' component={AuthForm} onEnter={ensureNotLoggedIn} />
-    <Route path='teas' component={TeaIndex} onEnter={ensureLoggedIn} />
+    <Route path='teas' component={TeaIndex} >
+      <Route path='new' component={TeaForm} />
+    </Route>
+    <Route path='teas/:id' component={TeaShow} />
   </Route>;
 
 $(

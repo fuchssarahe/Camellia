@@ -54,14 +54,21 @@
 	    SessionActions = __webpack_require__(254),
 	    AuthForm = __webpack_require__(261),
 	    SessionStore = __webpack_require__(232),
-	    TeaIndex = __webpack_require__(266);
+	    TeaIndex = __webpack_require__(266),
+	    TeaShow = __webpack_require__(268),
+	    TeaForm = __webpack_require__(269);
 	
 	var routes = React.createElement(
 	  _reactRouter.Route,
 	  { path: '/', component: App },
 	  React.createElement(_reactRouter.Route, { path: 'signup', component: AuthForm, onEnter: ensureNotLoggedIn }),
 	  React.createElement(_reactRouter.Route, { path: 'login', component: AuthForm, onEnter: ensureNotLoggedIn }),
-	  React.createElement(_reactRouter.Route, { path: 'teas', component: TeaIndex, onEnter: ensureLoggedIn })
+	  React.createElement(
+	    _reactRouter.Route,
+	    { path: 'teas', component: TeaIndex },
+	    React.createElement(_reactRouter.Route, { path: 'new', component: TeaForm })
+	  ),
+	  React.createElement(_reactRouter.Route, { path: 'teas/:id', component: TeaShow })
 	);
 	
 	$(function () {
@@ -33420,15 +33427,28 @@
 	    // this.errorListener.remove();
 	  },
 	
+	  _navToTeaForm: function _navToTeaForm() {
+	    window.location.hash = 'teas/new';
+	  },
+	
 	  render: function render() {
 	    var _this = this;
 	
 	    return React.createElement(
-	      'ul',
+	      'div',
 	      null,
-	      Object.keys(this.state.teas).map(function (teaId) {
-	        return React.createElement(TeaIndexItem, { key: teaId, tea: _this.state.teas[teaId] });
-	      })
+	      React.createElement(
+	        'ul',
+	        null,
+	        Object.keys(this.state.teas).map(function (teaId) {
+	          return React.createElement(TeaIndexItem, { key: teaId, tea: _this.state.teas[teaId] });
+	        })
+	      ),
+	      React.createElement(
+	        'button',
+	        { onClick: this._navToTeaForm },
+	        'Create New Tea'
+	      )
 	    );
 	  }
 	});
@@ -33441,6 +33461,8 @@
 
 	'use strict';
 	
+	var _reactRouter = __webpack_require__(1);
+	
 	var React = __webpack_require__(4),
 	    TeaStore = __webpack_require__(263);
 	// ErrorStore = require('../stores/error_store');
@@ -33450,25 +33472,200 @@
 	
 	  componentWillMount: function componentWillMount() {
 	    this.listener = TeaStore.addListener();
-	    this.errorListener = TeaStore.addListener();
+	    // this.errorListener = ErrorStore.addListener();
 	  },
 	
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.listener.remove();
-	    this.errorListener.remove();
+	    // this.errorListener.remove();
 	  },
 	
 	  render: function render() {
 	    return React.createElement(
 	      'li',
 	      null,
-	      'Tea: ',
-	      this.props.tea.name
+	      React.createElement(
+	        _reactRouter.Link,
+	        { to: '/teas/' + this.props.tea.id },
+	        'Tea: ',
+	        this.props.tea.name
+	      )
 	    );
 	  }
 	});
 	
 	module.exports = TeaIndexItem;
+
+/***/ },
+/* 268 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	// import { Link } from 'react-router';
+	var React = __webpack_require__(4),
+	    TeaStore = __webpack_require__(263),
+	    TeaActions = __webpack_require__(265);
+	// ErrorStore = require('../stores/error_store');
+	
+	var TeaShow = React.createClass({
+	  displayName: 'TeaShow',
+	
+	  getInitialState: function getInitialState() {
+	    return { tea: TeaStore.find(parseInt(this.props.params.id)) };
+	  },
+	
+	  componentWillMount: function componentWillMount() {
+	    TeaActions.fetchSingleTea(parseInt(this.props.params.id));
+	    this.listener = TeaStore.addListener(this._onChange);
+	    // this.errorListener = ErrorStore.addListener();
+	  },
+	
+	  _onChange: function _onChange() {
+	    this.setState({ tea: TeaStore.find(parseInt(this.props.params.id)) });
+	  },
+	
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.listener.remove();
+	    // this.errorListener.remove();
+	  },
+	
+	  render: function render() {
+	    console.log(this.state.tea);
+	    return React.createElement(
+	      'div',
+	      null,
+	      'Hello from the show page'
+	    );
+	  }
+	});
+	
+	module.exports = TeaShow;
+
+/***/ },
+/* 269 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	var React = __webpack_require__(4),
+	    ErrorStore = __webpack_require__(260),
+	    TeaActions = __webpack_require__(265);
+	
+	var TeaForm = React.createClass({
+	  displayName: 'TeaForm',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      name: '',
+	      tea_type: '',
+	      region: '',
+	      steep_time: '',
+	      temperature: '',
+	      leaf_quantity: '',
+	      leaf_density: '',
+	      retailer: '',
+	      errors: ErrorStore.all()
+	    };
+	  },
+	
+	  componentWillMount: function componentWillMount() {
+	    console.log('mounting form');
+	    this.errorListener = ErrorStore.addListener(this._onErrors);
+	  },
+	
+	  _onErrors: function _onErrors() {
+	    this.setState({ errors: ErrorStore.all() });
+	  },
+	
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.errorListener.remove();
+	  },
+	
+	  _handleInput: function _handleInput(property) {
+	    this.setState(_defineProperty({}, property, event.target.value));
+	  },
+	
+	  _handleSubmit: function _handleSubmit() {
+	    TeaActions.createTea(this.state);
+	    // window.location.history
+	  },
+	
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'p',
+	        null,
+	        'hellow from form'
+	      ),
+	      React.createElement(
+	        'form',
+	        { onSubmit: this._handleSubmit },
+	        React.createElement(
+	          'label',
+	          null,
+	          'name:',
+	          React.createElement('input', { type: 'text', value: this.state.name })
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'description:',
+	          React.createElement('input', { type: 'text', value: this.state.description })
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'tea_type:',
+	          React.createElement('input', { type: 'text', value: this.state.tea_type })
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'region:',
+	          React.createElement('input', { type: 'text', value: this.state.region })
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'steep_time:',
+	          React.createElement('input', { type: 'text', value: this.state.steep_time })
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'temperature:',
+	          React.createElement('input', { type: 'text', value: this.state.temperature })
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'leaf_quantity:',
+	          React.createElement('input', { type: 'text', value: this.state.leaf_quantity })
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'leaf_density:',
+	          React.createElement('input', { type: 'text', value: this.state.leaf_density })
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'retailer:',
+	          React.createElement('input', { type: 'text', value: this.state.retailer })
+	        ),
+	        React.createElement('input', { type: 'submit', value: 'Create Tea!' })
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = TeaForm;
 
 /***/ }
 /******/ ]);
