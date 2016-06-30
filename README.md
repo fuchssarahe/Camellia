@@ -14,7 +14,7 @@ At a minimum, this app will satisfy the following criteria:
 - [x] New account creation, login, and guest/demo login
 - [ ] A production README
 - [ ] Teas
-  - [ ] teas hold information on type, region, and steep specifications
+  - [x] teas hold information on type, region, and steep specifications
   - [ ] each tea has a profile page listing details and reviews
 - [ ] Tea Search
   - [ ] search for by tea name
@@ -66,17 +66,17 @@ At a minimum, this app will satisfy the following criteria:
 - [x] seed the database with a small amount of test data
 - [x] CRUD API for teas (`TeasController`)
 - [x] jBuilder views for teas
-- [ ] setup Webpack & Flux scaffold
-- [ ] setup `APIUtil` to interact with the API
-- [ ] test out API interaction in the console.
+- [x] setup Webpack & Flux scaffold
+- [x] setup `APIUtil` to interact with the API
+- [x] test out API interaction in the console.
 
 ### Phase 3: Tea Flux Architecture and Router (2.5 days, W2 T 6pm)
 
 **Objective:** Teas can be read through the
 user interface.
 
-- [ ] setup the flux loop with skeleton files
-- [ ] setup React Router
+- [x] setup the flux loop with skeleton files
+- [x] setup React Router
 - [ ] implement each tea component, building out the flux loop as needed.
   - [ ] `TeasIndex`
   - [ ] `TeaIndexItem`
