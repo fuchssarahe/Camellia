@@ -23,8 +23,15 @@ const App = React.createClass({
     window.location.hash = '/login';
   },
 
+  _navToTeasIndex: function () {
+    if (!window.location.hash.includes('teas')) {
+      window.location.hash = '/teas';
+    }
+  },
+
   _logout: function () {
     SessionActions.logout();
+    window.location.hash = '/';
   },
 
   _loginGuest: function () {
@@ -51,9 +58,11 @@ const App = React.createClass({
       <div>
         <header className="site-nav">
           <img src="https://raw.githubusercontent.com/fuchssarahe/Camellia/master/app/assets/images/camellia_logo.png" alt="Camellia Logo" />
+          <label for='search-bar'>Search:
+            <input type='text' onChange={this._navToTeasIndex} id='search-bar'/>
+          </label>
           {buttons}
         </header>
-        <h1>{greeting}</h1>
         {this.props.children}
       </div>)
   }

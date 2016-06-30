@@ -54,14 +54,14 @@
 	    SessionActions = __webpack_require__(254),
 	    AuthForm = __webpack_require__(261),
 	    SessionStore = __webpack_require__(232),
-	    TeaStore = window.store = __webpack_require__(263),
-	    TeaActions = window.actions = __webpack_require__(265);
+	    TeaIndex = __webpack_require__(266);
 	
 	var routes = React.createElement(
 	  _reactRouter.Route,
 	  { path: '/', component: App },
 	  React.createElement(_reactRouter.Route, { path: 'signup', component: AuthForm, onEnter: ensureNotLoggedIn }),
-	  React.createElement(_reactRouter.Route, { path: 'login', component: AuthForm, onEnter: ensureNotLoggedIn })
+	  React.createElement(_reactRouter.Route, { path: 'login', component: AuthForm, onEnter: ensureNotLoggedIn }),
+	  React.createElement(_reactRouter.Route, { path: 'teas', component: TeaIndex, onEnter: ensureLoggedIn })
 	);
 	
 	$(function () {
@@ -25989,8 +25989,15 @@
 	    window.location.hash = '/login';
 	  },
 	
+	  _navToTeasIndex: function _navToTeasIndex() {
+	    if (!window.location.hash.includes('teas')) {
+	      window.location.hash = '/teas';
+	    }
+	  },
+	
 	  _logout: function _logout() {
 	    SessionActions.logout();
+	    window.location.hash = '/';
 	  },
 	
 	  _loginGuest: function _loginGuest() {
@@ -26049,12 +26056,13 @@
 	        'header',
 	        { className: 'site-nav' },
 	        React.createElement('img', { src: 'https://raw.githubusercontent.com/fuchssarahe/Camellia/master/app/assets/images/camellia_logo.png', alt: 'Camellia Logo' }),
+	        React.createElement(
+	          'label',
+	          { 'for': 'search-bar' },
+	          'Search:',
+	          React.createElement('input', { type: 'text', onChange: this._navToTeasIndex, id: 'search-bar' })
+	        ),
 	        buttons
-	      ),
-	      React.createElement(
-	        'h1',
-	        null,
-	        greeting
 	      ),
 	      this.props.children
 	    );
@@ -33376,6 +33384,91 @@
 	};
 	
 	module.exports = TeaActions;
+
+/***/ },
+/* 266 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(4),
+	    TeaStore = __webpack_require__(263),
+	    TeaActions = __webpack_require__(265),
+	
+	// ErrorStore = require('../stores/error_store'),
+	TeaIndexItem = __webpack_require__(267);
+	
+	var TeaIndex = React.createClass({
+	  displayName: 'TeaIndex',
+	
+	  getInitialState: function getInitialState() {
+	    return { teas: TeaStore.all() };
+	  },
+	
+	  componentWillMount: function componentWillMount() {
+	    TeaActions.fetchTeas();
+	    this.listener = TeaStore.addListener(this._onChange);
+	    // this.errorListener = TeaStore.addListener();
+	  },
+	
+	  _onChange: function _onChange() {
+	    this.setState({ teas: TeaStore.all() });
+	  },
+	
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.listener.remove();
+	    // this.errorListener.remove();
+	  },
+	
+	  render: function render() {
+	    var _this = this;
+	
+	    return React.createElement(
+	      'ul',
+	      null,
+	      Object.keys(this.state.teas).map(function (teaId) {
+	        return React.createElement(TeaIndexItem, { key: teaId, tea: _this.state.teas[teaId] });
+	      })
+	    );
+	  }
+	});
+	
+	module.exports = TeaIndex;
+
+/***/ },
+/* 267 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(4),
+	    TeaStore = __webpack_require__(263);
+	// ErrorStore = require('../stores/error_store');
+	
+	var TeaIndexItem = React.createClass({
+	  displayName: 'TeaIndexItem',
+	
+	  componentWillMount: function componentWillMount() {
+	    this.listener = TeaStore.addListener();
+	    this.errorListener = TeaStore.addListener();
+	  },
+	
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.listener.remove();
+	    this.errorListener.remove();
+	  },
+	
+	  render: function render() {
+	    return React.createElement(
+	      'li',
+	      null,
+	      'Tea: ',
+	      this.props.tea.name
+	    );
+	  }
+	});
+	
+	module.exports = TeaIndexItem;
 
 /***/ }
 /******/ ]);
