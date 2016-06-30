@@ -1,7 +1,8 @@
 const React = require('react'),
       SessionStore = require('../stores/session_store'),
       ErrorStore = require('../stores/errors_store'),
-      SessionActions = require('../actions/session_actions');
+      SessionActions = require('../actions/session_actions'),
+      Errors = require('./errors');
 
 const AuthForm = React.createClass({
   getInitialState: function () {
@@ -64,14 +65,6 @@ const AuthForm = React.createClass({
       buttonText = "Login"
     }
 
-    let errors = <ul className='errors'>{
-      parseErrors(this.state.errors)
-    }</ul>;
-
-    if (Object.keys(this.state.errors).length === 0) {
-      errors = <div></div>;
-    }
-
     return (
       <div className="modal">
         <div className="modal-content">
@@ -81,7 +74,7 @@ const AuthForm = React.createClass({
               <div className="modal-close fade" onClick={this._closeModal}>&#10005;</div>
             </div>
           </header>
-          {errors}
+          <Errors errors={this.state.errors} />
           <form onSubmit={this._handleSubmit} >
              <input type="text"
                     onChange={event => this._handleFormChange(event, 'username')}
@@ -101,16 +94,5 @@ const AuthForm = React.createClass({
     )
   }
 });
-
-function parseErrors(errors) {
-  return Object.keys(errors).map( (field) => {
-    const parsedErrorsForField = errors[field].join(", ")
-    if (field === 'base') {
-      return <li key={field}>{'Oops! ' + parsedErrorsForField[0].toUpperCase() + parsedErrorsForField.slice(1) + '!'}</li>
-    };
-
-    return <li key={field}>{'Oops! ' + field[0].toUpperCase() + field.slice(1) + ' ' + parsedErrorsForField + '!'}</li>;
-  })
-}
 
 module.exports = AuthForm;
