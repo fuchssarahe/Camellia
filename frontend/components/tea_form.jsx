@@ -7,13 +7,14 @@ const TeaForm = React.createClass({
     return {
       name: '',
       tea_type: '',
+      description: '',
       region: '',
       steep_time: '',
       temperature: '',
       leaf_quantity: '',
       leaf_density: '',
       retailer: '',
-      errors: ErrorStore.all()
+      errors: ErrorStore.formErrors()
     }
   },
 
@@ -23,14 +24,16 @@ const TeaForm = React.createClass({
   },
 
   _onErrors: function () {
-    this.setState({errors: ErrorStore.all()})
+    if (ErrorStore.form() === 'newTea') {
+      this.setState({errors: ErrorStore.formErrors('newTea') });
+    }
   },
 
   componentWillUnmount: function () {
     this.errorListener.remove();
   },
 
-  _handleInput: function (property) {
+  _handleInput: function (event, property) {
     this.setState({[property]: event.target.value})
   },
 
@@ -41,48 +44,72 @@ const TeaForm = React.createClass({
 
   render: function () {
     return (
-      <div>
-        <p>hellow from form</p>
-        <form onSubmit={this._handleSubmit} >
-          <label>name:
-            <input type="text" value={this.state.name} />
-          </label>
+      <form onSubmit={this._handleSubmit} className="tea_form">
+        <label>Name:
+          <input type="text"
+                 onChange={(event) => this._handleInput(event, 'name')}
+                 value={this.state.name}
+                 placeholder='Dragonwell'/>
+        </label>
 
-          <label>description:
-            <input type="text" value={this.state.description} />
-          </label>
+        <label>Description:
+          <input type="text"
+                 onChange={(event) => this._handleInput(event, 'description')}
+                 value={this.state.description}
+                 placeholder='Dragonwell is a variety of pan-roasted green tea...'/>
+        </label>
 
-          <label>tea_type:
-            <input type="text" value={this.state.tea_type} />
-          </label>
+        <label>Type:
+          <input type="text"
+                 onChange={(event) => this._handleInput(event, 'tea_type')}
+                 value={this.state.tea_type}
+                 placeholder='Green'/>
+        </label>
 
-          <label>region:
-            <input type="text" value={this.state.region} />
-          </label>
+        <label>Region:
+          <input type="text"
+                 onChange={(event) => this._handleInput(event, 'region')}
+                 value={this.state.region}
+                 placeholder='China'/>
+        </label>
 
-          <label>steep_time:
-            <input type="text" value={this.state.steep_time} />
-          </label>
+        <label>Steep Time (in minutes):
+          <input type="text"
+                 onChange={(event) => this._handleInput(event, 'steep_time')}
+                 value={this.state.steep_time}
+                 placeholder=''/>
+        </label>
 
-          <label>temperature:
-            <input type="text" value={this.state.temperature} />
-          </label>
+        <label>Temperature (in Celcius):
+          <input type="text"
+                 onChange={(event) => this._handleInput(event, 'temperature')}
+                 value={this.state.temperature}
+                 placeholder='80'/>
+        </label>
 
-          <label>leaf_quantity:
-            <input type="text" value={this.state.leaf_quantity} />
-          </label>
+        <label>Leaf Quantity (teaspoons per 8 ounces of liquid):
+          <input type="text"
+                 onChange={(event) => this._handleInput(event, 'leaf_quantity')}
+                 value={this.state.leaf_quantity}
+                 placeholder='Leaf Quantity'/>
+        </label>
 
-          <label>leaf_density:
-            <input type="text" value={this.state.leaf_density} />
-          </label>
+        <label>Leaf Density (grams per ounce):
+          <input type="text"
+                 onChange={(event) => this._handleInput(event, 'leaf_density')}
+                 value={this.state.leaf_density}
+                 placeholder='Leaf Density'/>
+        </label>
 
-          <label>retailer:
-            <input type="text" value={this.state.retailer} />
-          </label>
+        <label>Retailer:
+          <input type="text"
+                 onChange={(event) => this._handleInput(event, 'retailer')}
+                 value={this.state.retailer}
+                 placeholder='Retailer'/>
+        </label>
 
-          <input type="submit" value="Create Tea!" />
-        </form>
-      </div>
+        <input type="submit" value="Create Tea!" />
+      </form>
     )
   }
 });
