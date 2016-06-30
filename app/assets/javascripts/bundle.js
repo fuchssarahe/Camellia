@@ -51,16 +51,18 @@
 	var React = __webpack_require__(4),
 	    ReactDOM = __webpack_require__(100),
 	    App = __webpack_require__(230),
-	    SessionActions = __webpack_require__(254),
-	    AuthForm = __webpack_require__(261),
-	    SessionStore = __webpack_require__(232),
-	    TeaIndex = __webpack_require__(266),
-	    TeaShow = __webpack_require__(268),
-	    TeaForm = __webpack_require__(269);
+	    Splash = __webpack_require__(268),
+	    SessionActions = __webpack_require__(231),
+	    AuthForm = __webpack_require__(258),
+	    SessionStore = __webpack_require__(240),
+	    TeaIndex = __webpack_require__(260),
+	    TeaShow = __webpack_require__(267),
+	    TeaForm = __webpack_require__(265);
 	
 	var routes = React.createElement(
 	  _reactRouter.Route,
 	  { path: '/', component: App },
+	  React.createElement(_reactRouter.IndexRoute, { component: Splash }),
 	  React.createElement(_reactRouter.Route, { path: 'signup', component: AuthForm, onEnter: ensureNotLoggedIn }),
 	  React.createElement(_reactRouter.Route, { path: 'login', component: AuthForm, onEnter: ensureNotLoggedIn }),
 	  React.createElement(
@@ -25969,9 +25971,11 @@
 
 	'use strict';
 	
+	var _reactRouter = __webpack_require__(1);
+	
 	var React = __webpack_require__(4),
-	    SessionActions = __webpack_require__(254),
-	    SessionStore = __webpack_require__(232);
+	    SessionActions = __webpack_require__(231),
+	    SessionStore = __webpack_require__(240);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -25997,7 +26001,7 @@
 	  },
 	
 	  _navToTeasIndex: function _navToTeasIndex() {
-	    if (!window.location.hash.includes('teas')) {
+	    if (!window.location.hash.includes('teas') || window.location.hash.lastIndexOf('?') >= 6) {
 	      window.location.hash = '/teas';
 	    }
 	  },
@@ -26062,7 +26066,11 @@
 	      React.createElement(
 	        'header',
 	        { className: 'site-nav' },
-	        React.createElement('img', { src: 'https://raw.githubusercontent.com/fuchssarahe/Camellia/master/app/assets/images/camellia_logo.png', alt: 'Camellia Logo' }),
+	        React.createElement(
+	          _reactRouter.Link,
+	          { to: '/' },
+	          React.createElement('img', { src: 'https://raw.githubusercontent.com/fuchssarahe/Camellia/master/app/assets/images/camellia_logo.png', alt: 'Camellia Logo' })
+	        ),
 	        React.createElement(
 	          'label',
 	          { 'for': 'search-bar' },
@@ -26079,15 +26087,477 @@
 	module.exports = App;
 
 /***/ },
-/* 231 */,
+/* 231 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Dispatcher = __webpack_require__(232),
+	    SessionConstants = __webpack_require__(236),
+	    SessionApiUtil = __webpack_require__(237),
+	    ErrorActions = __webpack_require__(238);
+	
+	var SessionActions = {
+	  signup: function signup(user) {
+	    SessionApiUtil.createUser(user, this.receiveCurrentUser, ErrorActions.setErrors);
+	  },
+	
+	  login: function login(user) {
+	    SessionApiUtil.createSession(user, this.receiveCurrentUser, ErrorActions.setErrors);
+	  },
+	
+	  logout: function logout() {
+	    SessionApiUtil.destroySession(this.receiveEmptyUser, ErrorActions.setErrors);
+	  },
+	
+	  receiveCurrentUser: function receiveCurrentUser(user) {
+	    ErrorActions.clearErrors();
+	    var payload = {
+	      actionType: SessionConstants.LOGIN,
+	      user: user
+	    };
+	    Dispatcher.dispatch(payload);
+	  },
+	
+	  receiveEmptyUser: function receiveEmptyUser(emptyUser) {
+	    ErrorActions.clearErrors();
+	    var payload = {
+	      actionType: SessionConstants.LOGOUT,
+	      user: emptyUser
+	    };
+	    Dispatcher.dispatch(payload);
+	  }
+	};
+	
+	module.exports = SessionActions;
+
+/***/ },
 /* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Store = __webpack_require__(233).Store,
-	    SessionConstants = __webpack_require__(255),
-	    Dispatcher = __webpack_require__(251);
+	var Dispatcher = __webpack_require__(233).Dispatcher;
+	module.exports = new Dispatcher();
+
+/***/ },
+/* 233 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright (c) 2014-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 */
+	
+	module.exports.Dispatcher = __webpack_require__(234);
+
+
+/***/ },
+/* 234 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright (c) 2014-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule Dispatcher
+	 * 
+	 * @preventMunge
+	 */
+	
+	'use strict';
+	
+	exports.__esModule = true;
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	
+	var invariant = __webpack_require__(235);
+	
+	var _prefix = 'ID_';
+	
+	/**
+	 * Dispatcher is used to broadcast payloads to registered callbacks. This is
+	 * different from generic pub-sub systems in two ways:
+	 *
+	 *   1) Callbacks are not subscribed to particular events. Every payload is
+	 *      dispatched to every registered callback.
+	 *   2) Callbacks can be deferred in whole or part until other callbacks have
+	 *      been executed.
+	 *
+	 * For example, consider this hypothetical flight destination form, which
+	 * selects a default city when a country is selected:
+	 *
+	 *   var flightDispatcher = new Dispatcher();
+	 *
+	 *   // Keeps track of which country is selected
+	 *   var CountryStore = {country: null};
+	 *
+	 *   // Keeps track of which city is selected
+	 *   var CityStore = {city: null};
+	 *
+	 *   // Keeps track of the base flight price of the selected city
+	 *   var FlightPriceStore = {price: null}
+	 *
+	 * When a user changes the selected city, we dispatch the payload:
+	 *
+	 *   flightDispatcher.dispatch({
+	 *     actionType: 'city-update',
+	 *     selectedCity: 'paris'
+	 *   });
+	 *
+	 * This payload is digested by `CityStore`:
+	 *
+	 *   flightDispatcher.register(function(payload) {
+	 *     if (payload.actionType === 'city-update') {
+	 *       CityStore.city = payload.selectedCity;
+	 *     }
+	 *   });
+	 *
+	 * When the user selects a country, we dispatch the payload:
+	 *
+	 *   flightDispatcher.dispatch({
+	 *     actionType: 'country-update',
+	 *     selectedCountry: 'australia'
+	 *   });
+	 *
+	 * This payload is digested by both stores:
+	 *
+	 *   CountryStore.dispatchToken = flightDispatcher.register(function(payload) {
+	 *     if (payload.actionType === 'country-update') {
+	 *       CountryStore.country = payload.selectedCountry;
+	 *     }
+	 *   });
+	 *
+	 * When the callback to update `CountryStore` is registered, we save a reference
+	 * to the returned token. Using this token with `waitFor()`, we can guarantee
+	 * that `CountryStore` is updated before the callback that updates `CityStore`
+	 * needs to query its data.
+	 *
+	 *   CityStore.dispatchToken = flightDispatcher.register(function(payload) {
+	 *     if (payload.actionType === 'country-update') {
+	 *       // `CountryStore.country` may not be updated.
+	 *       flightDispatcher.waitFor([CountryStore.dispatchToken]);
+	 *       // `CountryStore.country` is now guaranteed to be updated.
+	 *
+	 *       // Select the default city for the new country
+	 *       CityStore.city = getDefaultCityForCountry(CountryStore.country);
+	 *     }
+	 *   });
+	 *
+	 * The usage of `waitFor()` can be chained, for example:
+	 *
+	 *   FlightPriceStore.dispatchToken =
+	 *     flightDispatcher.register(function(payload) {
+	 *       switch (payload.actionType) {
+	 *         case 'country-update':
+	 *         case 'city-update':
+	 *           flightDispatcher.waitFor([CityStore.dispatchToken]);
+	 *           FlightPriceStore.price =
+	 *             getFlightPriceStore(CountryStore.country, CityStore.city);
+	 *           break;
+	 *     }
+	 *   });
+	 *
+	 * The `country-update` payload will be guaranteed to invoke the stores'
+	 * registered callbacks in order: `CountryStore`, `CityStore`, then
+	 * `FlightPriceStore`.
+	 */
+	
+	var Dispatcher = (function () {
+	  function Dispatcher() {
+	    _classCallCheck(this, Dispatcher);
+	
+	    this._callbacks = {};
+	    this._isDispatching = false;
+	    this._isHandled = {};
+	    this._isPending = {};
+	    this._lastID = 1;
+	  }
+	
+	  /**
+	   * Registers a callback to be invoked with every dispatched payload. Returns
+	   * a token that can be used with `waitFor()`.
+	   */
+	
+	  Dispatcher.prototype.register = function register(callback) {
+	    var id = _prefix + this._lastID++;
+	    this._callbacks[id] = callback;
+	    return id;
+	  };
+	
+	  /**
+	   * Removes a callback based on its token.
+	   */
+	
+	  Dispatcher.prototype.unregister = function unregister(id) {
+	    !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.unregister(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
+	    delete this._callbacks[id];
+	  };
+	
+	  /**
+	   * Waits for the callbacks specified to be invoked before continuing execution
+	   * of the current callback. This method should only be used by a callback in
+	   * response to a dispatched payload.
+	   */
+	
+	  Dispatcher.prototype.waitFor = function waitFor(ids) {
+	    !this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Must be invoked while dispatching.') : invariant(false) : undefined;
+	    for (var ii = 0; ii < ids.length; ii++) {
+	      var id = ids[ii];
+	      if (this._isPending[id]) {
+	        !this._isHandled[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Circular dependency detected while ' + 'waiting for `%s`.', id) : invariant(false) : undefined;
+	        continue;
+	      }
+	      !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
+	      this._invokeCallback(id);
+	    }
+	  };
+	
+	  /**
+	   * Dispatches a payload to all registered callbacks.
+	   */
+	
+	  Dispatcher.prototype.dispatch = function dispatch(payload) {
+	    !!this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch.') : invariant(false) : undefined;
+	    this._startDispatching(payload);
+	    try {
+	      for (var id in this._callbacks) {
+	        if (this._isPending[id]) {
+	          continue;
+	        }
+	        this._invokeCallback(id);
+	      }
+	    } finally {
+	      this._stopDispatching();
+	    }
+	  };
+	
+	  /**
+	   * Is this Dispatcher currently dispatching.
+	   */
+	
+	  Dispatcher.prototype.isDispatching = function isDispatching() {
+	    return this._isDispatching;
+	  };
+	
+	  /**
+	   * Call the callback stored with the given id. Also do some internal
+	   * bookkeeping.
+	   *
+	   * @internal
+	   */
+	
+	  Dispatcher.prototype._invokeCallback = function _invokeCallback(id) {
+	    this._isPending[id] = true;
+	    this._callbacks[id](this._pendingPayload);
+	    this._isHandled[id] = true;
+	  };
+	
+	  /**
+	   * Set up bookkeeping needed when dispatching.
+	   *
+	   * @internal
+	   */
+	
+	  Dispatcher.prototype._startDispatching = function _startDispatching(payload) {
+	    for (var id in this._callbacks) {
+	      this._isPending[id] = false;
+	      this._isHandled[id] = false;
+	    }
+	    this._pendingPayload = payload;
+	    this._isDispatching = true;
+	  };
+	
+	  /**
+	   * Clear bookkeeping used for dispatching.
+	   *
+	   * @internal
+	   */
+	
+	  Dispatcher.prototype._stopDispatching = function _stopDispatching() {
+	    delete this._pendingPayload;
+	    this._isDispatching = false;
+	  };
+	
+	  return Dispatcher;
+	})();
+	
+	module.exports = Dispatcher;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ },
+/* 235 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule invariant
+	 */
+	
+	"use strict";
+	
+	/**
+	 * Use invariant() to assert state which your program assumes to be true.
+	 *
+	 * Provide sprintf-style format (only %s is supported) and arguments
+	 * to provide information about what broke and what you were
+	 * expecting.
+	 *
+	 * The invariant message will be stripped in production, but the invariant
+	 * will remain to ensure logic does not differ in production.
+	 */
+	
+	var invariant = function (condition, format, a, b, c, d, e, f) {
+	  if (process.env.NODE_ENV !== 'production') {
+	    if (format === undefined) {
+	      throw new Error('invariant requires an error message argument');
+	    }
+	  }
+	
+	  if (!condition) {
+	    var error;
+	    if (format === undefined) {
+	      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
+	    } else {
+	      var args = [a, b, c, d, e, f];
+	      var argIndex = 0;
+	      error = new Error('Invariant Violation: ' + format.replace(/%s/g, function () {
+	        return args[argIndex++];
+	      }));
+	    }
+	
+	    error.framesToPop = 1; // we don't care about invariant's own frame
+	    throw error;
+	  }
+	};
+	
+	module.exports = invariant;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ },
+/* 236 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	var SessionConstants = {
+	  LOGIN: "LOGIN",
+	  LOGOUT: "LOGOUT"
+	};
+	
+	module.exports = SessionConstants;
+
+/***/ },
+/* 237 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var SessionApiUtil = {
+	  createUser: function createUser(user, callback, errorCallback) {
+	    $.ajax({
+	      type: 'POST',
+	      url: 'api/users',
+	      data: { user: user },
+	      success: callback,
+	      error: function error(resp) {
+	        return errorCallback('signup', resp);
+	      }
+	    });
+	  },
+	
+	  createSession: function createSession(user, callback, errorCallback) {
+	    $.ajax({
+	      type: 'POST',
+	      url: 'api/session',
+	      data: { user: user },
+	      success: callback,
+	      error: function error(resp) {
+	        return errorCallback('login', resp);
+	      }
+	    });
+	  },
+	
+	  destroySession: function destroySession(callback, errorCallback) {
+	    $.ajax({
+	      type: 'DELETE',
+	      url: 'api/session',
+	      success: callback,
+	      error: function error(resp) {
+	        return errorCallback('logout', resp);
+	      }
+	    });
+	  }
+	
+	};
+	
+	module.exports = SessionApiUtil;
+
+/***/ },
+/* 238 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var ErrorConstants = __webpack_require__(239),
+	    Dispatcher = __webpack_require__(232);
+	
+	var ErrorActions = {
+	  setErrors: function setErrors(form, error) {
+	    var payload = {
+	      actionType: ErrorConstants.SET_ERRORS,
+	      form: form,
+	      errors: error.responseJSON
+	    };
+	    Dispatcher.dispatch(payload);
+	  },
+	
+	  clearErrors: function clearErrors() {
+	    var payload = {
+	      actionType: ErrorConstants.CLEAR_ERRORS
+	    };
+	    Dispatcher.dispatch(payload);
+	  }
+	};
+	
+	module.exports = ErrorActions;
+
+/***/ },
+/* 239 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var ErrorConstants = {
+	  SET_ERRORS: 'SET_ERRORS',
+	  CLEAR_ERRORS: 'CLEAR_ERRORS'
+	};
+	
+	module.exports = ErrorConstants;
+
+/***/ },
+/* 240 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Store = __webpack_require__(241).Store,
+	    SessionConstants = __webpack_require__(236),
+	    Dispatcher = __webpack_require__(232);
 	
 	var SessionStore = new Store(Dispatcher);
 	
@@ -26127,7 +26597,7 @@
 	module.exports = SessionStore;
 
 /***/ },
-/* 233 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26139,15 +26609,15 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Container = __webpack_require__(234);
-	module.exports.MapStore = __webpack_require__(238);
-	module.exports.Mixin = __webpack_require__(250);
-	module.exports.ReduceStore = __webpack_require__(239);
-	module.exports.Store = __webpack_require__(240);
+	module.exports.Container = __webpack_require__(242);
+	module.exports.MapStore = __webpack_require__(245);
+	module.exports.Mixin = __webpack_require__(257);
+	module.exports.ReduceStore = __webpack_require__(246);
+	module.exports.Store = __webpack_require__(247);
 
 
 /***/ },
-/* 234 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26169,10 +26639,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStoreGroup = __webpack_require__(235);
+	var FluxStoreGroup = __webpack_require__(243);
 	
-	var invariant = __webpack_require__(236);
-	var shallowEqual = __webpack_require__(237);
+	var invariant = __webpack_require__(235);
+	var shallowEqual = __webpack_require__(244);
 	
 	var DEFAULT_OPTIONS = {
 	  pure: true,
@@ -26330,7 +26800,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 235 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26349,7 +26819,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(236);
+	var invariant = __webpack_require__(235);
 	
 	/**
 	 * FluxStoreGroup allows you to execute a callback on every dispatch after
@@ -26411,62 +26881,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 236 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule invariant
-	 */
-	
-	"use strict";
-	
-	/**
-	 * Use invariant() to assert state which your program assumes to be true.
-	 *
-	 * Provide sprintf-style format (only %s is supported) and arguments
-	 * to provide information about what broke and what you were
-	 * expecting.
-	 *
-	 * The invariant message will be stripped in production, but the invariant
-	 * will remain to ensure logic does not differ in production.
-	 */
-	
-	var invariant = function (condition, format, a, b, c, d, e, f) {
-	  if (process.env.NODE_ENV !== 'production') {
-	    if (format === undefined) {
-	      throw new Error('invariant requires an error message argument');
-	    }
-	  }
-	
-	  if (!condition) {
-	    var error;
-	    if (format === undefined) {
-	      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
-	    } else {
-	      var args = [a, b, c, d, e, f];
-	      var argIndex = 0;
-	      error = new Error('Invariant Violation: ' + format.replace(/%s/g, function () {
-	        return args[argIndex++];
-	      }));
-	    }
-	
-	    error.framesToPop = 1; // we don't care about invariant's own frame
-	    throw error;
-	  }
-	};
-	
-	module.exports = invariant;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
-
-/***/ },
-/* 237 */
+/* 244 */
 /***/ function(module, exports) {
 
 	/**
@@ -26521,7 +26936,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 238 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26542,10 +26957,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxReduceStore = __webpack_require__(239);
-	var Immutable = __webpack_require__(249);
+	var FluxReduceStore = __webpack_require__(246);
+	var Immutable = __webpack_require__(256);
 	
-	var invariant = __webpack_require__(236);
+	var invariant = __webpack_require__(235);
 	
 	/**
 	 * This is a simple store. It allows caching key value pairs. An implementation
@@ -26671,7 +27086,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 239 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26692,10 +27107,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStore = __webpack_require__(240);
+	var FluxStore = __webpack_require__(247);
 	
-	var abstractMethod = __webpack_require__(248);
-	var invariant = __webpack_require__(236);
+	var abstractMethod = __webpack_require__(255);
+	var invariant = __webpack_require__(235);
 	
 	var FluxReduceStore = (function (_FluxStore) {
 	  _inherits(FluxReduceStore, _FluxStore);
@@ -26778,7 +27193,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 240 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26797,11 +27212,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var _require = __webpack_require__(241);
+	var _require = __webpack_require__(248);
 	
 	var EventEmitter = _require.EventEmitter;
 	
-	var invariant = __webpack_require__(236);
+	var invariant = __webpack_require__(235);
 	
 	/**
 	 * This class should be extended by the stores in your application, like so:
@@ -26961,7 +27376,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 241 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26974,14 +27389,14 @@
 	 */
 	
 	var fbemitter = {
-	  EventEmitter: __webpack_require__(242)
+	  EventEmitter: __webpack_require__(249)
 	};
 	
 	module.exports = fbemitter;
 
 
 /***/ },
-/* 242 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27000,11 +27415,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var EmitterSubscription = __webpack_require__(243);
-	var EventSubscriptionVendor = __webpack_require__(245);
+	var EmitterSubscription = __webpack_require__(250);
+	var EventSubscriptionVendor = __webpack_require__(252);
 	
-	var emptyFunction = __webpack_require__(247);
-	var invariant = __webpack_require__(246);
+	var emptyFunction = __webpack_require__(254);
+	var invariant = __webpack_require__(253);
 	
 	/**
 	 * @class BaseEventEmitter
@@ -27178,7 +27593,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 243 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -27199,7 +27614,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var EventSubscription = __webpack_require__(244);
+	var EventSubscription = __webpack_require__(251);
 	
 	/**
 	 * EmitterSubscription represents a subscription with listener and context data.
@@ -27231,7 +27646,7 @@
 	module.exports = EmitterSubscription;
 
 /***/ },
-/* 244 */
+/* 251 */
 /***/ function(module, exports) {
 
 	/**
@@ -27285,7 +27700,7 @@
 	module.exports = EventSubscription;
 
 /***/ },
-/* 245 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27304,7 +27719,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(246);
+	var invariant = __webpack_require__(253);
 	
 	/**
 	 * EventSubscriptionVendor stores a set of EventSubscriptions that are
@@ -27394,7 +27809,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 246 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27449,7 +27864,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 247 */
+/* 254 */
 /***/ function(module, exports) {
 
 	/**
@@ -27491,7 +27906,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 248 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27508,7 +27923,7 @@
 	
 	'use strict';
 	
-	var invariant = __webpack_require__(236);
+	var invariant = __webpack_require__(235);
 	
 	function abstractMethod(className, methodName) {
 	   true ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Subclasses of %s must override %s() with their own implementation.', className, methodName) : invariant(false) : undefined;
@@ -27518,7 +27933,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 249 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32502,7 +32917,7 @@
 	}));
 
 /***/ },
-/* 250 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -32519,9 +32934,9 @@
 	
 	'use strict';
 	
-	var FluxStoreGroup = __webpack_require__(235);
+	var FluxStoreGroup = __webpack_require__(243);
 	
-	var invariant = __webpack_require__(236);
+	var invariant = __webpack_require__(235);
 	
 	/**
 	 * `FluxContainer` should be preferred over this mixin, but it requires using
@@ -32625,472 +33040,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 251 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Dispatcher = __webpack_require__(252).Dispatcher;
-	module.exports = new Dispatcher();
-
-/***/ },
-/* 252 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright (c) 2014-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 */
-	
-	module.exports.Dispatcher = __webpack_require__(253);
-
-
-/***/ },
-/* 253 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright (c) 2014-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule Dispatcher
-	 * 
-	 * @preventMunge
-	 */
-	
-	'use strict';
-	
-	exports.__esModule = true;
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-	
-	var invariant = __webpack_require__(236);
-	
-	var _prefix = 'ID_';
-	
-	/**
-	 * Dispatcher is used to broadcast payloads to registered callbacks. This is
-	 * different from generic pub-sub systems in two ways:
-	 *
-	 *   1) Callbacks are not subscribed to particular events. Every payload is
-	 *      dispatched to every registered callback.
-	 *   2) Callbacks can be deferred in whole or part until other callbacks have
-	 *      been executed.
-	 *
-	 * For example, consider this hypothetical flight destination form, which
-	 * selects a default city when a country is selected:
-	 *
-	 *   var flightDispatcher = new Dispatcher();
-	 *
-	 *   // Keeps track of which country is selected
-	 *   var CountryStore = {country: null};
-	 *
-	 *   // Keeps track of which city is selected
-	 *   var CityStore = {city: null};
-	 *
-	 *   // Keeps track of the base flight price of the selected city
-	 *   var FlightPriceStore = {price: null}
-	 *
-	 * When a user changes the selected city, we dispatch the payload:
-	 *
-	 *   flightDispatcher.dispatch({
-	 *     actionType: 'city-update',
-	 *     selectedCity: 'paris'
-	 *   });
-	 *
-	 * This payload is digested by `CityStore`:
-	 *
-	 *   flightDispatcher.register(function(payload) {
-	 *     if (payload.actionType === 'city-update') {
-	 *       CityStore.city = payload.selectedCity;
-	 *     }
-	 *   });
-	 *
-	 * When the user selects a country, we dispatch the payload:
-	 *
-	 *   flightDispatcher.dispatch({
-	 *     actionType: 'country-update',
-	 *     selectedCountry: 'australia'
-	 *   });
-	 *
-	 * This payload is digested by both stores:
-	 *
-	 *   CountryStore.dispatchToken = flightDispatcher.register(function(payload) {
-	 *     if (payload.actionType === 'country-update') {
-	 *       CountryStore.country = payload.selectedCountry;
-	 *     }
-	 *   });
-	 *
-	 * When the callback to update `CountryStore` is registered, we save a reference
-	 * to the returned token. Using this token with `waitFor()`, we can guarantee
-	 * that `CountryStore` is updated before the callback that updates `CityStore`
-	 * needs to query its data.
-	 *
-	 *   CityStore.dispatchToken = flightDispatcher.register(function(payload) {
-	 *     if (payload.actionType === 'country-update') {
-	 *       // `CountryStore.country` may not be updated.
-	 *       flightDispatcher.waitFor([CountryStore.dispatchToken]);
-	 *       // `CountryStore.country` is now guaranteed to be updated.
-	 *
-	 *       // Select the default city for the new country
-	 *       CityStore.city = getDefaultCityForCountry(CountryStore.country);
-	 *     }
-	 *   });
-	 *
-	 * The usage of `waitFor()` can be chained, for example:
-	 *
-	 *   FlightPriceStore.dispatchToken =
-	 *     flightDispatcher.register(function(payload) {
-	 *       switch (payload.actionType) {
-	 *         case 'country-update':
-	 *         case 'city-update':
-	 *           flightDispatcher.waitFor([CityStore.dispatchToken]);
-	 *           FlightPriceStore.price =
-	 *             getFlightPriceStore(CountryStore.country, CityStore.city);
-	 *           break;
-	 *     }
-	 *   });
-	 *
-	 * The `country-update` payload will be guaranteed to invoke the stores'
-	 * registered callbacks in order: `CountryStore`, `CityStore`, then
-	 * `FlightPriceStore`.
-	 */
-	
-	var Dispatcher = (function () {
-	  function Dispatcher() {
-	    _classCallCheck(this, Dispatcher);
-	
-	    this._callbacks = {};
-	    this._isDispatching = false;
-	    this._isHandled = {};
-	    this._isPending = {};
-	    this._lastID = 1;
-	  }
-	
-	  /**
-	   * Registers a callback to be invoked with every dispatched payload. Returns
-	   * a token that can be used with `waitFor()`.
-	   */
-	
-	  Dispatcher.prototype.register = function register(callback) {
-	    var id = _prefix + this._lastID++;
-	    this._callbacks[id] = callback;
-	    return id;
-	  };
-	
-	  /**
-	   * Removes a callback based on its token.
-	   */
-	
-	  Dispatcher.prototype.unregister = function unregister(id) {
-	    !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.unregister(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
-	    delete this._callbacks[id];
-	  };
-	
-	  /**
-	   * Waits for the callbacks specified to be invoked before continuing execution
-	   * of the current callback. This method should only be used by a callback in
-	   * response to a dispatched payload.
-	   */
-	
-	  Dispatcher.prototype.waitFor = function waitFor(ids) {
-	    !this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Must be invoked while dispatching.') : invariant(false) : undefined;
-	    for (var ii = 0; ii < ids.length; ii++) {
-	      var id = ids[ii];
-	      if (this._isPending[id]) {
-	        !this._isHandled[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Circular dependency detected while ' + 'waiting for `%s`.', id) : invariant(false) : undefined;
-	        continue;
-	      }
-	      !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
-	      this._invokeCallback(id);
-	    }
-	  };
-	
-	  /**
-	   * Dispatches a payload to all registered callbacks.
-	   */
-	
-	  Dispatcher.prototype.dispatch = function dispatch(payload) {
-	    !!this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch.') : invariant(false) : undefined;
-	    this._startDispatching(payload);
-	    try {
-	      for (var id in this._callbacks) {
-	        if (this._isPending[id]) {
-	          continue;
-	        }
-	        this._invokeCallback(id);
-	      }
-	    } finally {
-	      this._stopDispatching();
-	    }
-	  };
-	
-	  /**
-	   * Is this Dispatcher currently dispatching.
-	   */
-	
-	  Dispatcher.prototype.isDispatching = function isDispatching() {
-	    return this._isDispatching;
-	  };
-	
-	  /**
-	   * Call the callback stored with the given id. Also do some internal
-	   * bookkeeping.
-	   *
-	   * @internal
-	   */
-	
-	  Dispatcher.prototype._invokeCallback = function _invokeCallback(id) {
-	    this._isPending[id] = true;
-	    this._callbacks[id](this._pendingPayload);
-	    this._isHandled[id] = true;
-	  };
-	
-	  /**
-	   * Set up bookkeeping needed when dispatching.
-	   *
-	   * @internal
-	   */
-	
-	  Dispatcher.prototype._startDispatching = function _startDispatching(payload) {
-	    for (var id in this._callbacks) {
-	      this._isPending[id] = false;
-	      this._isHandled[id] = false;
-	    }
-	    this._pendingPayload = payload;
-	    this._isDispatching = true;
-	  };
-	
-	  /**
-	   * Clear bookkeeping used for dispatching.
-	   *
-	   * @internal
-	   */
-	
-	  Dispatcher.prototype._stopDispatching = function _stopDispatching() {
-	    delete this._pendingPayload;
-	    this._isDispatching = false;
-	  };
-	
-	  return Dispatcher;
-	})();
-	
-	module.exports = Dispatcher;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
-
-/***/ },
-/* 254 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Dispatcher = __webpack_require__(251),
-	    SessionConstants = __webpack_require__(255),
-	    SessionApiUtil = __webpack_require__(256),
-	    ErrorActions = __webpack_require__(258);
-	
-	var SessionActions = {
-	  signup: function signup(user) {
-	    SessionApiUtil.createUser(user, this.receiveCurrentUser, ErrorActions.setErrors);
-	  },
-	
-	  login: function login(user) {
-	    SessionApiUtil.createSession(user, this.receiveCurrentUser, ErrorActions.setErrors);
-	  },
-	
-	  logout: function logout() {
-	    SessionApiUtil.destroySession(this.receiveEmptyUser, ErrorActions.setErrors);
-	  },
-	
-	  receiveCurrentUser: function receiveCurrentUser(user) {
-	    ErrorActions.clearErrors();
-	    var payload = {
-	      actionType: SessionConstants.LOGIN,
-	      user: user
-	    };
-	    Dispatcher.dispatch(payload);
-	  },
-	
-	  receiveEmptyUser: function receiveEmptyUser(emptyUser) {
-	    ErrorActions.clearErrors();
-	    var payload = {
-	      actionType: SessionConstants.LOGOUT,
-	      user: emptyUser
-	    };
-	    Dispatcher.dispatch(payload);
-	  }
-	};
-	
-	module.exports = SessionActions;
-
-/***/ },
-/* 255 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	var SessionConstants = {
-	  LOGIN: "LOGIN",
-	  LOGOUT: "LOGOUT"
-	};
-	
-	module.exports = SessionConstants;
-
-/***/ },
-/* 256 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var SessionApiUtil = {
-	  createUser: function createUser(user, callback, errorCallback) {
-	    $.ajax({
-	      type: 'POST',
-	      url: 'api/users',
-	      data: { user: user },
-	      success: callback,
-	      error: function error(resp) {
-	        return errorCallback('signup', resp);
-	      }
-	    });
-	  },
-	
-	  createSession: function createSession(user, callback, errorCallback) {
-	    $.ajax({
-	      type: 'POST',
-	      url: 'api/session',
-	      data: { user: user },
-	      success: callback,
-	      error: function error(resp) {
-	        return errorCallback('login', resp);
-	      }
-	    });
-	  },
-	
-	  destroySession: function destroySession(callback, errorCallback) {
-	    $.ajax({
-	      type: 'DELETE',
-	      url: 'api/session',
-	      success: callback,
-	      error: function error(resp) {
-	        return errorCallback('logout', resp);
-	      }
-	    });
-	  }
-	
-	};
-	
-	module.exports = SessionApiUtil;
-
-/***/ },
-/* 257 */,
 /* 258 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var ErrorConstants = __webpack_require__(259),
-	    Dispatcher = __webpack_require__(251);
-	
-	var ErrorActions = {
-	  setErrors: function setErrors(form, error) {
-	    var payload = {
-	      actionType: ErrorConstants.SET_ERRORS,
-	      form: form,
-	      errors: error.responseJSON
-	    };
-	    Dispatcher.dispatch(payload);
-	  },
-	
-	  clearErrors: function clearErrors() {
-	    var payload = {
-	      actionType: ErrorConstants.CLEAR_ERRORS
-	    };
-	    Dispatcher.dispatch(payload);
-	  }
-	};
-	
-	module.exports = ErrorActions;
-
-/***/ },
-/* 259 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var ErrorConstants = {
-	  SET_ERRORS: 'SET_ERRORS',
-	  CLEAR_ERRORS: 'CLEAR_ERRORS'
-	};
-	
-	module.exports = ErrorConstants;
-
-/***/ },
-/* 260 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Store = __webpack_require__(233).Store,
-	    SessionConstants = __webpack_require__(255),
-	    ErrorConstants = __webpack_require__(259),
-	    Dispatcher = __webpack_require__(251);
-	
-	var ErrorsStore = new Store(Dispatcher);
-	
-	var _errors = {};
-	var _form = '';
-	
-	ErrorsStore.formErrors = function (form) {
-	  var errorsCopy = {};
-	
-	  if (_form === form) {
-	    Object.keys(_errors).map(function (field) {
-	      errorsCopy[field] = _errors[field];
-	    });
-	  }
-	  return errorsCopy;
-	};
-	
-	ErrorsStore.form = function () {
-	  return _form;
-	};
-	
-	ErrorsStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case ErrorConstants.SET_ERRORS:
-	      setErrors(payload.form, payload.errors);
-	      break;
-	    case ErrorConstants.CLEAR_ERRORS:
-	      clearErrors();
-	      break;
-	  }
-	};
-	
-	function setErrors(form, errors) {
-	  _form = form;
-	  _errors = errors;
-	  ErrorsStore.__emitChange();
-	};
-	
-	function clearErrors() {
-	  _form = '';
-	  _errors = {};
-	  ErrorsStore.__emitChange();
-	};
-	
-	module.exports = ErrorsStore;
-
-/***/ },
-/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33098,9 +33048,9 @@
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	var React = __webpack_require__(4),
-	    SessionStore = __webpack_require__(232),
-	    ErrorStore = __webpack_require__(260),
-	    SessionActions = __webpack_require__(254);
+	    SessionStore = __webpack_require__(240),
+	    ErrorStore = __webpack_require__(259),
+	    SessionActions = __webpack_require__(231);
 	
 	var AuthForm = React.createClass({
 	  displayName: 'AuthForm',
@@ -33247,54 +33197,148 @@
 	module.exports = AuthForm;
 
 /***/ },
-/* 262 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var TeaApiUtil = {
-	  fetchTeas: function fetchTeas(callback, errorCallback) {
-	    $.ajax({
-	      type: 'GET',
-	      url: 'api/teas',
-	      success: callback,
-	      error: errorCallback
-	    });
-	  },
-	
-	  getTea: function getTea(id, callback, errorCallback) {
-	    $.ajax({
-	      type: 'GET',
-	      url: 'api/teas/' + id,
-	      success: callback,
-	      error: errorCallback
-	    });
-	  },
-	
-	  createTea: function createTea(tea, callback, errorCallback) {
-	    $.ajax({
-	      type: 'POST',
-	      url: 'api/teas',
-	      data: { tea: tea },
-	      success: callback,
-	      error: function error(err) {
-	        return errorCallback('newTea', err);
-	      }
-	    });
-	  }
-	};
-	
-	module.exports = TeaApiUtil;
-
-/***/ },
-/* 263 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Store = __webpack_require__(233).Store,
-	    TeaConstants = __webpack_require__(264),
-	    Dispatcher = __webpack_require__(251);
+	var Store = __webpack_require__(241).Store,
+	    SessionConstants = __webpack_require__(236),
+	    ErrorConstants = __webpack_require__(239),
+	    Dispatcher = __webpack_require__(232);
+	
+	var ErrorsStore = new Store(Dispatcher);
+	
+	var _errors = {};
+	var _form = '';
+	
+	ErrorsStore.formErrors = function (form) {
+	  var errorsCopy = {};
+	
+	  if (_form === form) {
+	    Object.keys(_errors).map(function (field) {
+	      errorsCopy[field] = _errors[field];
+	    });
+	  }
+	  return errorsCopy;
+	};
+	
+	ErrorsStore.form = function () {
+	  return _form;
+	};
+	
+	ErrorsStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case ErrorConstants.SET_ERRORS:
+	      setErrors(payload.form, payload.errors);
+	      break;
+	    case ErrorConstants.CLEAR_ERRORS:
+	      clearErrors();
+	      break;
+	  }
+	};
+	
+	function setErrors(form, errors) {
+	  _form = form;
+	  _errors = errors;
+	  ErrorsStore.__emitChange();
+	};
+	
+	function clearErrors() {
+	  _form = '';
+	  _errors = {};
+	  ErrorsStore.__emitChange();
+	};
+	
+	module.exports = ErrorsStore;
+
+/***/ },
+/* 260 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(4),
+	    TeaStore = __webpack_require__(261),
+	    TeaActions = __webpack_require__(263),
+	    TeaForm = __webpack_require__(265),
+	
+	// ErrorStore = require('../stores/error_store'),
+	TeaIndexItem = __webpack_require__(266);
+	
+	var TeaIndex = React.createClass({
+	  displayName: 'TeaIndex',
+	
+	  getInitialState: function getInitialState() {
+	    return { teas: TeaStore.all() };
+	  },
+	
+	  componentWillMount: function componentWillMount() {
+	    TeaActions.fetchTeas();
+	    this.listener = TeaStore.addListener(this._onChange);
+	    // this.errorListener = TeaStore.addListener();
+	  },
+	
+	  _onChange: function _onChange() {
+	    this.setState({ teas: TeaStore.all() });
+	  },
+	
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.listener.remove();
+	    // this.errorListener.remove();
+	  },
+	
+	  _navToTeaForm: function _navToTeaForm() {
+	    window.location.hash = 'teas/new';
+	  },
+	
+	  render: function render() {
+	    var _this = this;
+	
+	    var buttonToSave = React.createElement(
+	      'button',
+	      { onClick: this._navToTeaForm },
+	      'Create New Tea'
+	    );
+	    return React.createElement(
+	      'div',
+	      { className: 'cf container' },
+	      React.createElement(
+	        'ul',
+	        { className: 'panel panel_main' },
+	        Object.keys(this.state.teas).map(function (teaId) {
+	          return React.createElement(TeaIndexItem, { key: teaId, tea: _this.state.teas[teaId] });
+	        })
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'panel panel_right' },
+	        React.createElement(
+	          'section',
+	          { className: 'panel_section' },
+	          React.createElement(
+	            'h2',
+	            { className: 'panel_section-header' },
+	            'Can\'t find what you\'re looking for? Add a new tea!'
+	          ),
+	          React.createElement(TeaForm, { className: 'panel_section-content' })
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = TeaIndex;
+
+/***/ },
+/* 261 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Store = __webpack_require__(241).Store,
+	    TeaConstants = __webpack_require__(262),
+	    Dispatcher = __webpack_require__(232);
 	
 	var TeaStore = new Store(Dispatcher);
 	
@@ -33337,7 +33381,7 @@
 	module.exports = TeaStore;
 
 /***/ },
-/* 264 */
+/* 262 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -33350,15 +33394,15 @@
 	module.exports = TeaConstants;
 
 /***/ },
-/* 265 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var TeaApiUtil = __webpack_require__(262),
-	    ErrorActions = __webpack_require__(258),
-	    Dispatcher = __webpack_require__(251),
-	    TeaConstants = __webpack_require__(264);
+	var TeaApiUtil = __webpack_require__(264),
+	    ErrorActions = __webpack_require__(238),
+	    Dispatcher = __webpack_require__(232),
+	    TeaConstants = __webpack_require__(262);
 	
 	var TeaActions = {
 	  fetchTeas: function fetchTeas() {
@@ -33395,248 +33439,47 @@
 	module.exports = TeaActions;
 
 /***/ },
-/* 266 */
-/***/ function(module, exports, __webpack_require__) {
+/* 264 */
+/***/ function(module, exports) {
 
 	'use strict';
 	
-	var React = __webpack_require__(4),
-	    TeaStore = __webpack_require__(263),
-	    TeaActions = __webpack_require__(265),
-	    TeaForm = __webpack_require__(269),
-	
-	// ErrorStore = require('../stores/error_store'),
-	TeaIndexItem = __webpack_require__(267);
-	
-	var TeaIndex = React.createClass({
-	  displayName: 'TeaIndex',
-	
-	  getInitialState: function getInitialState() {
-	    return { teas: TeaStore.all() };
+	var TeaApiUtil = {
+	  fetchTeas: function fetchTeas(callback, errorCallback) {
+	    $.ajax({
+	      type: 'GET',
+	      url: 'api/teas',
+	      success: callback,
+	      error: errorCallback
+	    });
 	  },
 	
-	  componentWillMount: function componentWillMount() {
-	    TeaActions.fetchTeas();
-	    this.listener = TeaStore.addListener(this._onChange);
-	    // this.errorListener = TeaStore.addListener();
+	  getTea: function getTea(id, callback, errorCallback) {
+	    $.ajax({
+	      type: 'GET',
+	      url: 'api/teas/' + id,
+	      success: callback,
+	      error: errorCallback
+	    });
 	  },
 	
-	  _onChange: function _onChange() {
-	    this.setState({ teas: TeaStore.all() });
-	  },
-	
-	  componentWillUnmount: function componentWillUnmount() {
-	    this.listener.remove();
-	    // this.errorListener.remove();
-	  },
-	
-	  _navToTeaForm: function _navToTeaForm() {
-	    window.location.hash = 'teas/new';
-	  },
-	
-	  render: function render() {
-	    var _this = this;
-	
-	    var buttonToSave = React.createElement(
-	      'button',
-	      { onClick: this._navToTeaForm },
-	      'Create New Tea'
-	    );
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'ul',
-	        { className: 'main-panel' },
-	        Object.keys(this.state.teas).map(function (teaId) {
-	          return React.createElement(TeaIndexItem, { key: teaId, tea: _this.state.teas[teaId] });
-	        })
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'cf right-panel' },
-	        React.createElement(
-	          'section',
-	          { className: 'panel_section' },
-	          React.createElement(
-	            'h2',
-	            null,
-	            'Can\'t find what you\'re looking for? Add a new tea!'
-	          ),
-	          React.createElement(TeaForm, null)
-	        )
-	      )
-	    );
+	  createTea: function createTea(tea, callback, errorCallback) {
+	    $.ajax({
+	      type: 'POST',
+	      url: 'api/teas',
+	      data: { tea: tea },
+	      success: callback,
+	      error: function error(err) {
+	        return errorCallback('newTea', err);
+	      }
+	    });
 	  }
-	});
+	};
 	
-	module.exports = TeaIndex;
+	module.exports = TeaApiUtil;
 
 /***/ },
-/* 267 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _reactRouter = __webpack_require__(1);
-	
-	var React = __webpack_require__(4),
-	    TeaStore = __webpack_require__(263);
-	// ErrorStore = require('../stores/error_store');
-	
-	var TeaIndexItem = React.createClass({
-	  displayName: 'TeaIndexItem',
-	
-	  componentWillMount: function componentWillMount() {
-	    this.listener = TeaStore.addListener();
-	    // this.errorListener = ErrorStore.addListener();
-	  },
-	
-	  componentWillUnmount: function componentWillUnmount() {
-	    this.listener.remove();
-	    // this.errorListener.remove();
-	  },
-	
-	  render: function render() {
-	    return React.createElement(
-	      'li',
-	      null,
-	      React.createElement(
-	        _reactRouter.Link,
-	        { to: '/teas/' + this.props.tea.id },
-	        'Tea: ',
-	        this.props.tea.name
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = TeaIndexItem;
-
-/***/ },
-/* 268 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	// import { Link } from 'react-router';
-	var React = __webpack_require__(4),
-	    TeaStore = __webpack_require__(263),
-	    TeaActions = __webpack_require__(265);
-	// ErrorStore = require('../stores/error_store');
-	
-	var TeaShow = React.createClass({
-	  displayName: 'TeaShow',
-	
-	  getInitialState: function getInitialState() {
-	    return { tea: TeaStore.find(parseInt(this.props.params.id)) };
-	  },
-	
-	  componentWillMount: function componentWillMount() {
-	    TeaActions.fetchSingleTea(parseInt(this.props.params.id));
-	    this.listener = TeaStore.addListener(this._onChange);
-	    // this.errorListener = ErrorStore.addListener();
-	  },
-	
-	  _onChange: function _onChange() {
-	    this.setState({ tea: TeaStore.find(parseInt(this.props.params.id)) });
-	  },
-	
-	  componentWillUnmount: function componentWillUnmount() {
-	    this.listener.remove();
-	    // this.errorListener.remove();
-	  },
-	
-	  render: function render() {
-	    console.log(this.state.tea);
-	    if (this.state.tea === undefined) {
-	      return React.createElement('div', null);
-	    }
-	
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'aside',
-	        { className: 'cf left-panel' },
-	        React.createElement('figure', null),
-	        React.createElement(
-	          'section',
-	          { className: 'panel_section' },
-	          'Aside'
-	        )
-	      ),
-	      React.createElement(
-	        'article',
-	        { className: 'cf main-panel' },
-	        React.createElement(
-	          'section',
-	          { className: 'main-panel_header' },
-	          React.createElement(
-	            'h1',
-	            null,
-	            this.state.tea.name
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            this.state.tea.tea_type + ', ' + this.state.tea.region
-	          )
-	        ),
-	        React.createElement(
-	          'section',
-	          { className: 'panel_section' },
-	          React.createElement(
-	            'h2',
-	            null,
-	            'Overview'
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            'Description: ',
-	            this.state.tea.description
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            'Steep Time: ',
-	            this.state.tea.steep_time
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            'Temperature: ',
-	            this.state.tea.temperature
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            'Leaf Quantity: ',
-	            this.state.tea.leaf_quantity
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            'Leaf Density: ',
-	            this.state.tea.leaf_density
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            'Retailer: ',
-	            this.state.tea.retailer
-	          )
-	        )
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = TeaShow;
-
-/***/ },
-/* 269 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33644,8 +33487,8 @@
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	var React = __webpack_require__(4),
-	    ErrorStore = __webpack_require__(260),
-	    TeaActions = __webpack_require__(265);
+	    ErrorStore = __webpack_require__(259),
+	    TeaActions = __webpack_require__(263);
 	
 	var TeaForm = React.createClass({
 	  displayName: 'TeaForm',
@@ -33748,12 +33591,12 @@
 	            return _this._handleInput(event, 'steep_time');
 	          },
 	          value: this.state.steep_time,
-	          placeholder: '' })
+	          placeholder: '2' })
 	      ),
 	      React.createElement(
 	        'label',
 	        null,
-	        'Temperature (in Celcius):',
+	        'Temperature (in degrees Celcius):',
 	        React.createElement('input', { type: 'text',
 	          onChange: function onChange(event) {
 	            return _this._handleInput(event, 'temperature');
@@ -33794,12 +33637,253 @@
 	          value: this.state.retailer,
 	          placeholder: 'Retailer' })
 	      ),
-	      React.createElement('input', { type: 'submit', value: 'Create Tea!' })
+	      React.createElement('input', { type: 'submit', value: 'Create Tea!', className: 'submit-input' })
 	    );
 	  }
 	});
 	
 	module.exports = TeaForm;
+
+/***/ },
+/* 266 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _reactRouter = __webpack_require__(1);
+	
+	var React = __webpack_require__(4),
+	    TeaStore = __webpack_require__(261);
+	// ErrorStore = require('../stores/error_store');
+	
+	var TeaIndexItem = React.createClass({
+	  displayName: 'TeaIndexItem',
+	
+	  componentWillMount: function componentWillMount() {
+	    this.listener = TeaStore.addListener();
+	    // this.errorListener = ErrorStore.addListener();
+	  },
+	
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.listener.remove();
+	    // this.errorListener.remove();
+	  },
+	
+	  render: function render() {
+	    return React.createElement(
+	      'li',
+	      { className: 'panel_section' },
+	      React.createElement(
+	        'section',
+	        { className: 'panel_section-content' },
+	        React.createElement(
+	          _reactRouter.Link,
+	          { to: '/teas/' + this.props.tea.id },
+	          'Tea: ',
+	          this.props.tea.name
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = TeaIndexItem;
+
+/***/ },
+/* 267 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	// import { Link } from 'react-router';
+	var React = __webpack_require__(4),
+	    TeaStore = __webpack_require__(261),
+	    TeaActions = __webpack_require__(263);
+	// ErrorStore = require('../stores/error_store');
+	
+	var TeaShow = React.createClass({
+	  displayName: 'TeaShow',
+	
+	  getInitialState: function getInitialState() {
+	    return { tea: TeaStore.find(parseInt(this.props.params.id)) };
+	  },
+	
+	  componentWillMount: function componentWillMount() {
+	    TeaActions.fetchSingleTea(parseInt(this.props.params.id));
+	    this.listener = TeaStore.addListener(this._onChange);
+	    // this.errorListener = ErrorStore.addListener();
+	  },
+	
+	  _onChange: function _onChange() {
+	    this.setState({ tea: TeaStore.find(parseInt(this.props.params.id)) });
+	  },
+	
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.listener.remove();
+	    // this.errorListener.remove();
+	  },
+	
+	  render: function render() {
+	    if (this.state.tea === undefined) {
+	      return React.createElement('div', null);
+	    }
+	
+	    var subHeading = void 0;
+	    if (this.state.tea.region === 'Unknown') {
+	      subHeading = this.state.tea.tea_type;
+	    } else {
+	      subHeading = this.state.tea.tea_type + ', ' + this.state.tea.region;
+	    }
+	
+	    var timeUnits = void 0;
+	    if (this.state.tea.steep_time === 1) {
+	      timeUnits = 'minute';
+	    } else {
+	      timeUnits = 'minutes';
+	    }
+	
+	    return React.createElement(
+	      'div',
+	      { className: 'cf container' },
+	      React.createElement(
+	        'aside',
+	        { className: 'panel panel_left' },
+	        React.createElement('figure', null),
+	        React.createElement(
+	          'section',
+	          { className: 'panel_section' },
+	          React.createElement(
+	            'h2',
+	            { className: 'panel_section-header' },
+	            'Aside'
+	          ),
+	          React.createElement(
+	            'p',
+	            { className: 'panel_section-content' },
+	            'content'
+	          )
+	        )
+	      ),
+	      React.createElement(
+	        'article',
+	        { className: 'panel panel_main' },
+	        React.createElement(
+	          'section',
+	          { className: 'panel_main-header' },
+	          React.createElement(
+	            'h1',
+	            null,
+	            this.state.tea.name
+	          ),
+	          React.createElement(
+	            'p',
+	            { className: 'panel_main-subheading' },
+	            subHeading
+	          )
+	        ),
+	        React.createElement(
+	          'section',
+	          { className: 'panel_section' },
+	          React.createElement(
+	            'h2',
+	            { className: 'panel_section-header' },
+	            'Overview'
+	          ),
+	          React.createElement(
+	            'ul',
+	            { className: 'cf panel_section-content' },
+	            React.createElement(
+	              'li',
+	              { className: 'col col-1-2' },
+	              React.createElement(
+	                'ul',
+	                null,
+	                React.createElement(
+	                  'li',
+	                  null,
+	                  React.createElement('span', { className: 'icon-pencil2' }),
+	                  ' ',
+	                  this.state.tea.description
+	                ),
+	                React.createElement(
+	                  'li',
+	                  null,
+	                  React.createElement('span', { className: 'icon-office' }),
+	                  ' Retailer: ',
+	                  this.state.tea.retailer
+	                )
+	              )
+	            ),
+	            React.createElement(
+	              'li',
+	              { className: 'col col-1-2' },
+	              React.createElement(
+	                'ul',
+	                null,
+	                React.createElement(
+	                  'li',
+	                  null,
+	                  React.createElement('span', { className: 'icon-stopwatch' }),
+	                  ' Steep Time: ',
+	                  this.state.tea.steep_time + ' ' + timeUnits
+	                ),
+	                React.createElement(
+	                  'li',
+	                  null,
+	                  React.createElement('span', { className: 'icon-thermometer-half' }),
+	                  ' Temperature: ',
+	                  this.state.tea.temperature,
+	                  ' °C'
+	                ),
+	                React.createElement(
+	                  'li',
+	                  null,
+	                  React.createElement('span', { className: 'icon-leaf' }),
+	                  ' Leaf Quantity: ',
+	                  this.state.tea.leaf_quantity,
+	                  ' tsp'
+	                ),
+	                React.createElement(
+	                  'li',
+	                  null,
+	                  React.createElement('span', { className: 'icon-balance-scale' }),
+	                  ' Leaf Density: ',
+	                  this.state.tea.leaf_density,
+	                  ' g/tsp'
+	                )
+	              )
+	            )
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = TeaShow;
+
+/***/ },
+/* 268 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var React = __webpack_require__(4);
+	
+	var Splash = React.createClass({
+	  displayName: "Splash",
+	
+	  render: function render() {
+	    return React.createElement(
+	      "div",
+	      { className: "splash" },
+	      React.createElement("figure", { className: "splash splash--banner" })
+	    );
+	  }
+	
+	});
+	
+	module.exports = Splash;
 
 /***/ }
 /******/ ]);

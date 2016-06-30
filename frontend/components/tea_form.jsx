@@ -77,10 +77,10 @@ const TeaForm = React.createClass({
           <input type="text"
                  onChange={(event) => this._handleInput(event, 'steep_time')}
                  value={this.state.steep_time}
-                 placeholder=''/>
+                 placeholder='2'/>
         </label>
 
-        <label>Temperature (in Celcius):
+        <label>Temperature (in degrees Celcius):
           <input type="text"
                  onChange={(event) => this._handleInput(event, 'temperature')}
                  value={this.state.temperature}
@@ -108,7 +108,7 @@ const TeaForm = React.createClass({
                  placeholder='Retailer'/>
         </label>
 
-        <input type="submit" value="Create Tea!" />
+        <input type="submit" value="Create Tea!" className="submit-input" />
       </form>
     )
   }

@@ -2,42 +2,80 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-
-body {
-  background: #f1efea;
-}
-
-.left-panel {
-  width: 34%;
-  float: left;
-  padding: 0 10px;
-  box-sizing: border-box;
-}
-
-.right-panel {
-  width: 34%;
-  float: right;
-  padding: 0 10px;
-  box-sizing: border-box;
-}
-
-.main-panel {
-  width: 66%;
-  padding-right: 5px;
-  float: left;
-  box-sizing: border-box;
-}
-
-.panel_section {
-  padding: 20px;
-  background: white;
-}
-
-.main-panel_header {
-  padding: 20px;
-}
-
 .tea_form {
   display: flex;
   flex-direction: column;
+  padding: 10px;
+}
+
+.container {
+  background: #f1efea;
+  padding: 10px 0;
+  height: 100%;
+}
+
+.panel {
+  box-sizing: border-box;
+  float: left;
+}
+
+.panel_left {
+  width: 34%;
+  min-width: 200px;
+  padding-left: 10px;
+}
+
+.panel_right {
+  width: 34%;
+  min-width: 200px;
+  padding-right: 10px;
+}
+
+.panel_main {
+  width: 66%;
+  min-width: 430px;
+  padding: 0 10px;
+
+}
+
+.panel_section {
+  background: white;
+  border-bottom: 2px solid #bfcad2;
+  margin: 0.625em auto;
+}
+
+.panel_section-header {
+  padding: 20px;
+  border-bottom: 1px solid #bfcad2;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.panel_section-content {
+  list-style: none;
+  padding: 20px;
+}
+
+.panel_section-content li {
+  list-style: none;
+  padding: 8px 0;
+}
+
+.panel_main-header {
+  padding: 20px;
+  font-size: 40px;
+  font-weight: 700;
+}
+
+.panel_main-subheading {
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.col {
+  float: left;
+}
+
+.col-1-2 {
+  width: 50%;
 }

@@ -2,6 +2,7 @@ import { Router, Route, IndexRoute, hashHistory, Link } from 'react-router';
 const React = require('react'),
       ReactDOM = require('react-dom'),
       App = require('./components/app'),
+      Splash = require('./components/splash_page'),
       SessionActions = require('./actions/session_actions'),
       AuthForm = require('./components/auth_form'),
       SessionStore = require('./stores/session_store'),
@@ -11,6 +12,7 @@ const React = require('react'),
 
 const routes =
   <Route path='/' component={App} >
+    <IndexRoute component={Splash} />
     <Route path='signup' component={AuthForm} onEnter={ensureNotLoggedIn} />
     <Route path='login' component={AuthForm} onEnter={ensureNotLoggedIn} />
     <Route path='teas' component={TeaIndex} >

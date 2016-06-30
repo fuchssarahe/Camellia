@@ -16,8 +16,10 @@ const TeaIndexItem = React.createClass({
 
   render: function () {
     return (
-      <li>
-      <Link to={'/teas/' + this.props.tea.id} >Tea: {this.props.tea.name}</Link>
+      <li className='panel_section'>
+        <section className='panel_section-content'>
+        <Link to={'/teas/' + this.props.tea.id} >Tea: {this.props.tea.name}</Link>
+        </section>
       </li>
     )
   }
