@@ -24,8 +24,13 @@ const TeaIndex = React.createClass({
     // this.errorListener.remove();
   },
 
+  _navToTeaForm: function () {
+    window.location.hash = 'teas/new';
+  },
+
   render: function () {
     return (
+      <div>
       <ul>
         {
           Object.keys(this.state.teas).map( (teaId) => {
@@ -33,6 +38,8 @@ const TeaIndex = React.createClass({
           })
         }
       </ul>
+      <button onClick={this._navToTeaForm}>Create New Tea</button>
+      </div>
     )
   }
 });
