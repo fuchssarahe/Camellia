@@ -17,7 +17,7 @@ const SessionActions = {
   },
 
   receiveCurrentUser: function (user) {
-    ErrorActions.clearErrors()
+    ErrorActions.clearErrors();
     const payload = {
       actionType: SessionConstants.LOGIN,
       user: user
@@ -26,7 +26,7 @@ const SessionActions = {
   },
 
   receiveEmptyUser: function (emptyUser) {
-    ErrorActions.clearErrors()
+    ErrorActions.clearErrors();
     const payload = {
       actionType: SessionConstants.LOGOUT,
       user: emptyUser
