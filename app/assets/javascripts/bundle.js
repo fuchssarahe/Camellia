@@ -33277,7 +33277,9 @@
 	      url: 'api/teas',
 	      data: { tea: tea },
 	      success: callback,
-	      error: errorCallback
+	      error: function error(err) {
+	        return errorCallback('newTea', err);
+	      }
 	    });
 	  }
 	};
@@ -33401,6 +33403,7 @@
 	var React = __webpack_require__(4),
 	    TeaStore = __webpack_require__(263),
 	    TeaActions = __webpack_require__(265),
+	    TeaForm = __webpack_require__(269),
 	
 	// ErrorStore = require('../stores/error_store'),
 	TeaIndexItem = __webpack_require__(267);
@@ -33434,20 +33437,34 @@
 	  render: function render() {
 	    var _this = this;
 	
+	    var buttonToSave = React.createElement(
+	      'button',
+	      { onClick: this._navToTeaForm },
+	      'Create New Tea'
+	    );
 	    return React.createElement(
 	      'div',
 	      null,
 	      React.createElement(
 	        'ul',
-	        null,
+	        { className: 'main-panel' },
 	        Object.keys(this.state.teas).map(function (teaId) {
 	          return React.createElement(TeaIndexItem, { key: teaId, tea: _this.state.teas[teaId] });
 	        })
 	      ),
 	      React.createElement(
-	        'button',
-	        { onClick: this._navToTeaForm },
-	        'Create New Tea'
+	        'div',
+	        { className: 'cf right-panel' },
+	        React.createElement(
+	          'section',
+	          { className: 'panel_section' },
+	          React.createElement(
+	            'h2',
+	            null,
+	            'Can\'t find what you\'re looking for? Add a new tea!'
+	          ),
+	          React.createElement(TeaForm, null)
+	        )
 	      )
 	    );
 	  }
@@ -33532,10 +33549,86 @@
 	
 	  render: function render() {
 	    console.log(this.state.tea);
+	    if (this.state.tea === undefined) {
+	      return React.createElement('div', null);
+	    }
+	
 	    return React.createElement(
 	      'div',
 	      null,
-	      'Hello from the show page'
+	      React.createElement(
+	        'aside',
+	        { className: 'cf left-panel' },
+	        React.createElement('figure', null),
+	        React.createElement(
+	          'section',
+	          { className: 'panel_section' },
+	          'Aside'
+	        )
+	      ),
+	      React.createElement(
+	        'article',
+	        { className: 'cf main-panel' },
+	        React.createElement(
+	          'section',
+	          { className: 'main-panel_header' },
+	          React.createElement(
+	            'h1',
+	            null,
+	            this.state.tea.name
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            this.state.tea.tea_type + ', ' + this.state.tea.region
+	          )
+	        ),
+	        React.createElement(
+	          'section',
+	          { className: 'panel_section' },
+	          React.createElement(
+	            'h2',
+	            null,
+	            'Overview'
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            'Description: ',
+	            this.state.tea.description
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            'Steep Time: ',
+	            this.state.tea.steep_time
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            'Temperature: ',
+	            this.state.tea.temperature
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            'Leaf Quantity: ',
+	            this.state.tea.leaf_quantity
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            'Leaf Density: ',
+	            this.state.tea.leaf_density
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            'Retailer: ',
+	            this.state.tea.retailer
+	          )
+	        )
+	      )
 	    );
 	  }
 	});
@@ -33561,13 +33654,14 @@
 	    return {
 	      name: '',
 	      tea_type: '',
+	      description: '',
 	      region: '',
 	      steep_time: '',
 	      temperature: '',
 	      leaf_quantity: '',
 	      leaf_density: '',
 	      retailer: '',
-	      errors: ErrorStore.all()
+	      errors: ErrorStore.formErrors()
 	    };
 	  },
 	
@@ -33577,14 +33671,16 @@
 	  },
 	
 	  _onErrors: function _onErrors() {
-	    this.setState({ errors: ErrorStore.all() });
+	    if (ErrorStore.form() === 'newTea') {
+	      this.setState({ errors: ErrorStore.formErrors('newTea') });
+	    }
 	  },
 	
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.errorListener.remove();
 	  },
 	
-	  _handleInput: function _handleInput(property) {
+	  _handleInput: function _handleInput(event, property) {
 	    this.setState(_defineProperty({}, property, event.target.value));
 	  },
 	
@@ -33594,73 +33690,111 @@
 	  },
 	
 	  render: function render() {
+	    var _this = this;
+	
 	    return React.createElement(
-	      'div',
-	      null,
+	      'form',
+	      { onSubmit: this._handleSubmit, className: 'tea_form' },
 	      React.createElement(
-	        'p',
+	        'label',
 	        null,
-	        'hellow from form'
+	        'Name:',
+	        React.createElement('input', { type: 'text',
+	          onChange: function onChange(event) {
+	            return _this._handleInput(event, 'name');
+	          },
+	          value: this.state.name,
+	          placeholder: 'Dragonwell' })
 	      ),
 	      React.createElement(
-	        'form',
-	        { onSubmit: this._handleSubmit },
-	        React.createElement(
-	          'label',
-	          null,
-	          'name:',
-	          React.createElement('input', { type: 'text', value: this.state.name })
-	        ),
-	        React.createElement(
-	          'label',
-	          null,
-	          'description:',
-	          React.createElement('input', { type: 'text', value: this.state.description })
-	        ),
-	        React.createElement(
-	          'label',
-	          null,
-	          'tea_type:',
-	          React.createElement('input', { type: 'text', value: this.state.tea_type })
-	        ),
-	        React.createElement(
-	          'label',
-	          null,
-	          'region:',
-	          React.createElement('input', { type: 'text', value: this.state.region })
-	        ),
-	        React.createElement(
-	          'label',
-	          null,
-	          'steep_time:',
-	          React.createElement('input', { type: 'text', value: this.state.steep_time })
-	        ),
-	        React.createElement(
-	          'label',
-	          null,
-	          'temperature:',
-	          React.createElement('input', { type: 'text', value: this.state.temperature })
-	        ),
-	        React.createElement(
-	          'label',
-	          null,
-	          'leaf_quantity:',
-	          React.createElement('input', { type: 'text', value: this.state.leaf_quantity })
-	        ),
-	        React.createElement(
-	          'label',
-	          null,
-	          'leaf_density:',
-	          React.createElement('input', { type: 'text', value: this.state.leaf_density })
-	        ),
-	        React.createElement(
-	          'label',
-	          null,
-	          'retailer:',
-	          React.createElement('input', { type: 'text', value: this.state.retailer })
-	        ),
-	        React.createElement('input', { type: 'submit', value: 'Create Tea!' })
-	      )
+	        'label',
+	        null,
+	        'Description:',
+	        React.createElement('input', { type: 'text',
+	          onChange: function onChange(event) {
+	            return _this._handleInput(event, 'description');
+	          },
+	          value: this.state.description,
+	          placeholder: 'Dragonwell is a variety of pan-roasted green tea...' })
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Type:',
+	        React.createElement('input', { type: 'text',
+	          onChange: function onChange(event) {
+	            return _this._handleInput(event, 'tea_type');
+	          },
+	          value: this.state.tea_type,
+	          placeholder: 'Green' })
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Region:',
+	        React.createElement('input', { type: 'text',
+	          onChange: function onChange(event) {
+	            return _this._handleInput(event, 'region');
+	          },
+	          value: this.state.region,
+	          placeholder: 'China' })
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Steep Time (in minutes):',
+	        React.createElement('input', { type: 'text',
+	          onChange: function onChange(event) {
+	            return _this._handleInput(event, 'steep_time');
+	          },
+	          value: this.state.steep_time,
+	          placeholder: '' })
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Temperature (in Celcius):',
+	        React.createElement('input', { type: 'text',
+	          onChange: function onChange(event) {
+	            return _this._handleInput(event, 'temperature');
+	          },
+	          value: this.state.temperature,
+	          placeholder: '80' })
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Leaf Quantity (teaspoons per 8 ounces of liquid):',
+	        React.createElement('input', { type: 'text',
+	          onChange: function onChange(event) {
+	            return _this._handleInput(event, 'leaf_quantity');
+	          },
+	          value: this.state.leaf_quantity,
+	          placeholder: 'Leaf Quantity' })
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Leaf Density (grams per ounce):',
+	        React.createElement('input', { type: 'text',
+	          onChange: function onChange(event) {
+	            return _this._handleInput(event, 'leaf_density');
+	          },
+	          value: this.state.leaf_density,
+	          placeholder: 'Leaf Density' })
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Retailer:',
+	        React.createElement('input', { type: 'text',
+	          onChange: function onChange(event) {
+	            return _this._handleInput(event, 'retailer');
+	          },
+	          value: this.state.retailer,
+	          placeholder: 'Retailer' })
+	      ),
+	      React.createElement('input', { type: 'submit', value: 'Create Tea!' })
 	    );
 	  }
 	});

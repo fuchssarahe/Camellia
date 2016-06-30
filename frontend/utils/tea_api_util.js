@@ -23,7 +23,7 @@ const TeaApiUtil = {
       url: 'api/teas',
       data: {tea: tea},
       success: callback,
-      error: errorCallback
+      error: (err) => errorCallback('newTea', err)
     })
   }
 }

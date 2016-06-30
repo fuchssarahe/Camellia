@@ -27,21 +27,23 @@ button {
   padding: 12px 8px;
   border-radius: 4px;
   margin-left: 10px;
-  background: palegreen;
+  background: green;
+  color: white;
 }
 
 .submit-input {
-  background: palegreen;
+  background: green;
+  color: white;
 }
 
 button:hover {
   cursor: pointer;
-  background: lightgreen;
+  background: darkgreen;
 }
 
 .submit-input:hover {
   cursor: pointer;
-  background: lightgreen;
+  background: darkgreen;
 
 }
 
@@ -51,4 +53,10 @@ button:hover {
   background-color: rgba(198,61,67,0.25);
   color: #3e1214;
   padding: 10px 10px;
+}
+
+.cf:after {
+  content: '';
+  display: block;
+  clear: both;
 }
