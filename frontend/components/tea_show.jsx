@@ -25,32 +25,59 @@ const TeaShow = React.createClass({
   },
 
   render: function () {
-    console.log(this.state.tea);
     if (this.state.tea === undefined) {
       return (<div></div>);
     }
 
+    let subHeading;
+    if (this.state.tea.region === 'Unknown') {
+      subHeading = this.state.tea.tea_type;
+    } else {
+      subHeading = this.state.tea.tea_type + ', ' + this.state.tea.region;
+    }
+
+    let timeUnits;
+    if (this.state.tea.steep_time === 1) {
+      timeUnits = 'minute'
+    } else {
+      timeUnits = 'minutes'
+    }
+
     return (
-      <div>
-        <aside className='cf left-panel'>
+      <div className="cf container">
+        <aside className='panel panel_left'>
           <figure></figure>
-          <section className='panel_section'>Aside</section>
+          <section className='panel_section'>
+            <h2 className='panel_section-header'>Aside</h2>
+            <p className='panel_section-content'>content</p>
+          </section>
         </aside>
 
-        <article className='cf main-panel'>
-          <section className='main-panel_header'>
+        <article className='panel panel_main'>
+          <section className='panel_main-header'>
             <h1>{this.state.tea.name}</h1>
-            <div>{this.state.tea.tea_type + ', ' + this.state.tea.region}</div>
+            <p className="panel_main-subheading">{subHeading}</p>
           </section>
 
           <section className="panel_section">
-            <h2>Overview</h2>
-            <div>Description: {this.state.tea.description}</div>
-            <div>Steep Time: {this.state.tea.steep_time}</div>
-            <div>Temperature: {this.state.tea.temperature}</div>
-            <div>Leaf Quantity: {this.state.tea.leaf_quantity}</div>
-            <div>Leaf Density: {this.state.tea.leaf_density}</div>
-            <div>Retailer: {this.state.tea.retailer}</div>
+            <h2 className="panel_section-header">Overview</h2>
+            <ul className="cf panel_section-content">
+              <li className="col col-1-2">
+                <ul>
+                  <li><span className='icon-pencil2' /> {this.state.tea.description}</li>
+                  <li><span className='icon-office'/> Retailer: {this.state.tea.retailer}</li>
+                </ul>
+              </li>
+
+              <li className="col col-1-2">
+                <ul>
+                  <li><span className='icon-stopwatch'/> Steep Time: {this.state.tea.steep_time + ' ' + timeUnits}</li>
+                  <li><span className='icon-thermometer-half'/> Temperature: {this.state.tea.temperature} °C</li>
+                  <li><span className='icon-leaf'/> Leaf Quantity: {this.state.tea.leaf_quantity} tsp</li>
+                  <li><span className='icon-balance-scale'/> Leaf Density: {this.state.tea.leaf_density} g/tsp</li>
+                </ul>
+              </li>
+            </ul>
           </section>
         </article>
 

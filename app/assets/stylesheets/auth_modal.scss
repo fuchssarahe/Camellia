@@ -81,8 +81,6 @@
 .fade {
   opacity: .7;
   transition: opacity .40s ease-in-out;
-  -moz-transition: opacity .40s ease-in-out;
-  -webkit-transition: opacity .40s ease-in-out;
 }
 
 .fade:hover {

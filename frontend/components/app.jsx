@@ -1,3 +1,4 @@
+import { Link } from 'react-router';
 const React = require('react'),
       SessionActions = require('../actions/session_actions'),
       SessionStore = require('../stores/session_store');
@@ -24,7 +25,7 @@ const App = React.createClass({
   },
 
   _navToTeasIndex: function () {
-    if (!window.location.hash.includes('teas')) {
+    if (!window.location.hash.includes('teas') || window.location.hash.lastIndexOf('?') >= 6) {
       window.location.hash = '/teas';
     }
   },
@@ -57,7 +58,7 @@ const App = React.createClass({
     return (
       <div>
         <header className="site-nav">
-          <img src="https://raw.githubusercontent.com/fuchssarahe/Camellia/master/app/assets/images/camellia_logo.png" alt="Camellia Logo" />
+          <Link to="/"><img src="https://raw.githubusercontent.com/fuchssarahe/Camellia/master/app/assets/images/camellia_logo.png" alt="Camellia Logo" /></Link>
           <label for='search-bar'>Search:
             <input type='text' onChange={this._navToTeasIndex} id='search-bar'/>
           </label>

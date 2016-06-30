@@ -32,18 +32,18 @@ const TeaIndex = React.createClass({
   render: function () {
     const buttonToSave = <button onClick={this._navToTeaForm}>Create New Tea</button>;
     return (
-      <div>
-        <ul className='main-panel'>
+      <div className="cf container">
+        <ul className='panel panel_main'>
           {
             Object.keys(this.state.teas).map( (teaId) => {
               return <TeaIndexItem key={teaId} tea={this.state.teas[teaId]}/>;
             })
           }
         </ul>
-        <div className="cf right-panel">
+        <div className="panel panel_right">
           <section className="panel_section">
-            <h2>Can't find what you're looking for? Add a new tea!</h2>
-            <TeaForm/>
+            <h2 className='panel_section-header'>Can't find what you're looking for? Add a new tea!</h2>
+            <TeaForm className="panel_section-content"/>
           </section>
         </div>
       </div>
