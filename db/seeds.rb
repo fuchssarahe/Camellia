@@ -7,7 +7,7 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 
-# User.create!(username: 'guest', password: '123456')
+User.create!(username: 'guest', password: '123456')
 
 Tea.create!(name: 'Gyokuro Imperial', tea_type: 'Green', description: 'Rich, almost full-bodied, smooth taste with sweet ending and complex notes.', region: 'Unknown', steep_time: 2, temperature: 77, leaf_quantity: 1, leaf_density: 1, retailer: 'Teavana')
 Tea.create!(name: 'Jasmine Dragon Phoenix Pearls', tea_type: 'Green', description: 'Young green tea leaves are scented 3-4 times with summery blossoms of fresh jasmine, this tea is a phenomenon of fragrance and sweetness.', region: 'Unknown', steep_time: 2, temperature: 77, leaf_quantity: 1, leaf_density: 1, retailer: 'Teavana')
@@ -15,7 +15,7 @@ Tea.create!(name: 'Jade Citrus Mint', tea_type: 'Green', description: 'Bright ci
 Tea.create!(name: 'Sakura Alluré', tea_type: 'Green', description: 'Enchanting and lively cherries and hibiscus blend with soft rose and mango.', region: 'Unknown', steep_time: 2, temperature: 77, leaf_quantity: 1, leaf_density: 1, retailer: 'Teavana')
 Tea.create!(name: 'Spring Mao Feng, 2015', tea_type: 'Green', description: 'Harvested mid-March 2015 in Northern Fujian, this bright and refreshing green tea is naturally sweet with mild notes of grass.', region: 'China', steep_time: 1, temperature: 85, leaf_quantity: 1, leaf_density: 1, retailer: 'Red Blossom Tea Company')
 
-# Tea.create!(name: 'Lapsang Souchong', tea_type: 'Black', region: 'Taiwan', steep_time: '4', temperature: '280', leaf_quantity: 1, leaf_density: 1, retailer: 'Wegmans', description: 'Lapsang has a dark, smokey flavor. It is commonly flavoured with fruit extracts for an interesting contrast.')
+Tea.create!(name: 'Lapsang Souchong', tea_type: 'Black', region: 'Taiwan', steep_time: '4', temperature: '280', leaf_quantity: 1, leaf_density: 1, retailer: 'Wegmans', description: 'Lapsang has a dark, smokey flavor. It is commonly flavoured with fruit extracts for an interesting contrast.')
 Tea.create!(name: 'DARJEELING 2ND FLUSH', tea_type: 'Black', description: 'The name Darjeeling comes from the Tibetan words for thunderbolt, “dorje,” and land, “ling.” This tea shows off the brisk, nutty, full-bodied flavor characteristics for which Darjeeling teas are renowned.', region: 'India', steep_time: 4, temperature: 97, leaf_quantity: 1, leaf_density: 1, retailer: 'Asha Tea House')
 Tea.create!(name: 'FORMOSA ASSAM', tea_type: 'Black', description: 'Assam tea bushes were first brought to Taiwan by the Japanese during their occupation of Taiwan. This clean, full-bodied black tea has no noticeable astringency and makes for a perfect morning tradition.', region: 'Taiwan', steep_time: 4, temperature: 97, leaf_quantity: 1, leaf_density: 1, retailer: 'Asha Tea House')
 Tea.create!(name: 'GONG FU BLACK', tea_type: 'Black', description: 'The Yunnan province in China is famous for robust black teas, and this one is no exception. The flavor is full-bodied, woody, and slightly smoky. Gong fu makes a perfect breakfast tea.', region: 'China', steep_time: 4, temperature: 97, leaf_quantity: 1, leaf_density: 1, retailer: 'Asha Tea House')
