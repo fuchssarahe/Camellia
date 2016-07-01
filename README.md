@@ -78,12 +78,10 @@ user interface.
 - [x] setup the flux loop with skeleton files
 - [x] setup React Router
 - [ ] implement each tea component, building out the flux loop as needed.
-  - [ ] `TeasIndex`
-  - [ ] `TeaIndexItem`
-  - [ ] `TeaForm`
-  - [ ] `TeaDetail`
-  - [ ] `TeaOverview`
-  - [ ] `TeaDetailedInfo`
+  - [x] `TeasIndex`
+  - [ ] `TeaIndexItem` (10%)
+  - [ ] `TeaForm` (90%)
+  - [ ] `TeaShow` (60%)
 - [ ] use CSS to style views
 
 ### Phase 4: Type Ahead Search (1 day, W2 W 6pm)

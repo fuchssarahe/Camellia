@@ -32,20 +32,18 @@
 .modal input {
   border-radius: 4px;
   padding: 12px 8px;
-  border: 1px solid #aeb5ba;
-  display: block;
   margin-bottom: 20px;
 }
 
 .modal-screen {
- position: fixed;
- top: 0;
- left: 0;
- width: 100%;
- height: 100%;
- z-index: 999;
- background: #000;
- opacity: 0.9;
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   z-index: 999;
+   background: #000;
+   opacity: 0.9;
 }
 
 .modal-header {

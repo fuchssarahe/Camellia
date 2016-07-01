@@ -1,0 +1,32 @@
+.tea_form {
+  display: flex;
+  flex-direction: column;
+  justify-content: middle;
+  // padding: 10px;
+  margin: 20px;
+}
+
+.tea_form input, textarea, select {
+    width: 100%;
+}
+//
+// .tea_form input {
+//   display: block;
+// }
+//
+// .tea_form textarea {
+//   min-height: 100px;
+//   width: 100%;
+//   display: block;
+// }
+//
+// .tea_form select {
+//   width: 100%;
+//   display: block;
+//
+// }
+
+.tea_form label {
+  display: flex;
+  flex-direction: column;
+}

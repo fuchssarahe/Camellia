@@ -3,17 +3,18 @@ const TeaConstants = {
 
   RECEIVE_TEA: 'RECEIVE_TEA',
 
-  ALL_TYPES: ['Black',
+  ALL_TYPES: ['Other',
+              'Black',
               'Red',
               'White',
               'Dark',
               'Yellow',
               'Green',
               'Oolong',
-              'Herbal',
-              'Other'],
+              'Herbal'],
 
-  ALL_REGIONS: ['Albania',
+  ALL_REGIONS: ['Unknown',
+                'Albania',
                 'Argentina',
                 'Australia',
                 'Bangladesh',
@@ -55,8 +56,7 @@ const TeaConstants = {
                 'Uganda',
                 'United States of America',
                 'Vietnam',
-                'Zimbabwe',
-                'Unknown']
+                'Zimbabwe']
 
 };
 
