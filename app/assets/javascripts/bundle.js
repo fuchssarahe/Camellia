@@ -26017,10 +26017,8 @@
 	
 	  render: function render() {
 	
-	    var greeting = 'Welcome to Camellia!';
 	    var buttons = "";
 	    if (SessionStore.isUserLoggedIn()) {
-	      greeting = 'Hello, ' + this.state.currentUser.username + "!";
 	      buttons = React.createElement(
 	        'button',
 	        { className: 'auth-buttons', onClick: this._logout },
@@ -33363,9 +33361,9 @@
 	
 	            RECEIVE_TEA: 'RECEIVE_TEA',
 	
-	            ALL_TYPES: ['Black', 'Red', 'White', 'Dark', 'Yellow', 'Green', 'Oolong', 'Herbal', 'Other'],
+	            ALL_TYPES: ['Other', 'Black', 'Red', 'White', 'Dark', 'Yellow', 'Green', 'Oolong', 'Herbal'],
 	
-	            ALL_REGIONS: ['Albania', 'Argentina', 'Australia', 'Bangladesh', 'Bolivia', 'Brazil', 'Burkina Faso', 'Burma', 'Chile', 'China', 'Colombia', 'Ecuador', 'Egypt', 'France', 'Germany', 'Guatemala', 'India', 'Indonesia', 'Italy', 'Japan', 'Kenya', 'Malawi', 'Malaysia', 'Mexico', 'Morocco', 'Nepal', 'New Zealand', 'Nigeria', 'Paraguay', 'Portugal', 'Rwanda', 'South Africa', 'South Korea', 'Sri Lanka', 'Sudan', 'Taiwan', 'Tanzania', 'Thailand', 'Turkey', 'Uganda', 'United States of America', 'Vietnam', 'Zimbabwe', 'Unknown']
+	            ALL_REGIONS: ['Unknown', 'Albania', 'Argentina', 'Australia', 'Bangladesh', 'Bolivia', 'Brazil', 'Burkina Faso', 'Burma', 'Chile', 'China', 'Colombia', 'Ecuador', 'Egypt', 'France', 'Germany', 'Guatemala', 'India', 'Indonesia', 'Italy', 'Japan', 'Kenya', 'Malawi', 'Malaysia', 'Mexico', 'Morocco', 'Nepal', 'New Zealand', 'Nigeria', 'Paraguay', 'Portugal', 'Rwanda', 'South Africa', 'South Korea', 'Sri Lanka', 'Sudan', 'Taiwan', 'Tanzania', 'Thailand', 'Turkey', 'Uganda', 'United States of America', 'Vietnam', 'Zimbabwe']
 	
 	};
 	
@@ -33526,7 +33524,7 @@
 	        React.createElement(
 	          'label',
 	          null,
-	          'Name:',
+	          'Name',
 	          React.createElement('input', { type: 'text',
 	            onChange: function onChange(event) {
 	              return _this._handleInput(event, 'name');
@@ -33537,7 +33535,7 @@
 	        React.createElement(
 	          'label',
 	          null,
-	          'Description:',
+	          'Description',
 	          React.createElement('textarea', { onChange: function onChange(event) {
 	              return _this._handleInput(event, 'description');
 	            },
@@ -33547,7 +33545,7 @@
 	        React.createElement(
 	          'label',
 	          null,
-	          'Type:',
+	          'Type',
 	          React.createElement(
 	            'select',
 	            { onChange: function onChange(event) {
@@ -33570,7 +33568,7 @@
 	        React.createElement(
 	          'label',
 	          null,
-	          'Region:',
+	          'Region',
 	          React.createElement(
 	            'select',
 	            { onChange: function onChange(event) {
@@ -33593,7 +33591,7 @@
 	        React.createElement(
 	          'label',
 	          null,
-	          'Steep Time (in minutes):',
+	          'Steep Time (in minutes)',
 	          React.createElement('input', { type: 'number',
 	            step: '0.25',
 	            onChange: function onChange(event) {
@@ -33605,7 +33603,7 @@
 	        React.createElement(
 	          'label',
 	          null,
-	          'Temperature (in degrees Celcius):',
+	          'Temperature (in degrees Celcius)',
 	          React.createElement('input', { type: 'text',
 	            onChange: function onChange(event) {
 	              return _this._handleInput(event, 'temperature');
@@ -33616,7 +33614,7 @@
 	        React.createElement(
 	          'label',
 	          null,
-	          'Leaf Quantity (teaspoons per 8 ounces of liquid):',
+	          'Leaf Quantity (teaspoons per 8 ounces of liquid)',
 	          React.createElement('input', { type: 'float',
 	            onChange: function onChange(event) {
 	              return _this._handleInput(event, 'leaf_quantity');
@@ -33627,7 +33625,7 @@
 	        React.createElement(
 	          'label',
 	          null,
-	          'Leaf Density (grams per ounce):',
+	          'Leaf Density (grams per ounce)',
 	          React.createElement('input', { type: 'number',
 	            onChange: function onChange(event) {
 	              return _this._handleInput(event, 'leaf_density');
@@ -33638,7 +33636,7 @@
 	        React.createElement(
 	          'label',
 	          null,
-	          'Retailer:',
+	          'Retailer',
 	          React.createElement('input', { type: 'text',
 	            onChange: function onChange(event) {
 	              return _this._handleInput(event, 'retailer');

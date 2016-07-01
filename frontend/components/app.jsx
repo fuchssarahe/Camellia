@@ -41,10 +41,8 @@ const App = React.createClass({
 
   render: function () {
 
-    let greeting = 'Welcome to Camellia!';
     let buttons = "";
     if (SessionStore.isUserLoggedIn()) {
-      greeting = `Hello, ` + this.state.currentUser.username + "!";
       buttons = <button className='auth-buttons' onClick={this._logout}>Logout!</button>;
     } else {
       buttons =
