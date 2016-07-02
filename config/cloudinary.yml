@@ -1,0 +1,19 @@
+---
+development:
+  cloud_name: fuchssarahe
+  api_key: '389483491697225'
+  api_secret: wAV6Ylqn40CCslAeZyUN0Sp3zZw
+  enhance_image_tag: true
+  static_image_support: false
+production:
+  cloud_name: fuchssarahe
+  api_key: '389483491697225'
+  api_secret: wAV6Ylqn40CCslAeZyUN0Sp3zZw
+  enhance_image_tag: true
+  static_image_support: true
+test:
+  cloud_name: fuchssarahe
+  api_key: '389483491697225'
+  api_secret: wAV6Ylqn40CCslAeZyUN0Sp3zZw
+  enhance_image_tag: true
+  static_image_support: false

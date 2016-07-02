@@ -6,4 +6,5 @@ Rails.application.routes.draw do
     resource :session, only: [:create, :destroy, :show]
     resources :teas, only: [:create, :show, :index]
   end
+
 end

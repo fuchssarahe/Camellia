@@ -29,13 +29,13 @@
   width: 66%;
   min-width: 430px;
   padding: 0 10px;
-
+  // max-width: 700px;
 }
 
 .panel_section {
   background: white;
   border-bottom: 2px solid #bfcad2;
-  margin: 0.625em auto;
+  margin-bottom: 10px;
 }
 
 .panel_section-header {
@@ -52,13 +52,22 @@
 
 .panel_section-content li {
   list-style: none;
-  padding: 8px 0;
+  padding-bottom: 8px;
+  padding-right: 8px;
+}
+
+.panel_section-content figure {
+  height: 90px;
 }
 
 .panel_main-header {
   padding: 20px;
   font-size: 40px;
   font-weight: 700;
+}
+
+.panel_main-header--white {
+  background: white;
 }
 
 .panel_main-subheading {
@@ -68,8 +77,51 @@
 
 .col {
   float: left;
+  box-sizing: border-box;
 }
 
 .col-1-2 {
   width: 50%;
+}
+
+.panel_main-divider {
+  background: #f9f9f9;
+  padding: 10px 20px;
+}
+
+.panel_section > a:hover {
+  display: block;
+  text-decoration: underline;
+}
+
+.green {
+  color: #41b866;
+}
+
+.red {
+  color: #DE3D3D;
+}
+
+.black {
+  color: black;
+}
+
+.white {
+  color: antiquewhite;
+}
+
+.yellow {
+  color: yellow;
+}
+
+.oolong {
+  color: #35613D;
+}
+
+.herbal {
+  color: #C98420;
+}
+
+.dark {
+  color: darkgray;
 }

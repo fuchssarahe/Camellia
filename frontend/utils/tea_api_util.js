@@ -18,12 +18,39 @@ const TeaApiUtil = {
   },
 
   createTea: function (tea, callback, errorCallback) {
+    const data = new FormData(tea);
+    // Object.keys(tea).forEach( (property) => {
+    //   console.log(property);
+    //   if (property === 'image') {
+    //     console.log('processing image');
+    //     data.set(property, tea[property], tea[property].name)
+    //   } else {
+    //     console.log('processing another field');
+    //     data.set(property, tea[property])
+    //   }
+    // })
+    console.log('tea');
+    console.log(tea);
+    console.log('data');
+    console.log(data);
+
+    // const params = JSON.stringify({tea: tea});
+    // console.log('params');
+    // console.log(params);
+
     $.ajax({
       type: 'POST',
       url: 'api/teas',
-      data: {tea: tea},
+      contentType: 'multipart/form-data',
+      cache: false,
+      processData: false,
+      data: {tea: data.serialize()},
       success: callback,
-      error: (err) => errorCallback('newTea', err)
+      error: (err) => {
+        console.log('err');
+        console.log(err);
+        errorCallback('newTea', err);
+      }
     })
   }
 }

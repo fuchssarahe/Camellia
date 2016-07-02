@@ -1,10 +1,10 @@
 @font-face {
     font-family: 'icomoon';
-    src:    font-url('icomoon.eot?a3mqsc');
-    src:    font-url('icomoon.eot?a3mqsc#iefix') format('embedded-opentype'),
-        font-url('icomoon.ttf?a3mqsc') format('truetype'),
-        font-url('icomoon.woff?a3mqsc') format('woff'),
-        font-url('icomoon.svg?a3mqsc#icomoon') format('svg');
+    src:    font-url('icomoon.eot?j9run8');
+    src:    font-url('icomoon.eot?j9run8#iefix') format('embedded-opentype'),
+        font-url('icomoon.ttf?j9run8') format('truetype'),
+        font-url('icomoon.woff?j9run8') format('woff'),
+        font-url('icomoon.svg?j9run8#icomoon') format('svg');
     font-weight: normal;
     font-style: normal;
 }
@@ -24,6 +24,12 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-select-arrows:before {
+    content: "\e902";
+}
+.icon-thermometer-half:before {
+    content: "\e900";
+}
 .icon-pencil2:before {
     content: "\e906";
 }
@@ -36,8 +42,8 @@
 .icon-leaf:before {
     content: "\e9a4";
 }
-.icon-thermometer-half:before {
-    content: "\e900";
+.icon-earth:before {
+    content: "\e9ca";
 }
 .icon-balance-scale:before {
     content: "\e901";

@@ -15,11 +15,27 @@ const TeaIndexItem = React.createClass({
   },
 
   render: function () {
+
+    let color = this.props.tea.tea_type.toLowerCase()
+    if (color === 'other') {
+      color = ""
+    }
+
     return (
       <li className='panel_section'>
-        <section className='panel_section-content'>
-        <Link to={'/teas/' + this.props.tea.id} >Tea: {this.props.tea.name}</Link>
-        </section>
+        <ul className='cf panel_section-content'>
+          <li className="col col-1-2">
+            <p className="panel_main-subheading">
+              <Link to={'/teas/' + this.props.tea.id}>{this.props.tea.name}</Link>
+            </p>
+            <p><span className={"icon-leaf" + ' ' + color} />Type: {this.props.tea.tea_type}</p>
+            <p><span className='icon-earth' />Region: {this.props.tea.region}</p>
+            <p><span className="icon-office" />Retailer: {this.props.tea.retailer}</p>
+          </li>
+          <li className="col col-1-2">
+            <figure>This is a figure.</figure>
+          </li>
+        </ul>
       </li>
     )
   }

@@ -16,6 +16,7 @@ const TeaForm = React.createClass({
       leaf_quantity: '',
       leaf_density: '',
       retailer: '',
+      image: '',
       errors: ErrorStore.formErrors()
     }
   },
@@ -36,12 +37,17 @@ const TeaForm = React.createClass({
   },
 
   _handleInput: function (event, property) {
-    this.setState({[property]: event.target.value})
+    this.setState({[property]: event.target.value});
+  },
+
+  _handleImageInput: function (event) {
+    this.setState({image: event.target.files[0]});
   },
 
   _handleSubmit: function (event) {
+    console.log(this.state);
     event.preventDefault();
-    TeaActions.createTea(this.state);
+    TeaActions.createTea(event.target);
     // window.location.history
   },
 
@@ -65,7 +71,7 @@ const TeaForm = React.createClass({
 
           <label>Type
             <select onChange={(event) => this._handleInput(event, 'tea_type')}>
-              <option>Please select a tea type!</option>
+              <option hidden style={{display: 'none'}} >Select a type!</option>
               {
                 TeaConstants.ALL_TYPES.map( (type) => {
                   return <option name={type} key={type}>{type}</option>;
@@ -76,7 +82,7 @@ const TeaForm = React.createClass({
 
           <label>Region
             <select onChange={(event) => this._handleInput(event, 'region')}>
-              <option>Please select a region!</option>
+              <option hidden style={{display: 'none'}}>Select a region!</option>
               {
                 TeaConstants.ALL_REGIONS.map( (region) => {
                   return <option name={region} key={region}>{region}</option>;
@@ -119,6 +125,13 @@ const TeaForm = React.createClass({
                    onChange={(event) => this._handleInput(event, 'retailer')}
                    value={this.state.retailer}
                    placeholder='Louisville Tea Company'/>
+          </label>
+
+          <label>Image
+            <input type="file"
+                   accept="image/*"
+                   ref='image'
+                   onChange={this._handleImageInput}/>
           </label>
 
           <input type="submit" value="Create Tea!" className="submit-input" />

@@ -51,13 +51,13 @@
 	var React = __webpack_require__(4),
 	    ReactDOM = __webpack_require__(100),
 	    App = __webpack_require__(230),
-	    Splash = __webpack_require__(268),
+	    Splash = __webpack_require__(258),
 	    SessionActions = __webpack_require__(231),
-	    AuthForm = __webpack_require__(258),
+	    AuthForm = __webpack_require__(259),
 	    SessionStore = __webpack_require__(240),
-	    TeaIndex = __webpack_require__(260),
-	    TeaShow = __webpack_require__(267),
-	    TeaForm = __webpack_require__(265);
+	    TeaIndex = __webpack_require__(262),
+	    TeaShow = __webpack_require__(269),
+	    TeaForm = __webpack_require__(267);
 	
 	var routes = React.createElement(
 	  _reactRouter.Route,
@@ -33041,15 +33041,38 @@
 /* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
+	
+	var React = __webpack_require__(4);
+	
+	var Splash = React.createClass({
+	  displayName: "Splash",
+	
+	  render: function render() {
+	    return React.createElement(
+	      "div",
+	      { className: "splash" },
+	      React.createElement("figure", { className: "splash splash--banner" })
+	    );
+	  }
+	
+	});
+	
+	module.exports = Splash;
+
+/***/ },
+/* 259 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	var React = __webpack_require__(4),
 	    SessionStore = __webpack_require__(240),
-	    ErrorStore = __webpack_require__(259),
+	    ErrorStore = __webpack_require__(260),
 	    SessionActions = __webpack_require__(231),
-	    Errors = __webpack_require__(269);
+	    Errors = __webpack_require__(261);
 	
 	var AuthForm = React.createClass({
 	  displayName: 'AuthForm',
@@ -33167,7 +33190,7 @@
 	module.exports = AuthForm;
 
 /***/ },
-/* 259 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33223,18 +33246,69 @@
 	module.exports = ErrorsStore;
 
 /***/ },
-/* 260 */
+/* 261 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(4);
+	
+	var Errors = React.createClass({
+	  displayName: 'Errors',
+	
+	  render: function render() {
+	    var errors = React.createElement(
+	      'ul',
+	      { className: 'errors' },
+	      parseErrors(this.props.errors)
+	    );
+	
+	    if (Object.keys(this.props.errors).length === 0) {
+	      errors = '';
+	    }
+	
+	    return React.createElement(
+	      'div',
+	      null,
+	      errors
+	    );
+	  }
+	});
+	
+	function parseErrors(errors) {
+	  return Object.keys(errors).map(function (field) {
+	    var parsedErrorsForField = errors[field].join(", ");
+	    if (field === 'base') {
+	      return React.createElement(
+	        'li',
+	        { key: field },
+	        'Oops! ' + parsedErrorsForField[0].toUpperCase() + parsedErrorsForField.slice(1) + '!'
+	      );
+	    };
+	
+	    return React.createElement(
+	      'li',
+	      { key: field },
+	      'Oops! ' + field[0].toUpperCase() + field.slice(1) + ' ' + parsedErrorsForField + '!'
+	    );
+	  });
+	}
+	
+	module.exports = Errors;
+
+/***/ },
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(4),
-	    TeaStore = __webpack_require__(261),
-	    TeaActions = __webpack_require__(263),
-	    TeaForm = __webpack_require__(265),
+	    TeaStore = __webpack_require__(263),
+	    TeaActions = __webpack_require__(265),
+	    TeaForm = __webpack_require__(267),
 	
 	// ErrorStore = require('../stores/error_store'),
-	TeaIndexItem = __webpack_require__(266);
+	TeaIndexItem = __webpack_require__(268);
 	
 	var TeaIndex = React.createClass({
 	  displayName: 'TeaIndex',
@@ -33276,6 +33350,17 @@
 	      React.createElement(
 	        'ul',
 	        { className: 'panel panel_main' },
+	        React.createElement(
+	          'div',
+	          { className: 'panel_main-header panel_main-header--white' },
+	          'These are some of them search results'
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'panel_main-divider' },
+	          Object.keys(this.state.teas).length,
+	          ' teas found'
+	        ),
 	        Object.keys(this.state.teas).map(function (teaId) {
 	          return React.createElement(TeaIndexItem, { key: teaId, tea: _this.state.teas[teaId] });
 	        })
@@ -33301,13 +33386,13 @@
 	module.exports = TeaIndex;
 
 /***/ },
-/* 261 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var Store = __webpack_require__(241).Store,
-	    TeaConstants = __webpack_require__(262),
+	    TeaConstants = __webpack_require__(264),
 	    Dispatcher = __webpack_require__(232);
 	
 	var TeaStore = new Store(Dispatcher);
@@ -33351,7 +33436,7 @@
 	module.exports = TeaStore;
 
 /***/ },
-/* 262 */
+/* 264 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -33370,15 +33455,15 @@
 	module.exports = TeaConstants;
 
 /***/ },
-/* 263 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var TeaApiUtil = __webpack_require__(264),
+	var TeaApiUtil = __webpack_require__(266),
 	    ErrorActions = __webpack_require__(238),
 	    Dispatcher = __webpack_require__(232),
-	    TeaConstants = __webpack_require__(262);
+	    TeaConstants = __webpack_require__(264);
 	
 	var TeaActions = {
 	  fetchTeas: function fetchTeas() {
@@ -33415,7 +33500,7 @@
 	module.exports = TeaActions;
 
 /***/ },
-/* 264 */
+/* 266 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -33440,13 +33525,38 @@
 	  },
 	
 	  createTea: function createTea(tea, callback, errorCallback) {
+	    var data = new FormData(tea);
+	    // Object.keys(tea).forEach( (property) => {
+	    //   console.log(property);
+	    //   if (property === 'image') {
+	    //     console.log('processing image');
+	    //     data.set(property, tea[property], tea[property].name)
+	    //   } else {
+	    //     console.log('processing another field');
+	    //     data.set(property, tea[property])
+	    //   }
+	    // })
+	    console.log('tea');
+	    console.log(tea);
+	    console.log('data');
+	    console.log(data);
+	
+	    // const params = JSON.stringify({tea: tea});
+	    // console.log('params');
+	    // console.log(params);
+	
 	    $.ajax({
 	      type: 'POST',
 	      url: 'api/teas',
-	      data: { tea: tea },
+	      contentType: 'multipart/form-data',
+	      cache: false,
+	      processData: false,
+	      data: { tea: data.serialize() },
 	      success: callback,
 	      error: function error(err) {
-	        return errorCallback('newTea', err);
+	        console.log('err');
+	        console.log(err);
+	        errorCallback('newTea', err);
 	      }
 	    });
 	  }
@@ -33455,7 +33565,7 @@
 	module.exports = TeaApiUtil;
 
 /***/ },
-/* 265 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33463,10 +33573,10 @@
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	var React = __webpack_require__(4),
-	    ErrorStore = __webpack_require__(259),
-	    TeaActions = __webpack_require__(263),
-	    TeaConstants = __webpack_require__(262),
-	    Errors = __webpack_require__(269);
+	    ErrorStore = __webpack_require__(260),
+	    TeaActions = __webpack_require__(265),
+	    TeaConstants = __webpack_require__(264),
+	    Errors = __webpack_require__(261);
 	
 	var TeaForm = React.createClass({
 	  displayName: 'TeaForm',
@@ -33482,6 +33592,7 @@
 	      leaf_quantity: '',
 	      leaf_density: '',
 	      retailer: '',
+	      image: '',
 	      errors: ErrorStore.formErrors()
 	    };
 	  },
@@ -33505,9 +33616,14 @@
 	    this.setState(_defineProperty({}, property, event.target.value));
 	  },
 	
+	  _handleImageInput: function _handleImageInput(event) {
+	    this.setState({ image: event.target.files[0] });
+	  },
+	
 	  _handleSubmit: function _handleSubmit(event) {
+	    console.log(this.state);
 	    event.preventDefault();
-	    TeaActions.createTea(this.state);
+	    TeaActions.createTea(event.target);
 	    // window.location.history
 	  },
 	
@@ -33553,8 +33669,8 @@
 	              } },
 	            React.createElement(
 	              'option',
-	              null,
-	              'Please select a tea type!'
+	              { hidden: true, style: { display: 'none' } },
+	              'Select a type!'
 	            ),
 	            TeaConstants.ALL_TYPES.map(function (type) {
 	              return React.createElement(
@@ -33576,8 +33692,8 @@
 	              } },
 	            React.createElement(
 	              'option',
-	              null,
-	              'Please select a region!'
+	              { hidden: true, style: { display: 'none' } },
+	              'Select a region!'
 	            ),
 	            TeaConstants.ALL_REGIONS.map(function (region) {
 	              return React.createElement(
@@ -33644,6 +33760,15 @@
 	            value: this.state.retailer,
 	            placeholder: 'Louisville Tea Company' })
 	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Image',
+	          React.createElement('input', { type: 'file',
+	            accept: 'image/*',
+	            ref: 'image',
+	            onChange: this._handleImageInput })
+	        ),
 	        React.createElement('input', { type: 'submit', value: 'Create Tea!', className: 'submit-input' })
 	      )
 	    );
@@ -33653,7 +33778,7 @@
 	module.exports = TeaForm;
 
 /***/ },
-/* 266 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33661,7 +33786,7 @@
 	var _reactRouter = __webpack_require__(1);
 	
 	var React = __webpack_require__(4),
-	    TeaStore = __webpack_require__(261);
+	    TeaStore = __webpack_require__(263);
 	// ErrorStore = require('../stores/error_store');
 	
 	var TeaIndexItem = React.createClass({
@@ -33678,17 +33803,60 @@
 	  },
 	
 	  render: function render() {
+	
+	    var color = this.props.tea.tea_type.toLowerCase();
+	    if (color === 'other') {
+	      color = "";
+	    }
+	
 	    return React.createElement(
 	      'li',
 	      { className: 'panel_section' },
 	      React.createElement(
-	        'section',
-	        { className: 'panel_section-content' },
+	        'ul',
+	        { className: 'cf panel_section-content' },
 	        React.createElement(
-	          _reactRouter.Link,
-	          { to: '/teas/' + this.props.tea.id },
-	          'Tea: ',
-	          this.props.tea.name
+	          'li',
+	          { className: 'col col-1-2' },
+	          React.createElement(
+	            'p',
+	            { className: 'panel_main-subheading' },
+	            React.createElement(
+	              _reactRouter.Link,
+	              { to: '/teas/' + this.props.tea.id },
+	              this.props.tea.name
+	            )
+	          ),
+	          React.createElement(
+	            'p',
+	            null,
+	            React.createElement('span', { className: "icon-leaf" + ' ' + color }),
+	            'Type: ',
+	            this.props.tea.tea_type
+	          ),
+	          React.createElement(
+	            'p',
+	            null,
+	            React.createElement('span', { className: 'icon-earth' }),
+	            'Region: ',
+	            this.props.tea.region
+	          ),
+	          React.createElement(
+	            'p',
+	            null,
+	            React.createElement('span', { className: 'icon-office' }),
+	            'Retailer: ',
+	            this.props.tea.retailer
+	          )
+	        ),
+	        React.createElement(
+	          'li',
+	          { className: 'col col-1-2' },
+	          React.createElement(
+	            'figure',
+	            null,
+	            'This is a figure.'
+	          )
 	        )
 	      )
 	    );
@@ -33698,15 +33866,15 @@
 	module.exports = TeaIndexItem;
 
 /***/ },
-/* 267 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	// import { Link } from 'react-router';
 	var React = __webpack_require__(4),
-	    TeaStore = __webpack_require__(261),
-	    TeaActions = __webpack_require__(263);
+	    TeaStore = __webpack_require__(263),
+	    TeaActions = __webpack_require__(265);
 	// ErrorStore = require('../stores/error_store');
 	
 	var TeaShow = React.createClass({
@@ -33756,7 +33924,7 @@
 	      React.createElement(
 	        'aside',
 	        { className: 'panel panel_left' },
-	        React.createElement('figure', null),
+	        React.createElement('figure', { className: 'profile-img' }),
 	        React.createElement(
 	          'section',
 	          { className: 'panel_section' },
@@ -33869,80 +34037,6 @@
 	});
 	
 	module.exports = TeaShow;
-
-/***/ },
-/* 268 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var React = __webpack_require__(4);
-	
-	var Splash = React.createClass({
-	  displayName: "Splash",
-	
-	  render: function render() {
-	    return React.createElement(
-	      "div",
-	      { className: "splash" },
-	      React.createElement("figure", { className: "splash splash--banner" })
-	    );
-	  }
-	
-	});
-	
-	module.exports = Splash;
-
-/***/ },
-/* 269 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(4);
-	
-	var Errors = React.createClass({
-	  displayName: 'Errors',
-	
-	  render: function render() {
-	    var errors = React.createElement(
-	      'ul',
-	      { className: 'errors' },
-	      parseErrors(this.props.errors)
-	    );
-	
-	    if (Object.keys(this.props.errors).length === 0) {
-	      errors = '';
-	    }
-	
-	    return React.createElement(
-	      'div',
-	      null,
-	      errors
-	    );
-	  }
-	});
-	
-	function parseErrors(errors) {
-	  return Object.keys(errors).map(function (field) {
-	    var parsedErrorsForField = errors[field].join(", ");
-	    if (field === 'base') {
-	      return React.createElement(
-	        'li',
-	        { key: field },
-	        'Oops! ' + parsedErrorsForField[0].toUpperCase() + parsedErrorsForField.slice(1) + '!'
-	      );
-	    };
-	
-	    return React.createElement(
-	      'li',
-	      { key: field },
-	      'Oops! ' + field[0].toUpperCase() + field.slice(1) + ' ' + parsedErrorsForField + '!'
-	    );
-	  });
-	}
-	
-	module.exports = Errors;
 
 /***/ }
 /******/ ]);
