@@ -11,23 +11,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160629223905) do
+ActiveRecord::Schema.define(version: 20160701172414) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "teas", force: :cascade do |t|
-    t.string   "name",          null: false
-    t.text     "description",   null: false
-    t.string   "region",        null: false
-    t.integer  "steep_time",    null: false
-    t.integer  "temperature",   null: false
-    t.integer  "leaf_quantity", null: false
-    t.integer  "leaf_density",  null: false
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
-    t.string   "tea_type",      null: false
-    t.string   "retailer",      null: false
+    t.string   "name",            null: false
+    t.text     "description",     null: false
+    t.string   "region",          null: false
+    t.integer  "steep_time",      null: false
+    t.integer  "temperature",     null: false
+    t.integer  "leaf_quantity",   null: false
+    t.integer  "leaf_density",    null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.string   "tea_type",        null: false
+    t.string   "retailer",        null: false
+    t.string   "image_public_id"
   end
 
   add_index "teas", ["name"], name: "index_teas_on_name", unique: true, using: :btree

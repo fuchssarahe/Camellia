@@ -3,7 +3,7 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 
-html, body, div, ul, section, article, aside, p, h1, h2, h3, h4, input, button, a, textarea, select, form {
+html, body, div, ul, section, article, aside, p, h1, h2, h3, h4, input, button, a, textarea, select, form, label, li, figure {
   margin: 0;
   padding: 0;
   border: 0;
@@ -28,6 +28,15 @@ a {
   cursor: pointer;
 }
 
+span {
+  margin-right: 10px;
+}
+
+figure {
+  text-align: center;
+  border: 1px solid black;
+}
+
 button {
   border: 1px solid #41b866 ;
   padding: 12px 8px;
@@ -45,7 +54,7 @@ button {
 }
 
 input, select, textarea {
-  border: 1px solid #bfcad2 ;
+  border: 1px solid #bfcad2;
   padding: 6px 8px;
   border-radius: 4px;
   margin-bottom: 10px;

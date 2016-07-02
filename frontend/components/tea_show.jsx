@@ -46,7 +46,9 @@ const TeaShow = React.createClass({
     return (
       <div className="cf container">
         <aside className='panel panel_left'>
-          <figure></figure>
+          <figure className="profile-img">
+            
+          </figure>
           <section className='panel_section'>
             <h2 className='panel_section-header'>Aside</h2>
             <p className='panel_section-content'>content</p>

@@ -9,24 +9,11 @@
 .tea_form input, textarea, select {
     width: 100%;
 }
-//
-// .tea_form input {
-//   display: block;
-// }
-//
-// .tea_form textarea {
-//   min-height: 100px;
-//   width: 100%;
-//   display: block;
-// }
-//
-// .tea_form select {
-//   width: 100%;
-//   display: block;
-//
-// }
 
-.tea_form label {
-  display: flex;
-  flex-direction: column;
+.tea_form select {
+  appearance: none;
+  text-overflow: '';
+  text-indent: 0.01px;
+  overflow: hidden;
+  background: url(select-arrows.png) no-repeat right;
 }
