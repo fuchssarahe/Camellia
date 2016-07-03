@@ -1,3 +1,10 @@
+.header-holder {
+  position: fixed;
+  min-height: 100px;
+  width: 100%;
+  display: block;
+}
+
 .site-nav {
   display: flex;
   flex-direction: row;
@@ -7,6 +14,7 @@
   height: 60px;
   padding: 0 20px;
   background: white;
+  position: relative;
 }
 
 .auth-buttons {
@@ -24,4 +32,9 @@
 .site-nav img {
   max-height: 30px;
   width: auto;
+}
+
+.footer {
+  padding: 40px 0 24px 0;
+  text-align: center;
 }

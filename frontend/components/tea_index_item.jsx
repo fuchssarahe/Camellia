@@ -33,9 +33,9 @@ const TeaIndexItem = React.createClass({
         <Link to={'/teas/' + this.props.tea.id}>
           <ul className='cf panel_section-content'>
             <li className="col col-1-2">
-              <p className="panel_main-subheading">
-                <div>{this.props.tea.name}</div>
-              </p>
+              <div className="panel_main-subheading">
+                <p>{this.props.tea.name}</p>
+              </div>
               <p><span className={"icon-leaf" + ' ' + color} />Type: {this.props.tea.tea_type}</p>
               <p><span className='icon-earth' />Region: {this.props.tea.region}</p>
               <p><span className="icon-office" />Retailer: {this.props.tea.retailer}</p>

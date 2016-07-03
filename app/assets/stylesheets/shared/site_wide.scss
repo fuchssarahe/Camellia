@@ -22,6 +22,7 @@ html, body, div, ul, section, article, aside, p, h1, h2, h3, h4, input, button, 
 html {
   font-size: 15px;
   color: #27374c;
+  box-sizing: border-box;
 }
 
 a {
@@ -32,12 +33,35 @@ span {
   margin-right: 10px;
 }
 
+input, select, textarea {
+  border: 1px solid #bfcad2;
+  padding: 6px 8px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
 button {
   border: 1px solid #41b866 ;
   padding: 12px 8px;
   border-radius: 4px;
   margin-left: 10px;
-  background: #41b866 ;
+  background: #41b866;
+  color: white;
+}
+
+button:hover {
+  cursor: pointer;
+  background: darken(#41b866 , 7%);
+}
+
+.minor-button {
+  background: white;
+  color: #41b866;
+  border: 1px solid #41b866 ;
+}
+
+.minor-button:hover {
+  background: lighten(#41b866, 20%);
   color: white;
 }
 
@@ -46,18 +70,6 @@ button {
   background: #41b866;
   color: white;
   text-align: center;
-}
-
-input, select, textarea {
-  border: 1px solid #bfcad2;
-  padding: 6px 8px;
-  border-radius: 4px;
-  margin-bottom: 10px;
-}
-
-button:hover {
-  cursor: pointer;
-  background: darken(#41b866 , 7%);
 }
 
 .submit-input:hover {
@@ -71,6 +83,18 @@ button:hover {
   background-color: rgba(198,61,67,0.25);
   color: #3e1214;
   padding: 10px 10px;
+}
+
+.container {
+  background: #f1efea;
+  padding: 10px 0;
+  height: 100%;
+  padding-top: 73px;
+  min-height: calc(100vh - 82px);
+}
+
+.profile-img {
+  width: 100%;
 }
 
 .cf:after {

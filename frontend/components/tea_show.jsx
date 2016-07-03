@@ -46,12 +46,12 @@ const TeaShow = React.createClass({
     return (
       <div className="cf container">
         <aside className='panel panel_left'>
-          <figure className="profile-img">
-            
+          <figure className="panel_section">
+            <img src={this.state.tea.image_public_id} alt="Tea Image" className="profile-img"/>
           </figure>
           <section className='panel_section'>
-            <h2 className='panel_section-header'>Aside</h2>
-            <p className='panel_section-content'>content</p>
+            <h2 className='panel_section-header'>Your Review</h2>
+            <p className='panel_section-content'>You haven't reviewed this tea yet!</p>
           </section>
         </aside>
 
