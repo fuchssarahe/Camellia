@@ -48,16 +48,14 @@
 .panel_section-content {
   list-style: none;
   padding: 20px;
+  display: flex;
+  align-items: center;
 }
 
 .panel_section-content li {
   list-style: none;
   padding-bottom: 8px;
   padding-right: 8px;
-}
-
-.panel_section-content figure {
-  height: 90px;
 }
 
 .panel_main-header {
@@ -124,4 +122,19 @@
 
 .dark {
   color: darkgray;
+}
+
+.index-item_image {
+  margin: auto;
+  height: auto;
+  max-height: 150px;
+}
+
+.index-item_image--empty {
+  min-height: 100px;
+  background-image: url('http://res.cloudinary.com/fuchssarahe/image/upload/v1467519823/Screen_Shot_2016-07-02_at_9.10.39_PM_ozihtp.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center bottom;
+
 }
