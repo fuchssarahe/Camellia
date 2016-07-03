@@ -21,6 +21,13 @@ const TeaIndexItem = React.createClass({
       color = ""
     }
 
+    let figureContents;
+    if (this.props.tea.image_public_id) {
+      figureContents = <img src={this.props.tea.image_public_id} alt="Tea Image" className="index-item_image"/>
+    } else {
+      figureContents = <div className="index-item_image--empty"></div>
+    }
+
     return (
       <li className='panel_section'>
         <ul className='cf panel_section-content'>
@@ -33,7 +40,9 @@ const TeaIndexItem = React.createClass({
             <p><span className="icon-office" />Retailer: {this.props.tea.retailer}</p>
           </li>
           <li className="col col-1-2">
-            <figure>This is a figure.</figure>
+            <figure>
+              {figureContents}
+            </figure>
           </li>
         </ul>
       </li>

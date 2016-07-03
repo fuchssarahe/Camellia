@@ -33799,6 +33799,13 @@
 	      color = "";
 	    }
 	
+	    var figureContents = void 0;
+	    if (this.props.tea.image_public_id) {
+	      figureContents = React.createElement('img', { src: this.props.tea.image_public_id, alt: 'Tea Image', className: 'index-item_image' });
+	    } else {
+	      figureContents = React.createElement('div', { className: 'index-item_image--empty' });
+	    }
+	
 	    return React.createElement(
 	      'li',
 	      { className: 'panel_section' },
@@ -33845,7 +33852,7 @@
 	          React.createElement(
 	            'figure',
 	            null,
-	            'This is a figure.'
+	            figureContents
 	          )
 	        )
 	      )
