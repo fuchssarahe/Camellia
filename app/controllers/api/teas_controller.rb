@@ -2,7 +2,6 @@ class Api::TeasController < ApplicationController
 
   def create
     @tea = Tea.new(tea_params)
-    p @tea
     if @tea.save
       render :show
     else
