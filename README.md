@@ -79,8 +79,8 @@ user interface.
 - [x] setup React Router
 - [ ] implement each tea component, building out the flux loop as needed.
   - [x] `TeasIndex`
-  - [ ] `TeaIndexItem` (10%)
-  - [ ] `TeaForm` (90%)
+  - [x] `TeaIndexItem`
+  - [x] `TeaForm`
   - [ ] `TeaShow` (60%)
 - [ ] use CSS to style views
 
