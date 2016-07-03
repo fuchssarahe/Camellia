@@ -47,7 +47,7 @@ const TeaForm = React.createClass({
   _handleSubmit: function (event) {
     console.log(this.state);
     event.preventDefault();
-    TeaActions.createTea(event.target);
+    TeaActions.createTea(this.state);
     // window.location.history
   },
 

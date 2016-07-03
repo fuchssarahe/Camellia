@@ -1,12 +1,8 @@
 class Api::TeasController < ApplicationController
 
   def create
-    p 'printing params'
-    p params
     @tea = Tea.new(tea_params)
-    upload_params = Cloudinary::Uploader.upload(user_params[:image])
-    @tea.image_public_id = upload_params[:url]
-
+    p @tea
     if @tea.save
       render :show
     else
