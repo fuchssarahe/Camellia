@@ -26033,7 +26033,7 @@
 	          null,
 	          React.createElement(
 	            'button',
-	            { onClick: this._navToSignup },
+	            { onClick: this._navToSignup, className: 'minor-button' },
 	            'Sign Up'
 	          )
 	        ),
@@ -26042,7 +26042,7 @@
 	          null,
 	          React.createElement(
 	            'button',
-	            { onClick: this._navToLogin },
+	            { onClick: this._navToLogin, className: 'minor-button' },
 	            'Login'
 	          )
 	        ),
@@ -26062,22 +26062,31 @@
 	      'div',
 	      null,
 	      React.createElement(
-	        'header',
-	        { className: 'site-nav' },
+	        'div',
+	        { className: 'header-holder' },
 	        React.createElement(
-	          _reactRouter.Link,
-	          { to: '/' },
-	          React.createElement('img', { src: 'https://raw.githubusercontent.com/fuchssarahe/Camellia/master/app/assets/images/camellia_logo.png', alt: 'Camellia Logo' })
-	        ),
-	        React.createElement(
-	          'label',
-	          { 'for': 'search-bar' },
-	          'Search:',
-	          React.createElement('input', { type: 'text', onChange: this._navToTeasIndex, id: 'search-bar' })
-	        ),
-	        buttons
+	          'header',
+	          { className: 'site-nav' },
+	          React.createElement(
+	            _reactRouter.Link,
+	            { to: '/' },
+	            React.createElement('img', { src: 'https://raw.githubusercontent.com/fuchssarahe/Camellia/master/app/assets/images/camellia_logo.png', alt: 'Camellia Logo' })
+	          ),
+	          React.createElement(
+	            'label',
+	            { 'for': 'search-bar' },
+	            'Search:',
+	            React.createElement('input', { type: 'text', onChange: this._navToTeasIndex, id: 'search-bar' })
+	          ),
+	          buttons
+	        )
 	      ),
-	      this.props.children
+	      this.props.children,
+	      React.createElement(
+	        'footer',
+	        { className: 'footer' },
+	        'this will be the footer.'
+	      )
 	    );
 	  }
 	});
@@ -33819,10 +33828,10 @@
 	            'li',
 	            { className: 'col col-1-2' },
 	            React.createElement(
-	              'p',
+	              'div',
 	              { className: 'panel_main-subheading' },
 	              React.createElement(
-	                'div',
+	                'p',
 	                null,
 	                this.props.tea.name
 	              )
@@ -33925,19 +33934,23 @@
 	      React.createElement(
 	        'aside',
 	        { className: 'panel panel_left' },
-	        React.createElement('figure', { className: 'profile-img' }),
+	        React.createElement(
+	          'figure',
+	          { className: 'panel_section' },
+	          React.createElement('img', { src: this.state.tea.image_public_id, alt: 'Tea Image', className: 'profile-img' })
+	        ),
 	        React.createElement(
 	          'section',
 	          { className: 'panel_section' },
 	          React.createElement(
 	            'h2',
 	            { className: 'panel_section-header' },
-	            'Aside'
+	            'Your Review'
 	          ),
 	          React.createElement(
 	            'p',
 	            { className: 'panel_section-content' },
-	            'content'
+	            'You haven\'t reviewed this tea yet!'
 	          )
 	        )
 	      ),

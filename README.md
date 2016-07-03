@@ -13,9 +13,9 @@ At a minimum, this app will satisfy the following criteria:
 - [x] Hosting on Heroku
 - [x] New account creation, login, and guest/demo login
 - [ ] A production README
-- [ ] Teas
+- [x] Teas
   - [x] teas hold information on type, region, and steep specifications
-  - [ ] each tea has a profile page listing details and reviews
+  - [x] each tea has a profile page listing details
 - [ ] Tea Search
   - [ ] search for by tea name
   - [ ] search bar is easily accessible from the header of any page
@@ -77,12 +77,12 @@ user interface.
 
 - [x] setup the flux loop with skeleton files
 - [x] setup React Router
-- [ ] implement each tea component, building out the flux loop as needed.
+- [x] implement each tea component, building out the flux loop as needed.
   - [x] `TeasIndex`
   - [x] `TeaIndexItem`
   - [x] `TeaForm`
-  - [ ] `TeaShow` (60%)
-- [ ] use CSS to style views
+  - [x] `TeaShow`
+- [x] use CSS to style views
 
 ### Phase 4: Type Ahead Search (1 day, W2 W 6pm)
 

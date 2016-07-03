@@ -47,22 +47,27 @@ const App = React.createClass({
     } else {
       buttons =
       <ul className='auth-buttons'>
-        <li><button onClick={this._navToSignup}>Sign Up</button></li>
-        <li><button onClick={this._navToLogin}>Login</button></li>
+        <li><button onClick={this._navToSignup} className="minor-button">Sign Up</button></li>
+        <li><button onClick={this._navToLogin} className="minor-button">Login</button></li>
         <li><button onClick={this._loginGuest}>Demo Acount</button></li>
       </ul>
     }
 
     return (
       <div>
-        <header className="site-nav">
+        <div className="header-holder">
+          <header className="site-nav">
           <Link to="/"><img src="https://raw.githubusercontent.com/fuchssarahe/Camellia/master/app/assets/images/camellia_logo.png" alt="Camellia Logo" /></Link>
           <label for='search-bar'>Search:
             <input type='text' onChange={this._navToTeasIndex} id='search-bar'/>
           </label>
           {buttons}
-        </header>
+          </header>
+        </div>
         {this.props.children}
+        <footer className="footer">
+          this will be the footer.
+        </footer>
       </div>)
   }
 });
