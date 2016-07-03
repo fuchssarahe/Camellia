@@ -33810,49 +33810,53 @@
 	      'li',
 	      { className: 'panel_section' },
 	      React.createElement(
-	        'ul',
-	        { className: 'cf panel_section-content' },
+	        _reactRouter.Link,
+	        { to: '/teas/' + this.props.tea.id },
 	        React.createElement(
-	          'li',
-	          { className: 'col col-1-2' },
+	          'ul',
+	          { className: 'cf panel_section-content' },
 	          React.createElement(
-	            'p',
-	            { className: 'panel_main-subheading' },
+	            'li',
+	            { className: 'col col-1-2' },
 	            React.createElement(
-	              _reactRouter.Link,
-	              { to: '/teas/' + this.props.tea.id },
-	              this.props.tea.name
+	              'p',
+	              { className: 'panel_main-subheading' },
+	              React.createElement(
+	                'div',
+	                null,
+	                this.props.tea.name
+	              )
+	            ),
+	            React.createElement(
+	              'p',
+	              null,
+	              React.createElement('span', { className: "icon-leaf" + ' ' + color }),
+	              'Type: ',
+	              this.props.tea.tea_type
+	            ),
+	            React.createElement(
+	              'p',
+	              null,
+	              React.createElement('span', { className: 'icon-earth' }),
+	              'Region: ',
+	              this.props.tea.region
+	            ),
+	            React.createElement(
+	              'p',
+	              null,
+	              React.createElement('span', { className: 'icon-office' }),
+	              'Retailer: ',
+	              this.props.tea.retailer
 	            )
 	          ),
 	          React.createElement(
-	            'p',
-	            null,
-	            React.createElement('span', { className: "icon-leaf" + ' ' + color }),
-	            'Type: ',
-	            this.props.tea.tea_type
-	          ),
-	          React.createElement(
-	            'p',
-	            null,
-	            React.createElement('span', { className: 'icon-earth' }),
-	            'Region: ',
-	            this.props.tea.region
-	          ),
-	          React.createElement(
-	            'p',
-	            null,
-	            React.createElement('span', { className: 'icon-office' }),
-	            'Retailer: ',
-	            this.props.tea.retailer
-	          )
-	        ),
-	        React.createElement(
-	          'li',
-	          { className: 'col col-1-2' },
-	          React.createElement(
-	            'figure',
-	            null,
-	            figureContents
+	            'li',
+	            { className: 'col col-1-2' },
+	            React.createElement(
+	              'figure',
+	              null,
+	              figureContents
+	            )
 	          )
 	        )
 	      )

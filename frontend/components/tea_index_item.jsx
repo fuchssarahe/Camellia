@@ -30,21 +30,23 @@ const TeaIndexItem = React.createClass({
 
     return (
       <li className='panel_section'>
-        <ul className='cf panel_section-content'>
-          <li className="col col-1-2">
-            <p className="panel_main-subheading">
-              <Link to={'/teas/' + this.props.tea.id}>{this.props.tea.name}</Link>
-            </p>
-            <p><span className={"icon-leaf" + ' ' + color} />Type: {this.props.tea.tea_type}</p>
-            <p><span className='icon-earth' />Region: {this.props.tea.region}</p>
-            <p><span className="icon-office" />Retailer: {this.props.tea.retailer}</p>
-          </li>
-          <li className="col col-1-2">
-            <figure>
-              {figureContents}
-            </figure>
-          </li>
-        </ul>
+        <Link to={'/teas/' + this.props.tea.id}>
+          <ul className='cf panel_section-content'>
+            <li className="col col-1-2">
+              <p className="panel_main-subheading">
+                <div>{this.props.tea.name}</div>
+              </p>
+              <p><span className={"icon-leaf" + ' ' + color} />Type: {this.props.tea.tea_type}</p>
+              <p><span className='icon-earth' />Region: {this.props.tea.region}</p>
+              <p><span className="icon-office" />Retailer: {this.props.tea.retailer}</p>
+            </li>
+            <li className="col col-1-2">
+              <figure>
+                {figureContents}
+              </figure>
+            </li>
+          </ul>
+        </Link>
       </li>
     )
   }
