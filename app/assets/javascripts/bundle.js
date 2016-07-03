@@ -33548,10 +33548,10 @@
 	    $.ajax({
 	      type: 'POST',
 	      url: 'api/teas',
-	      contentType: 'multipart/form-data',
-	      cache: false,
+	      contentType: 'application/json',
+	      // cache: false,
 	      processData: false,
-	      data: { tea: data.serialize() },
+	      data: JSON.stringify({ tea: tea }),
 	      success: callback,
 	      error: function error(err) {
 	        console.log('err');
@@ -33623,7 +33623,7 @@
 	  _handleSubmit: function _handleSubmit(event) {
 	    console.log(this.state);
 	    event.preventDefault();
-	    TeaActions.createTea(event.target);
+	    TeaActions.createTea(this.state);
 	    // window.location.history
 	  },
 	
