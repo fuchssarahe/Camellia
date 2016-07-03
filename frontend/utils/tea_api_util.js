@@ -18,33 +18,23 @@ const TeaApiUtil = {
   },
 
   createTea: function (tea, callback, errorCallback) {
-    const data = new FormData(tea);
-    // Object.keys(tea).forEach( (property) => {
-    //   console.log(property);
-    //   if (property === 'image') {
-    //     console.log('processing image');
-    //     data.set(property, tea[property], tea[property].name)
-    //   } else {
-    //     console.log('processing another field');
-    //     data.set(property, tea[property])
-    //   }
-    // })
-    console.log('tea');
-    console.log(tea);
-    console.log('data');
-    console.log(data);
-
-    // const params = JSON.stringify({tea: tea});
-    // console.log('params');
-    // console.log(params);
+    const data = new FormData();
+    Object.keys(tea).forEach( (property) => {
+      console.log(property);
+      if (property === 'image') {
+        data.append(`tea[${property}]`, tea[property], tea[property].name)
+      } else {
+        data.append(`tea[${property}]`, tea[property])
+      }
+    })
 
     $.ajax({
       type: 'POST',
       url: 'api/teas',
-      contentType: 'application/json',
-      // cache: false,
+      contentType: false,
+      cache: false,
       processData: false,
-      data: JSON.stringify({tea: tea}),
+      data: data,
       success: callback,
       error: (err) => {
         console.log('err');

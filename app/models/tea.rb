@@ -7,7 +7,7 @@ class Tea < ActiveRecord::Base
 
   def image=(file)
     upload_params = Cloudinary::Uploader.upload(file)
-    self.image_public_id = upload_params[:url]
+    self.image_public_id = upload_params['url']
   end
 
 end
