@@ -1,4 +1,4 @@
-const SearchSuggestionApiUtil = require('../utils/tea_api_util'),
+const SearchSuggestionApiUtil = require('../utils/search_suggestion_api_util'),
       ErrorActions = require('./error_actions'),
       Dispatcher = require('../dispatcher/dispatcher'),
       SearchSuggestionConstants = require('../constants/search_suggestion_constants');

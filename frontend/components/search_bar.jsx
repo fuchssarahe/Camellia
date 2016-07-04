@@ -1,31 +1,60 @@
+import { Link } from 'react-router';
 const React = require('react'),
-      TeaStore = require('../stores/tea_store'),
+      SessionStore = require('../stores/session_store'),
+      SearchSuggestionActions = require('../actions/search_suggestion_actions'),
       SearchSuggestionStore = require('../stores/search_suggestion_store');
 
 const SearchBar = React.createClass({
   getInitialState: function () {
-    return { suggestions: SearchSuggestionStore.all() }
+    return { suggestions: SearchSuggestionStore.all(), searchType: 'tea', query: '' }
   },
 
   componentWillMount: function () {
-    SuggestionStore.addListener(this._onChange);
+    SearchSuggestionStore.addListener(this._onChange);
   },
 
   _onChange: function () {
     this.setState( { suggestions: SearchSuggestionStore.all() } );
   },
 
-  _navToTeasIndex: function () {
-    if (!window.location.hash.includes('teas') || window.location.hash.lastIndexOf('?') >= 6) {
-      window.location.hash = '/teas';
-    }
+  _updateSuggestions: function (event) {
+    this.setState(
+      {query: event.target.value},
+      () => SearchSuggestionActions.fetchSuggestions( {[this.state.searchType]: this.state.query} )
+    )
+  },
+
+  _updateSearchType: function (event) {
+    this.setState({searchType: event.target.value})
   },
 
   render: function () {
+    if (!SessionStore.isUserLoggedIn) {
+      return <div></div>
+    }
+
     return (
-      <label for='search-bar'>Search:
-        <input type='text' onChange={this._navToTeasIndex} id='search-bar'/>
-      </label>
+      <form className="site-search">
+        <label>Search By:
+          <select onChange={this._updateSearchType}>
+            <option value="tea">Tea</option>
+            <option value="region">Region</option>
+            <option value="tea_type">Type</option>
+          </select>
+        </label>
+
+        <label>Search:
+          <input type='text' onChange={this._updateSuggestions} className="search-bar"/>
+        </label>
+
+        <ul className='search-suggestions'>
+          {
+            this.state.suggestions.map( (suggestion) => {
+              return <li key={suggestion.suggestion}><Link to={'teas/' + suggestion.tea_id}> {suggestion.suggestion+ `(${suggestion.suggestion_type})`}</Link></li>
+            })
+          }
+        </ul>
+      </form>
     )
   }
 });

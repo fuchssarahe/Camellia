@@ -2,13 +2,12 @@ const Store = require('flux/utils').Store,
       SearchSuggestionConstants = require('../constants/search_suggestion_constants'),
       Dispatcher = require('../dispatcher/dispatcher');
 
-const SearchSuggestionStore = new Store(Dispatcher);
+const SearchSuggestionStore = window.store = new Store(Dispatcher);
 
-_suggestions = {};
-
+let _suggestions = [];
 
 SearchSuggestionStore.all = function () {
-
+  return _suggestions.slice();
 };
 
 SearchSuggestionStore.__onDispatch = function (payload) {
