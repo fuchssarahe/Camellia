@@ -34,7 +34,7 @@ const SearchBar = React.createClass({
     }
 
     return (
-      <form className="site-search">
+      <form className="tea-search">
         <label>Search By:
           <select onChange={this._updateSearchType}>
             <option value="tea">Tea</option>
@@ -50,7 +50,20 @@ const SearchBar = React.createClass({
         <ul className='search-suggestions'>
           {
             this.state.suggestions.map( (suggestion) => {
-              return <li key={suggestion.suggestion}><Link to={'teas/' + suggestion.tea_id}> {suggestion.suggestion + ` (${suggestion.suggestion_type})`}</Link></li>
+
+              let className = '';
+              switch (suggestion.suggestion_type) {
+                case 'region':
+                  className = 'icon-earth';
+                  break;
+                case 'tea_type':
+                  className = 'icon-leaf ';
+                  className += suggestion.suggestion.toLowerCase();
+                  break;
+                default:
+              }
+
+              return <li key={suggestion.suggestion}><span className={className} /><Link to={'teas/' + suggestion.tea_id}> {suggestion.suggestion}</Link></li>
             })
           }
         </ul>
