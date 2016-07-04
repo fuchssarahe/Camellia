@@ -50,7 +50,7 @@ const SearchBar = React.createClass({
         <ul className='search-suggestions'>
           {
             this.state.suggestions.map( (suggestion) => {
-              return <li key={suggestion.suggestion}><Link to={'teas/' + suggestion.tea_id}> {suggestion.suggestion+ `(${suggestion.suggestion_type})`}</Link></li>
+              return <li key={suggestion.suggestion}><Link to={'teas/' + suggestion.tea_id}> {suggestion.suggestion + ` (${suggestion.suggestion_type})`}</Link></li>
             })
           }
         </ul>

@@ -34133,7 +34133,7 @@
 	              _reactRouter.Link,
 	              { to: 'teas/' + suggestion.tea_id },
 	              ' ',
-	              suggestion.suggestion + ('(' + suggestion.suggestion_type + ')')
+	              suggestion.suggestion + (' (' + suggestion.suggestion_type + ')')
 	            )
 	          );
 	        })
