@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     resources :users, only: :create
     resource :session, only: [:create, :destroy, :show]
     resources :teas, only: [:create, :show, :index]
+    resources :search_suggestions, only: [:index]
   end
 
 end

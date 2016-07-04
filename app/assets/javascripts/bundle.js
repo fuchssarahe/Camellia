@@ -25975,7 +25975,8 @@
 	
 	var React = __webpack_require__(4),
 	    SessionActions = __webpack_require__(231),
-	    SessionStore = __webpack_require__(240);
+	    SessionStore = __webpack_require__(240),
+	    SearchBar = __webpack_require__(270);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -25998,12 +25999,6 @@
 	
 	  _navToLogin: function _navToLogin() {
 	    window.location.hash = '/login';
-	  },
-	
-	  _navToTeasIndex: function _navToTeasIndex() {
-	    if (!window.location.hash.includes('teas') || window.location.hash.lastIndexOf('?') >= 6) {
-	      window.location.hash = '/teas';
-	    }
 	  },
 	
 	  _logout: function _logout() {
@@ -26072,12 +26067,7 @@
 	            { to: '/' },
 	            React.createElement('img', { src: 'https://raw.githubusercontent.com/fuchssarahe/Camellia/master/app/assets/images/camellia_logo.png', alt: 'Camellia Logo' })
 	          ),
-	          React.createElement(
-	            'label',
-	            { 'for': 'search-bar' },
-	            'Search:',
-	            React.createElement('input', { type: 'text', onChange: this._navToTeasIndex, id: 'search-bar' })
-	          ),
+	          React.createElement(SearchBar, null),
 	          buttons
 	        )
 	      ),
@@ -34051,6 +34041,49 @@
 	});
 	
 	module.exports = TeaShow;
+
+/***/ },
+/* 270 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(4),
+	    TeaStore = __webpack_require__(263),
+	    SearchSuggestionStore = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../stores/search_suggestion_store\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	
+	var SearchBar = React.createClass({
+	  displayName: 'SearchBar',
+	
+	  getInitialState: function getInitialState() {
+	    return { suggestions: SearchSuggestionStore.all() };
+	  },
+	
+	  componentWillMount: function componentWillMount() {
+	    SuggestionStore.addListener(this._onChange);
+	  },
+	
+	  _onChange: function _onChange() {
+	    this.setState({ suggestions: SearchSuggestionStore.all() });
+	  },
+	
+	  _navToTeasIndex: function _navToTeasIndex() {
+	    if (!window.location.hash.includes('teas') || window.location.hash.lastIndexOf('?') >= 6) {
+	      window.location.hash = '/teas';
+	    }
+	  },
+	
+	  render: function render() {
+	    return React.createElement(
+	      'label',
+	      { 'for': 'search-bar' },
+	      'Search:',
+	      React.createElement('input', { type: 'text', onChange: this._navToTeasIndex, id: 'search-bar' })
+	    );
+	  }
+	});
+	
+	module.exports = SearchBar;
 
 /***/ }
 /******/ ]);
