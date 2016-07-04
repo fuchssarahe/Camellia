@@ -4,8 +4,8 @@ const TeaApiUtil = require('../utils/tea_api_util'),
       TeaConstants = require('../constants/tea_constants');
 
 const TeaActions = {
-  fetchTeas: function () {
-    TeaApiUtil.fetchTeas(this.receiveTeas, ErrorActions.setErrors)
+  fetchTeas: function (params) {
+    TeaApiUtil.fetchTeas(params, this.receiveTeas, ErrorActions.setErrors)
   },
 
   fetchSingleTea: function (id) {

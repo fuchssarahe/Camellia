@@ -11,9 +11,15 @@ const TeaIndex = React.createClass({
   },
 
   componentWillMount: function () {
-    TeaActions.fetchTeas();
+    console.log(this.props.params);
+    TeaActions.fetchTeas({});
     this.listener = TeaStore.addListener(this._onChange);
     // this.errorListener = TeaStore.addListener();
+  },
+
+  componentWillReceiveProps: function () {
+    console.log(this.props);
+    TeaActions.fetchTeas(this.props.params);
   },
 
   _onChange: function () {
