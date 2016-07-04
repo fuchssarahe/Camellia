@@ -15,6 +15,10 @@ const TeaShow = React.createClass({
     // this.errorListener = ErrorStore.addListener();
   },
 
+  componentWillReceiveProps: function () {
+    TeaActions.fetchSingleTea(parseInt(this.props.params.id))
+  },
+
   _onChange: function () {
     this.setState( {tea: TeaStore.find(parseInt(this.props.params.id))} )
   },
