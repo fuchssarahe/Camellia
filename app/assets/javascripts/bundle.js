@@ -34048,42 +34048,195 @@
 
 	'use strict';
 	
+	var _reactRouter = __webpack_require__(1);
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
 	var React = __webpack_require__(4),
-	    TeaStore = __webpack_require__(263),
-	    SearchSuggestionStore = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../stores/search_suggestion_store\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	    SessionStore = __webpack_require__(240),
+	    SearchSuggestionActions = __webpack_require__(273),
+	    SearchSuggestionStore = __webpack_require__(271);
 	
 	var SearchBar = React.createClass({
 	  displayName: 'SearchBar',
 	
 	  getInitialState: function getInitialState() {
-	    return { suggestions: SearchSuggestionStore.all() };
+	    return { suggestions: SearchSuggestionStore.all(), searchType: 'tea', query: '' };
 	  },
 	
 	  componentWillMount: function componentWillMount() {
-	    SuggestionStore.addListener(this._onChange);
+	    SearchSuggestionStore.addListener(this._onChange);
 	  },
 	
 	  _onChange: function _onChange() {
 	    this.setState({ suggestions: SearchSuggestionStore.all() });
 	  },
 	
-	  _navToTeasIndex: function _navToTeasIndex() {
-	    if (!window.location.hash.includes('teas') || window.location.hash.lastIndexOf('?') >= 6) {
-	      window.location.hash = '/teas';
-	    }
+	  _updateSuggestions: function _updateSuggestions(event) {
+	    var _this = this;
+	
+	    this.setState({ query: event.target.value }, function () {
+	      return SearchSuggestionActions.fetchSuggestions(_defineProperty({}, _this.state.searchType, _this.state.query));
+	    });
+	  },
+	
+	  _updateSearchType: function _updateSearchType(event) {
+	    this.setState({ searchType: event.target.value });
 	  },
 	
 	  render: function render() {
+	    if (!SessionStore.isUserLoggedIn) {
+	      return React.createElement('div', null);
+	    }
+	
 	    return React.createElement(
-	      'label',
-	      { 'for': 'search-bar' },
-	      'Search:',
-	      React.createElement('input', { type: 'text', onChange: this._navToTeasIndex, id: 'search-bar' })
+	      'form',
+	      { className: 'site-search' },
+	      React.createElement(
+	        'label',
+	        null,
+	        'Search By:',
+	        React.createElement(
+	          'select',
+	          { onChange: this._updateSearchType },
+	          React.createElement(
+	            'option',
+	            { value: 'tea' },
+	            'Tea'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: 'region' },
+	            'Region'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: 'tea_type' },
+	            'Type'
+	          )
+	        )
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Search:',
+	        React.createElement('input', { type: 'text', onChange: this._updateSuggestions, className: 'search-bar' })
+	      ),
+	      React.createElement(
+	        'ul',
+	        { className: 'search-suggestions' },
+	        this.state.suggestions.map(function (suggestion) {
+	          return React.createElement(
+	            'li',
+	            { key: suggestion.suggestion },
+	            React.createElement(
+	              _reactRouter.Link,
+	              { to: 'teas/' + suggestion.tea_id },
+	              ' ',
+	              suggestion.suggestion + ('(' + suggestion.suggestion_type + ')')
+	            )
+	          );
+	        })
+	      )
 	    );
 	  }
 	});
 	
 	module.exports = SearchBar;
+
+/***/ },
+/* 271 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Store = __webpack_require__(241).Store,
+	    SearchSuggestionConstants = __webpack_require__(272),
+	    Dispatcher = __webpack_require__(232);
+	
+	var SearchSuggestionStore = window.store = new Store(Dispatcher);
+	
+	var _suggestions = [];
+	
+	SearchSuggestionStore.all = function () {
+	  return _suggestions.slice();
+	};
+	
+	SearchSuggestionStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case SearchSuggestionConstants.RECEIVE_SUGGESTIONS:
+	      _suggestions = payload.suggestions;
+	      this.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = SearchSuggestionStore;
+
+/***/ },
+/* 272 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var SearchSuggestionConstants = {
+	  RECEIVE_SUGGESTIONS: 'RECEIVE_SUGGESTIONS'
+	};
+	
+	module.exports = SearchSuggestionConstants;
+
+/***/ },
+/* 273 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var SearchSuggestionApiUtil = __webpack_require__(274),
+	    ErrorActions = __webpack_require__(238),
+	    Dispatcher = __webpack_require__(232),
+	    SearchSuggestionConstants = __webpack_require__(272);
+	
+	var SearchSuggestionActions = {
+	  fetchSuggestions: function fetchSuggestions(search_params) {
+	    SearchSuggestionApiUtil.getSuggestions(search_params, this.receiveSuggestions, ErrorActions.setErrors);
+	  },
+	
+	  receiveSuggestions: function receiveSuggestions(suggestions) {
+	    ErrorActions.clearErrors();
+	    var payload = {
+	      actionType: SearchSuggestionConstants.RECEIVE_SUGGESTIONS,
+	      suggestions: suggestions
+	    };
+	    Dispatcher.dispatch(payload);
+	  }
+	};
+	
+	module.exports = SearchSuggestionActions;
+
+/***/ },
+/* 274 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var SearchSuggestionApiUtil = {
+	  getSuggestions: function getSuggestions(search_params, callback, errorCallback) {
+	    // search_params is an object formatted as {key: value} accepting tea, region, or tea_type as key values
+	    // success returns an array of objects with suggestion and suggestion_type keys
+	    $.ajax({
+	      url: 'api/search_suggestions',
+	      data: { search_params: search_params },
+	      success: callback,
+	      error: function error(resp) {
+	        console.log(resp);
+	        errorCallback('search', resp);
+	      }
+	    });
+	  }
+	
+	};
+	
+	module.exports = SearchSuggestionApiUtil;
 
 /***/ }
 /******/ ]);
