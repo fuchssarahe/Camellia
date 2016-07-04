@@ -4,7 +4,7 @@ class Api::SearchSuggestionsController < ApplicationController
     if params[:search_params].keys
 
       if params[:search_params][:tea]
-        @suggestions = Tea.select('name as search_name')
+        @suggestions = Tea.select('id, name as search_name')
           .where("UPPER(name) LIKE :search_params OR description LIKE :search_params", {search_params: '%' + search_params[:tea].upcase + '%'})
         @suggestion_type = 'tea'
       else
