@@ -1,0 +1,2 @@
+json.suggestion suggestion.search_name
+json.suggestion_type suggestion_type

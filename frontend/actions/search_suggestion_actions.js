@@ -4,8 +4,8 @@ const SearchSuggestionApiUtil = require('../utils/tea_api_util'),
       SearchSuggestionConstants = require('../constants/search_suggestion_constants');
 
 const SearchSuggestionActions = {
-  fetchSuggestions: function (params) {
-    SearchSuggestionApiUtil.getSuggestions(params, this.receiveSuggestions, ErrorActions.setErrors)
+  fetchSuggestions: function (search_params) {
+    SearchSuggestionApiUtil.getSuggestions(search_params, this.receiveSuggestions, ErrorActions.setErrors);
   },
 
   receiveSuggestions: function (suggestions) {
