@@ -2,7 +2,9 @@ import { Link } from 'react-router';
 const React = require('react'),
       SessionStore = require('../stores/session_store'),
       SearchSuggestionActions = require('../actions/search_suggestion_actions'),
-      SearchSuggestionStore = require('../stores/search_suggestion_store');
+      SearchSuggestionStore = require('../stores/search_suggestion_store'),
+      TeaActions = require('../actions/tea_actions'),
+      TeaConstants = require('../constants/tea_constants');
 
 const SearchBar = React.createClass({
   getInitialState: function () {
@@ -18,14 +20,19 @@ const SearchBar = React.createClass({
   },
 
   _updateSuggestions: function (event) {
-    this.setState(
-      {query: event.target.value},
-      () => SearchSuggestionActions.fetchSuggestions( {[this.state.searchType]: this.state.query} )
-    )
+      this.setState(
+        {query: event.target.value},
+        () => SearchSuggestionActions.fetchSuggestions( {[this.state.searchType]: this.state.query} )
+      )
   },
 
   _updateSearchType: function (event) {
     this.setState({searchType: event.target.value})
+  },
+
+  _searchAndNavAway: function (type, query) {
+    TeaActions.fetchTeas({[type]: query});
+    window.location.hash = `teas?${type}=${query}`;
   },
 
   render: function () {
@@ -53,17 +60,25 @@ const SearchBar = React.createClass({
 
               let className = '';
               switch (suggestion.suggestion_type) {
+                case 'tea':
+                  return <li key={suggestion.suggestion}><Link to={'teas/' + suggestion.tea_id}>{suggestion.suggestion}</Link></li>
                 case 'region':
                   className = 'icon-earth';
-                  break;
+                  return (
+                    <li key={suggestion.suggestion}
+                        onClick={() => this._searchAndNavAway(suggestion.suggestion_type, suggestion.suggestion)}
+                        ><span className={className} />{suggestion.suggestion}</li>
+                  )
                 case 'tea_type':
                   className = 'icon-leaf ';
                   className += suggestion.suggestion.toLowerCase();
-                  break;
+                  return (
+                    <li key={suggestion.suggestion}
+                        onClick={() => this._searchAndNavAway(suggestion.suggestion_type, suggestion.suggestion)}
+                        ><span className={className} />{suggestion.suggestion}</li>
+                  )
                 default:
               }
-
-              return <li key={suggestion.suggestion}><span className={className} /><Link to={'teas/' + suggestion.tea_id}> {suggestion.suggestion}</Link></li>
             })
           }
         </ul>

@@ -10,7 +10,11 @@ class Api::TeasController < ApplicationController
   end
 
   def index
-    @teas = Tea.all
+    if params[:search_params].keys
+      @teas = Tea.search(search_params)
+    else
+      @teas = Tea.all
+    end
   end
 
   def show
