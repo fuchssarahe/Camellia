@@ -1,8 +1,8 @@
-const SearchSuggestionApiUtil ={
-  getSuggestions: function (params, callback, errorCallback) {
+const SearchSuggestionApiUtil = {
+  getSuggestions: function (search_params, callback, errorCallback) {
     $.ajax({
       url: 'api/search_suggestions',
-      data: params,
+      data: search_params,
       success: callback,
       error: errorCallback
     })
