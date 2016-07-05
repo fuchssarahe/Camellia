@@ -1,8 +1,6 @@
-// import { Link } from 'react-router';
 const React = require('react'),
       TeaStore = require('../stores/tea_store'),
       TeaActions = require('../actions/tea_actions');
-      // ErrorStore = require('../stores/error_store');
 
 const TeaShow = React.createClass({
   getInitialState: function () {
@@ -12,11 +10,10 @@ const TeaShow = React.createClass({
   componentWillMount: function () {
     TeaActions.fetchSingleTea(parseInt(this.props.params.id));
     this.listener = TeaStore.addListener(this._onChange);
-    // this.errorListener = ErrorStore.addListener();
   },
 
-  componentWillReceiveProps: function () {
-    TeaActions.fetchSingleTea(parseInt(this.props.params.id))
+  componentWillReceiveProps: function (newProps) {
+    TeaActions.fetchSingleTea(parseInt(newProps.params.id));
   },
 
   _onChange: function () {
@@ -25,7 +22,6 @@ const TeaShow = React.createClass({
 
   componentWillUnmount: function () {
     this.listener.remove();
-    // this.errorListener.remove();
   },
 
   render: function () {

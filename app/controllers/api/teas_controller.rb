@@ -10,10 +10,10 @@ class Api::TeasController < ApplicationController
   end
 
   def index
-    if params[:search_params].keys
-      @teas = Tea.search(search_params)
+    if params['search_params']
+      @teas = Tea.search(params['search_params'])
     else
-      @teas = Tea.all
+      @teas = []
     end
   end
 
