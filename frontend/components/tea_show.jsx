@@ -1,6 +1,7 @@
 const React = require('react'),
       TeaStore = require('../stores/tea_store'),
-      TeaActions = require('../actions/tea_actions');
+      TeaActions = require('../actions/tea_actions'),
+      OwnershipButton = require('./ownership_button');
 
 const TeaShow = React.createClass({
   getInitialState: function () {
@@ -52,6 +53,7 @@ const TeaShow = React.createClass({
           <section className='panel_section'>
             <h2 className='panel_section-header'>Your Review</h2>
             <p className='panel_section-content'>You haven't reviewed this tea yet!</p>
+            <OwnershipButton teaId={this.state.tea.id}/>
           </section>
         </aside>
 

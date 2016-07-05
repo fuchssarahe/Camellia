@@ -8,8 +8,8 @@ const React = require('react'),
       SessionStore = require('./stores/session_store'),
       TeaIndex = require('./components/tea_index'),
       TeaShow = require('./components/tea_show'),
-      OwnershipApiUtil = window.ownship = require('./utils/ownership_api_util'),
-      TeaForm = require('./components/tea_form');
+      TeaForm = require('./components/tea_form'),
+      Dashboard = require('./components/dashboard');
 
 const routes =
   <Route path='/' component={App} >
@@ -20,6 +20,7 @@ const routes =
       <Route path='new' component={TeaForm} />
     </Route>
     <Route path='teas/:id' component={TeaShow} />
+    <Route path='dashboard' component={Dashboard} onEnter={ensureLoggedIn}/>
   </Route>;
 
 $(

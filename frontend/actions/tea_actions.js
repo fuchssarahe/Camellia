@@ -33,6 +33,7 @@ const TeaActions = {
     }
     Dispatcher.dispatch(payload);
   }
+
 }
 
 module.exports = TeaActions;

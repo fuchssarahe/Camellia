@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     resources :teas, only: [:create, :show, :index] do
       resource :ownership, only: [:create, :destroy]
     end
+    resources :ownerships, only: [:index]
     resources :search_suggestions, only: [:index]
   end
-
 end
