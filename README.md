@@ -17,9 +17,9 @@ At a minimum, this app will satisfy the following criteria:
   - [x] teas hold information on type, region, and steep specifications
   - [x] each tea has a profile page listing details
 - [ ] Tea Search
-  - [ ] search for by tea name
-  - [ ] search bar is easily accessible from the header of any page
-  - [ ] search yields an index of teas and minimal details like rating and type
+  - [x] search for by tea name
+  - [x] search bar is easily accessible from the header of any page
+  - [x] search yields an index of teas and minimal details like country and type
 - [ ] Tea Inventory
   - [ ] users can add teas to their personal inventory
   - [ ] owned teas will appear on the dashboard for the user
@@ -88,11 +88,12 @@ user interface.
 
 **Objective:** User will have the ability to search for teas by name/description, by region, or by type.
 
-- [ ] Use CSS to style new views
-- [ ] Implement search suggestions
-  - [ ] `SearchBar`
-  - [ ] `SearchBarSuggestionIndex`
-  - [ ] `SearchSuggestionItem`
+- [x] Use CSS to style new views
+- [x] Implement search suggestions
+  - [x] `SearchBar`
+  - [x] `SearchBarSuggestionIndex`
+  - [x] `SearchSuggestionItem`
+- [ ] Figure out a way to hide search suggestions a bit better
 
 ### Phase 5: Ownerships (1 day, W2 Th 6pm)
 
