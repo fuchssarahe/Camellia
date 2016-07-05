@@ -2,25 +2,57 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-
-.tea-search {
-
+.search-container {
+  position: relative;
 }
 
-.search-bar {
+.tea-search {
+  border: 1px solid #aeb5ba;
+  border-radius: 50px;
+  padding: 0 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: bottom;
+  margin: 0;
+  padding: 0;
+  padding-left: 4px;
+}
 
+.search-bar, .tea-search_field-selector, .tea-search_submit {
+  border: 0;
+  margin-bottom: 0;
+  padding: 8px 0 8px 8px;
+  background-color: transparent;
+}
+
+.tea-search_submit {
+  color: #bfcad2;
+}
+
+.tea-search_submit:hover {
+  border: 0;
+  background-color: transparent;
+}
+
+.tea-search > span {
+  padding-top: 10px;
 }
 
 .search-suggestions {
   display: flex;
   flex-direction: column;
+  align-items: baseline;
+  position: absolute;
+  left: 70px;
 }
 
 .search-suggestions > li {
-  padding: 0;
-  margin: 0;
+  border: 1px solid #BFCAD2;
+  width: 100%;
+  padding-left: 4px;
+  background: white;
 }
 
 .search-suggestions > li:hover {
-
+  background: darken(#f9f9f9, 10%);
 }

@@ -59,24 +59,24 @@ const SearchBar = React.createClass({
 
     // onBlur={SearchSuggestionActions.clearSuggestions}
     return (
-      <div>
+      <div className="search-container">
         <form className="tea-search" onSubmit={this._searchAndNavAway}>
-          <label>Search By:
-            <select onChange={this._updateSearchType}>
+            <select onChange={this._updateSearchType} className="tea-search_field-selector">
               <option value="tea">Tea</option>
               <option value="region">Region</option>
               <option value="tea_type">Type</option>
             </select>
-          </label>
 
-          <label>Search:
             <input type='text'
                    onChange={this._updateSuggestions}
                    onFocus={this._updateSuggestions}
-                   className="search-bar" />
-          </label>
+                   className="search-bar"
+                   placeholder="Search for a tea!"/>
 
-          <input type="submit" value='Search' />
+            <button type="submit" value=" " className="tea-search_submit">
+              <span className="icon-leaf" />
+            </button>
+
         </form>
         <ul className='search-suggestions'>
           {

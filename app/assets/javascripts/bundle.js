@@ -33109,44 +33109,39 @@
 	    // onBlur={SearchSuggestionActions.clearSuggestions}
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'search-container' },
 	      React.createElement(
 	        'form',
 	        { className: 'tea-search', onSubmit: this._searchAndNavAway },
 	        React.createElement(
-	          'label',
-	          null,
-	          'Search By:',
+	          'select',
+	          { onChange: this._updateSearchType, className: 'tea-search_field-selector' },
 	          React.createElement(
-	            'select',
-	            { onChange: this._updateSearchType },
-	            React.createElement(
-	              'option',
-	              { value: 'tea' },
-	              'Tea'
-	            ),
-	            React.createElement(
-	              'option',
-	              { value: 'region' },
-	              'Region'
-	            ),
-	            React.createElement(
-	              'option',
-	              { value: 'tea_type' },
-	              'Type'
-	            )
+	            'option',
+	            { value: 'tea' },
+	            'Tea'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: 'region' },
+	            'Region'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: 'tea_type' },
+	            'Type'
 	          )
 	        ),
+	        React.createElement('input', { type: 'text',
+	          onChange: this._updateSuggestions,
+	          onFocus: this._updateSuggestions,
+	          className: 'search-bar',
+	          placeholder: 'Search for a tea!' }),
 	        React.createElement(
-	          'label',
-	          null,
-	          'Search:',
-	          React.createElement('input', { type: 'text',
-	            onChange: this._updateSuggestions,
-	            onFocus: this._updateSuggestions,
-	            className: 'search-bar' })
-	        ),
-	        React.createElement('input', { type: 'submit', value: 'Search' })
+	          'button',
+	          { type: 'submit', value: ' ', className: 'tea-search_submit' },
+	          React.createElement('span', { className: 'icon-leaf' })
+	        )
 	      ),
 	      React.createElement(
 	        'ul',
