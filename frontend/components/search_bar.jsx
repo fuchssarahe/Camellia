@@ -2,7 +2,6 @@ const React = require('react'),
       SessionStore = require('../stores/session_store'),
       SearchSuggestionActions = require('../actions/search_suggestion_actions'),
       SearchSuggestionStore = require('../stores/search_suggestion_store'),
-      TeaConstants = require('../constants/tea_constants'),
       SearchSuggestion = require('./search_suggestion'),
       TeaActions = require('../actions/tea_actions');
 
@@ -22,16 +21,6 @@ const SearchBar = React.createClass({
   componentWillUnmount: function () {
     this.listener.remove();
   },
-
-  // _currentSearchParams: function () {
-  //   let searchParams;
-  //   if (this.state.searchType === 'tea') {
-  //     searchParams = { : this.state.query} }
-  //   } else {
-  //     searchParams = { [this.state.searchType]: this.state.query }
-  //   }
-  //   return searchParams;
-  // },
 
   _updateSuggestions: function (event) {
     this.setState(
@@ -57,7 +46,10 @@ const SearchBar = React.createClass({
       return <div></div>
     }
 
+
+
     // onBlur={SearchSuggestionActions.clearSuggestions}
+    // onFocus={this._updateSuggestions}
     return (
       <div className="search-container">
         <form className="tea-search" onSubmit={this._searchAndNavAway}>
@@ -67,24 +59,27 @@ const SearchBar = React.createClass({
               <option value="tea_type">Type</option>
             </select>
 
-            <input type='text'
-                   onChange={this._updateSuggestions}
-                   onFocus={this._updateSuggestions}
-                   className="search-bar"
-                   placeholder="Search for a tea!"/>
+            <div className='input-container'>
+              <input type='text'
+                     onChange={this._updateSuggestions}
+                     className="search-bar"
+                     placeholder="Search for a tea!"/>
+
+              <ul className='search-suggestions'>
+                {
+                  this.state.suggestions.map( (suggestion) => {
+                    return <SearchSuggestion key={suggestion.suggestion} suggestion={suggestion}/>;
+                  })
+                }
+              </ul>
+            </div>
 
             <button type="submit" value=" " className="tea-search_submit">
               <span className="icon-leaf" />
             </button>
 
         </form>
-        <ul className='search-suggestions'>
-          {
-            this.state.suggestions.map( (suggestion) => {
-              return <SearchSuggestion key={suggestion.suggestion} suggestion={suggestion}/>;
-            })
-          }
-        </ul>
+
       </div>
     )
   }

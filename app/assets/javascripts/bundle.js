@@ -51,13 +51,13 @@
 	var React = __webpack_require__(4),
 	    ReactDOM = __webpack_require__(100),
 	    App = __webpack_require__(230),
-	    Splash = __webpack_require__(259),
+	    Splash = __webpack_require__(267),
 	    SessionActions = __webpack_require__(231),
-	    AuthForm = __webpack_require__(260),
+	    AuthForm = __webpack_require__(268),
 	    SessionStore = __webpack_require__(240),
-	    TeaIndex = __webpack_require__(263),
-	    TeaShow = __webpack_require__(270),
-	    TeaForm = __webpack_require__(268);
+	    TeaIndex = __webpack_require__(271),
+	    TeaShow = __webpack_require__(275),
+	    TeaForm = __webpack_require__(273);
 	
 	var routes = React.createElement(
 	  _reactRouter.Route,
@@ -67,7 +67,7 @@
 	  React.createElement(_reactRouter.Route, { path: 'login', component: AuthForm, onEnter: ensureNotLoggedIn }),
 	  React.createElement(
 	    _reactRouter.Route,
-	    { path: 'teas', component: TeaIndex },
+	    { path: 'teas/', component: TeaIndex },
 	    React.createElement(_reactRouter.Route, { path: 'new', component: TeaForm })
 	  ),
 	  React.createElement(_reactRouter.Route, { path: 'teas/:id', component: TeaShow })
@@ -33046,11 +33046,10 @@
 	
 	var React = __webpack_require__(4),
 	    SessionStore = __webpack_require__(240),
-	    SearchSuggestionActions = __webpack_require__(271),
-	    SearchSuggestionStore = __webpack_require__(274),
-	    TeaConstants = __webpack_require__(265),
-	    SearchSuggestion = __webpack_require__(275),
-	    TeaActions = __webpack_require__(266);
+	    SearchSuggestionActions = __webpack_require__(259),
+	    SearchSuggestionStore = __webpack_require__(263),
+	    SearchSuggestion = __webpack_require__(264),
+	    TeaActions = __webpack_require__(265);
 	
 	var SearchBar = React.createClass({
 	  displayName: 'SearchBar',
@@ -33070,16 +33069,6 @@
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.listener.remove();
 	  },
-	
-	  // _currentSearchParams: function () {
-	  //   let searchParams;
-	  //   if (this.state.searchType === 'tea') {
-	  //     searchParams = { : this.state.query} }
-	  //   } else {
-	  //     searchParams = { [this.state.searchType]: this.state.query }
-	  //   }
-	  //   return searchParams;
-	  // },
 	
 	  _updateSuggestions: function _updateSuggestions(event) {
 	    var _this = this;
@@ -33107,6 +33096,7 @@
 	    }
 	
 	    // onBlur={SearchSuggestionActions.clearSuggestions}
+	    // onFocus={this._updateSuggestions}
 	    return React.createElement(
 	      'div',
 	      { className: 'search-container' },
@@ -33132,23 +33122,26 @@
 	            'Type'
 	          )
 	        ),
-	        React.createElement('input', { type: 'text',
-	          onChange: this._updateSuggestions,
-	          onFocus: this._updateSuggestions,
-	          className: 'search-bar',
-	          placeholder: 'Search for a tea!' }),
+	        React.createElement(
+	          'div',
+	          { className: 'input-container' },
+	          React.createElement('input', { type: 'text',
+	            onChange: this._updateSuggestions,
+	            className: 'search-bar',
+	            placeholder: 'Search for a tea!' }),
+	          React.createElement(
+	            'ul',
+	            { className: 'search-suggestions' },
+	            this.state.suggestions.map(function (suggestion) {
+	              return React.createElement(SearchSuggestion, { key: suggestion.suggestion, suggestion: suggestion });
+	            })
+	          )
+	        ),
 	        React.createElement(
 	          'button',
 	          { type: 'submit', value: ' ', className: 'tea-search_submit' },
 	          React.createElement('span', { className: 'icon-leaf' })
 	        )
-	      ),
-	      React.createElement(
-	        'ul',
-	        { className: 'search-suggestions' },
-	        this.state.suggestions.map(function (suggestion) {
-	          return React.createElement(SearchSuggestion, { key: suggestion.suggestion, suggestion: suggestion });
-	        })
 	      )
 	    );
 	  }
@@ -33158,6 +33151,355 @@
 
 /***/ },
 /* 259 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var SearchSuggestionApiUtil = __webpack_require__(260),
+	    ErrorActions = __webpack_require__(238),
+	    Dispatcher = __webpack_require__(232),
+	    SearchSuggestionConstants = __webpack_require__(261),
+	    TeaConstants = __webpack_require__(262);
+	
+	var SearchSuggestionActions = {
+	  fetchSuggestions: function fetchSuggestions(search_params) {
+	    var searchType = Object.keys(search_params)[0];
+	
+	    //  clear out suggestions if query is empty
+	    if (search_params[searchType] === '') {
+	      this.clearSuggestions();
+	
+	      // make api call if searching for teas
+	    } else if (search_params.tea) {
+	      SearchSuggestionApiUtil.getSuggestions(search_params, this.receiveSuggestions, ErrorActions.setErrors);
+	
+	      // search constants if region or type
+	    } else {
+	      var suggestions = _getMatchingCategories(searchType, search_params[searchType]);
+	      this.receiveSuggestions(suggestions);
+	    }
+	  },
+	
+	  receiveSuggestions: function receiveSuggestions(suggestions) {
+	    ErrorActions.clearErrors();
+	    var payload = {
+	      actionType: SearchSuggestionConstants.RECEIVE_SUGGESTIONS,
+	      suggestions: suggestions
+	    };
+	    Dispatcher.dispatch(payload);
+	  },
+	
+	  clearSuggestions: function clearSuggestions() {
+	    ErrorActions.clearErrors();
+	    var payload = {
+	      actionType: SearchSuggestionConstants.CLEAR_SUGGESTIONS
+	    };
+	    Dispatcher.dispatch(payload);
+	  }
+	};
+	
+	// Private methods
+	
+	function _getMatchingCategories(searchType, query) {
+	  var matchers = [];
+	
+	  // find correct constant to search
+	  var categories = void 0;
+	  switch (searchType) {
+	    case 'region':
+	      categories = TeaConstants.ALL_REGIONS;
+	      break;
+	    case 'tea_type':
+	      categories = TeaConstants.ALL_TYPES;
+	      break;
+	    default:
+	  }
+	
+	  // find matching values
+	  var i = 0;
+	
+	  while (matchers.length < 5 && i < categories.length) {
+	    if (categories[i].toLowerCase().match(query.toLowerCase())) {
+	      var suggestion = {
+	        suggestion: categories[i],
+	        suggestion_type: searchType
+	      };
+	      matchers.push(suggestion);
+	    }
+	    i++;
+	  }
+	
+	  return matchers;
+	}
+	
+	module.exports = SearchSuggestionActions;
+
+/***/ },
+/* 260 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var SearchSuggestionApiUtil = {
+	  getSuggestions: function getSuggestions(search_params, callback, errorCallback) {
+	    // search_params is an object formatted as {tea: value} accepting tea as key value
+	    // success returns an array of objects with suggestion, tea_id and suggestion_type keys
+	    $.ajax({
+	      url: 'api/search_suggestions',
+	      data: { search_params: search_params },
+	      success: callback,
+	      error: function error(resp) {
+	        return errorCallback('search', resp);
+	      }
+	    });
+	  }
+	
+	};
+	
+	module.exports = SearchSuggestionApiUtil;
+
+/***/ },
+/* 261 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var SearchSuggestionConstants = {
+	  RECEIVE_SUGGESTIONS: 'RECEIVE_SUGGESTIONS',
+	  CLEAR_SUGGESTIONS: 'CLEAR_SUGGESTIONS'
+	
+	};
+	
+	module.exports = SearchSuggestionConstants;
+
+/***/ },
+/* 262 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var TeaConstants = {
+	            RECEIVE_TEAS: 'RECEIVE_TEAS',
+	
+	            RECEIVE_TEA: 'RECEIVE_TEA',
+	
+	            ALL_TYPES: ['Other', 'Black', 'Red', 'White', 'Dark', 'Yellow', 'Green', 'Oolong', 'Herbal'],
+	
+	            ALL_REGIONS: ['Unknown', 'Albania', 'Argentina', 'Australia', 'Bangladesh', 'Bolivia', 'Brazil', 'Burkina Faso', 'Burma', 'Chile', 'China', 'Colombia', 'Ecuador', 'Egypt', 'France', 'Germany', 'Guatemala', 'India', 'Indonesia', 'Italy', 'Japan', 'Kenya', 'Malawi', 'Malaysia', 'Mexico', 'Morocco', 'Nepal', 'New Zealand', 'Nigeria', 'Paraguay', 'Portugal', 'Rwanda', 'South Africa', 'South Korea', 'Sri Lanka', 'Sudan', 'Taiwan', 'Tanzania', 'Thailand', 'Turkey', 'Uganda', 'United States of America', 'Vietnam', 'Zimbabwe']
+	
+	};
+	
+	module.exports = TeaConstants;
+
+/***/ },
+/* 263 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Store = __webpack_require__(241).Store,
+	    SearchSuggestionConstants = __webpack_require__(261),
+	    Dispatcher = __webpack_require__(232);
+	
+	var SearchSuggestionStore = window.store = new Store(Dispatcher);
+	
+	var _suggestions = [];
+	
+	SearchSuggestionStore.all = function () {
+	  return _suggestions.slice();
+	};
+	
+	SearchSuggestionStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case SearchSuggestionConstants.RECEIVE_SUGGESTIONS:
+	      _suggestions = payload.suggestions;
+	      this.__emitChange();
+	      break;
+	    case SearchSuggestionConstants.CLEAR_SUGGESTIONS:
+	      _suggestions = [];
+	      this.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = SearchSuggestionStore;
+
+/***/ },
+/* 264 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	var React = __webpack_require__(4),
+	    SearchSuggestionActions = __webpack_require__(259),
+	    TeaActions = __webpack_require__(265);
+	
+	var SearchSuggestion = React.createClass({
+	  displayName: 'SearchSuggestion',
+	
+	  _searchAndNavToIndex: function _searchAndNavToIndex(type, query) {
+	    SearchSuggestionActions.clearSuggestions();
+	    TeaActions.fetchTeas(_defineProperty({}, type, query));
+	    window.location.hash = 'teas/?' + type + '=' + query;
+	  },
+	
+	  _navToShowPage: function _navToShowPage(teaId) {
+	    SearchSuggestionActions.clearSuggestions();
+	    window.location.hash = 'teas/' + this.props.suggestion.tea_id;
+	  },
+	
+	  render: function render() {
+	    var _this = this;
+	
+	    var className = '';
+	
+	    switch (this.props.suggestion.suggestion_type) {
+	      case 'tea':
+	        return React.createElement(
+	          'li',
+	          { onClick: function onClick() {
+	              return _this._navToShowPage(_this.props.suggestion.tea_id);
+	            } },
+	          this.props.suggestion.suggestion
+	        );
+	      case 'region':
+	        className = 'icon-earth';
+	        return React.createElement(
+	          'li',
+	          { onClick: function onClick() {
+	              return _this._searchAndNavToIndex(_this.props.suggestion.suggestion_type, _this.props.suggestion.suggestion);
+	            } },
+	          React.createElement('span', { className: className }),
+	          this.props.suggestion.suggestion
+	        );
+	      case 'tea_type':
+	        className = 'icon-leaf ';
+	        className += this.props.suggestion.suggestion.toLowerCase();
+	        return React.createElement(
+	          'li',
+	          { onClick: function onClick() {
+	              return _this._searchAndNavToIndex(_this.props.suggestion.suggestion_type, _this.props.suggestion.suggestion);
+	            } },
+	          React.createElement('span', { className: className }),
+	          this.props.suggestion.suggestion
+	        );
+	      default:
+	    }
+	  }
+	
+	});
+	
+	module.exports = SearchSuggestion;
+
+/***/ },
+/* 265 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var TeaApiUtil = __webpack_require__(266),
+	    ErrorActions = __webpack_require__(238),
+	    Dispatcher = __webpack_require__(232),
+	    TeaConstants = __webpack_require__(262);
+	
+	var TeaActions = {
+	  fetchTeas: function fetchTeas(params) {
+	    TeaApiUtil.fetchTeas(params, this.receiveTeas, ErrorActions.setErrors);
+	  },
+	
+	  fetchSingleTea: function fetchSingleTea(id) {
+	    TeaApiUtil.getTea(id, this.receiveSingleTea, ErrorActions.setErrors);
+	  },
+	
+	  createTea: function createTea(tea) {
+	    TeaApiUtil.createTea(tea, this.receiveSingleTea, ErrorActions.setErrors);
+	  },
+	
+	  receiveTeas: function receiveTeas(teas) {
+	    ErrorActions.clearErrors();
+	    var payload = {
+	      actionType: TeaConstants.RECEIVE_TEAS,
+	      teas: teas
+	    };
+	    Dispatcher.dispatch(payload);
+	  },
+	
+	  receiveSingleTea: function receiveSingleTea(tea) {
+	    ErrorActions.clearErrors();
+	    var payload = {
+	      actionType: TeaConstants.RECEIVE_TEA,
+	      tea: tea
+	    };
+	    Dispatcher.dispatch(payload);
+	  }
+	};
+	
+	module.exports = TeaActions;
+
+/***/ },
+/* 266 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var TeaApiUtil = {
+	  fetchTeas: function fetchTeas() {
+	    var params = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+	    var callback = arguments[1];
+	    var errorCallback = arguments[2];
+	
+	    $.ajax({
+	      type: 'GET',
+	      data: params ? { search_params: params } : {},
+	      url: 'api/teas',
+	      success: callback,
+	      error: errorCallback
+	    });
+	  },
+	
+	  getTea: function getTea(id, callback, errorCallback) {
+	    $.ajax({
+	      type: 'GET',
+	      url: 'api/teas/' + id,
+	      success: callback,
+	      error: errorCallback
+	    });
+	  },
+	
+	  createTea: function createTea(tea, callback, errorCallback) {
+	    var data = new FormData();
+	    Object.keys(tea).forEach(function (property) {
+	      console.log(property);
+	      if (property === 'image') {
+	        data.append('tea[' + property + ']', tea[property], tea[property].name);
+	      } else {
+	        data.append('tea[' + property + ']', tea[property]);
+	      }
+	    });
+	
+	    $.ajax({
+	      type: 'POST',
+	      url: 'api/teas',
+	      contentType: false,
+	      cache: false,
+	      processData: false,
+	      data: data,
+	      success: callback,
+	      error: function error(err) {
+	        console.log('err');
+	        console.log(err);
+	        errorCallback('newTea', err);
+	      }
+	    });
+	  }
+	};
+	
+	module.exports = TeaApiUtil;
+
+/***/ },
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -33180,7 +33522,7 @@
 	module.exports = Splash;
 
 /***/ },
-/* 260 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33189,9 +33531,9 @@
 	
 	var React = __webpack_require__(4),
 	    SessionStore = __webpack_require__(240),
-	    ErrorStore = __webpack_require__(261),
+	    ErrorStore = __webpack_require__(269),
 	    SessionActions = __webpack_require__(231),
-	    Errors = __webpack_require__(262);
+	    Errors = __webpack_require__(270);
 	
 	var AuthForm = React.createClass({
 	  displayName: 'AuthForm',
@@ -33309,7 +33651,7 @@
 	module.exports = AuthForm;
 
 /***/ },
-/* 261 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33365,7 +33707,7 @@
 	module.exports = ErrorsStore;
 
 /***/ },
-/* 262 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33416,18 +33758,16 @@
 	module.exports = Errors;
 
 /***/ },
-/* 263 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(4),
-	    TeaStore = __webpack_require__(264),
-	    TeaActions = __webpack_require__(266),
-	    TeaForm = __webpack_require__(268),
-	
-	// ErrorStore = require('../stores/error_store'),
-	TeaIndexItem = __webpack_require__(269);
+	    TeaStore = __webpack_require__(272),
+	    TeaActions = __webpack_require__(265),
+	    TeaForm = __webpack_require__(273),
+	    TeaIndexItem = __webpack_require__(274);
 	
 	var TeaIndex = React.createClass({
 	  displayName: 'TeaIndex',
@@ -33437,15 +33777,8 @@
 	  },
 	
 	  componentWillMount: function componentWillMount() {
-	    // console.log(this.props.params);
-	    // TeaActions.fetchTeas({this.props.params});
+	    TeaActions.fetchTeas(this.props.location.query);
 	    this.listener = TeaStore.addListener(this._onChange);
-	    // this.errorListener = TeaStore.addListener();
-	  },
-	
-	  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
-	    console.log(newProps.params);
-	    // TeaActions.fetchTeas(newProps.params.query);
 	  },
 	
 	  _onChange: function _onChange() {
@@ -33454,21 +33787,11 @@
 	
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.listener.remove();
-	    // this.errorListener.remove();
-	  },
-	
-	  _navToTeaForm: function _navToTeaForm() {
-	    window.location.hash = 'teas/new';
 	  },
 	
 	  render: function render() {
 	    var _this = this;
 	
-	    var buttonToSave = React.createElement(
-	      'button',
-	      { onClick: this._navToTeaForm },
-	      'Create New Tea'
-	    );
 	    return React.createElement(
 	      'div',
 	      { className: 'cf container' },
@@ -33511,13 +33834,13 @@
 	module.exports = TeaIndex;
 
 /***/ },
-/* 264 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var Store = __webpack_require__(241).Store,
-	    TeaConstants = __webpack_require__(265),
+	    TeaConstants = __webpack_require__(262),
 	    Dispatcher = __webpack_require__(232);
 	
 	var TeaStore = new Store(Dispatcher);
@@ -33561,131 +33884,7 @@
 	module.exports = TeaStore;
 
 /***/ },
-/* 265 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var TeaConstants = {
-	            RECEIVE_TEAS: 'RECEIVE_TEAS',
-	
-	            RECEIVE_TEA: 'RECEIVE_TEA',
-	
-	            ALL_TYPES: ['Other', 'Black', 'Red', 'White', 'Dark', 'Yellow', 'Green', 'Oolong', 'Herbal'],
-	
-	            ALL_REGIONS: ['Unknown', 'Albania', 'Argentina', 'Australia', 'Bangladesh', 'Bolivia', 'Brazil', 'Burkina Faso', 'Burma', 'Chile', 'China', 'Colombia', 'Ecuador', 'Egypt', 'France', 'Germany', 'Guatemala', 'India', 'Indonesia', 'Italy', 'Japan', 'Kenya', 'Malawi', 'Malaysia', 'Mexico', 'Morocco', 'Nepal', 'New Zealand', 'Nigeria', 'Paraguay', 'Portugal', 'Rwanda', 'South Africa', 'South Korea', 'Sri Lanka', 'Sudan', 'Taiwan', 'Tanzania', 'Thailand', 'Turkey', 'Uganda', 'United States of America', 'Vietnam', 'Zimbabwe']
-	
-	};
-	
-	module.exports = TeaConstants;
-
-/***/ },
-/* 266 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var TeaApiUtil = __webpack_require__(267),
-	    ErrorActions = __webpack_require__(238),
-	    Dispatcher = __webpack_require__(232),
-	    TeaConstants = __webpack_require__(265);
-	
-	var TeaActions = {
-	  fetchTeas: function fetchTeas(params) {
-	    TeaApiUtil.fetchTeas(params, this.receiveTeas, ErrorActions.setErrors);
-	  },
-	
-	  fetchSingleTea: function fetchSingleTea(id) {
-	    TeaApiUtil.getTea(id, this.receiveSingleTea, ErrorActions.setErrors);
-	  },
-	
-	  createTea: function createTea(tea) {
-	    TeaApiUtil.createTea(tea, this.receiveSingleTea, ErrorActions.setErrors);
-	  },
-	
-	  receiveTeas: function receiveTeas(teas) {
-	    ErrorActions.clearErrors();
-	    var payload = {
-	      actionType: TeaConstants.RECEIVE_TEAS,
-	      teas: teas
-	    };
-	    Dispatcher.dispatch(payload);
-	  },
-	
-	  receiveSingleTea: function receiveSingleTea(tea) {
-	    ErrorActions.clearErrors();
-	    var payload = {
-	      actionType: TeaConstants.RECEIVE_TEA,
-	      tea: tea
-	    };
-	    Dispatcher.dispatch(payload);
-	  }
-	};
-	
-	module.exports = TeaActions;
-
-/***/ },
-/* 267 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var TeaApiUtil = {
-	  fetchTeas: function fetchTeas() {
-	    var params = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
-	    var callback = arguments[1];
-	    var errorCallback = arguments[2];
-	
-	    $.ajax({
-	      type: 'GET',
-	      data: params ? { search_params: params } : {},
-	      url: 'api/teas',
-	      success: callback,
-	      error: errorCallback
-	    });
-	  },
-	
-	  getTea: function getTea(id, callback, errorCallback) {
-	    $.ajax({
-	      type: 'GET',
-	      url: 'api/teas/' + id,
-	      success: callback,
-	      error: errorCallback
-	    });
-	  },
-	
-	  createTea: function createTea(tea, callback, errorCallback) {
-	    var data = new FormData();
-	    Object.keys(tea).forEach(function (property) {
-	      console.log(property);
-	      if (property === 'image') {
-	        data.append('tea[' + property + ']', tea[property], tea[property].name);
-	      } else {
-	        data.append('tea[' + property + ']', tea[property]);
-	      }
-	    });
-	
-	    $.ajax({
-	      type: 'POST',
-	      url: 'api/teas',
-	      contentType: false,
-	      cache: false,
-	      processData: false,
-	      data: data,
-	      success: callback,
-	      error: function error(err) {
-	        console.log('err');
-	        console.log(err);
-	        errorCallback('newTea', err);
-	      }
-	    });
-	  }
-	};
-	
-	module.exports = TeaApiUtil;
-
-/***/ },
-/* 268 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33693,10 +33892,10 @@
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	var React = __webpack_require__(4),
-	    ErrorStore = __webpack_require__(261),
-	    TeaActions = __webpack_require__(266),
-	    TeaConstants = __webpack_require__(265),
-	    Errors = __webpack_require__(262);
+	    ErrorStore = __webpack_require__(269),
+	    TeaActions = __webpack_require__(265),
+	    TeaConstants = __webpack_require__(262),
+	    Errors = __webpack_require__(270);
 	
 	var TeaForm = React.createClass({
 	  displayName: 'TeaForm',
@@ -33898,7 +34097,7 @@
 	module.exports = TeaForm;
 
 /***/ },
-/* 269 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33906,7 +34105,7 @@
 	var _reactRouter = __webpack_require__(1);
 	
 	var React = __webpack_require__(4),
-	    TeaStore = __webpack_require__(264);
+	    TeaStore = __webpack_require__(272);
 	// ErrorStore = require('../stores/error_store');
 	
 	var TeaIndexItem = React.createClass({
@@ -33997,14 +34196,14 @@
 	module.exports = TeaIndexItem;
 
 /***/ },
-/* 270 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(4),
-	    TeaStore = __webpack_require__(264),
-	    TeaActions = __webpack_require__(266);
+	    TeaStore = __webpack_require__(272),
+	    TeaActions = __webpack_require__(265);
 	
 	var TeaShow = React.createClass({
 	  displayName: 'TeaShow',
@@ -34172,231 +34371,6 @@
 	});
 	
 	module.exports = TeaShow;
-
-/***/ },
-/* 271 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var SearchSuggestionApiUtil = __webpack_require__(272),
-	    ErrorActions = __webpack_require__(238),
-	    Dispatcher = __webpack_require__(232),
-	    SearchSuggestionConstants = __webpack_require__(273),
-	    TeaConstants = __webpack_require__(265);
-	
-	var SearchSuggestionActions = {
-	  fetchSuggestions: function fetchSuggestions(search_params) {
-	    var searchType = Object.keys(search_params)[0];
-	
-	    //  clear out suggestions if query is empty
-	    if (search_params[searchType] === '') {
-	      this.clearSuggestions();
-	
-	      // make api call if searching for teas
-	    } else if (search_params.tea) {
-	      SearchSuggestionApiUtil.getSuggestions(search_params, this.receiveSuggestions, ErrorActions.setErrors);
-	
-	      // search constants if region or type
-	    } else {
-	      var suggestions = _getMatchingCategories(searchType, search_params[searchType]);
-	      this.receiveSuggestions(suggestions);
-	    }
-	  },
-	
-	  receiveSuggestions: function receiveSuggestions(suggestions) {
-	    ErrorActions.clearErrors();
-	    var payload = {
-	      actionType: SearchSuggestionConstants.RECEIVE_SUGGESTIONS,
-	      suggestions: suggestions
-	    };
-	    Dispatcher.dispatch(payload);
-	  },
-	
-	  clearSuggestions: function clearSuggestions() {
-	    ErrorActions.clearErrors();
-	    var payload = {
-	      actionType: SearchSuggestionConstants.CLEAR_SUGGESTIONS
-	    };
-	    Dispatcher.dispatch(payload);
-	  }
-	};
-	
-	// Private methods
-	
-	function _getMatchingCategories(searchType, query) {
-	  var matchers = [];
-	
-	  // find correct constant to search
-	  var categories = void 0;
-	  switch (searchType) {
-	    case 'region':
-	      categories = TeaConstants.ALL_REGIONS;
-	      break;
-	    case 'tea_type':
-	      categories = TeaConstants.ALL_TYPES;
-	      break;
-	    default:
-	  }
-	
-	  // find matching values
-	  var i = 0;
-	
-	  while (matchers.length < 5 && i < categories.length) {
-	    if (categories[i].toLowerCase().match(query.toLowerCase())) {
-	      var suggestion = {
-	        suggestion: categories[i],
-	        suggestion_type: searchType
-	      };
-	      matchers.push(suggestion);
-	    }
-	    i++;
-	  }
-	
-	  return matchers;
-	}
-	
-	module.exports = SearchSuggestionActions;
-
-/***/ },
-/* 272 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var SearchSuggestionApiUtil = {
-	  getSuggestions: function getSuggestions(search_params, callback, errorCallback) {
-	    // search_params is an object formatted as {tea: value} accepting tea as key value
-	    // success returns an array of objects with suggestion, tea_id and suggestion_type keys
-	    $.ajax({
-	      url: 'api/search_suggestions',
-	      data: { search_params: search_params },
-	      success: callback,
-	      error: function error(resp) {
-	        return errorCallback('search', resp);
-	      }
-	    });
-	  }
-	
-	};
-	
-	module.exports = SearchSuggestionApiUtil;
-
-/***/ },
-/* 273 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var SearchSuggestionConstants = {
-	  RECEIVE_SUGGESTIONS: 'RECEIVE_SUGGESTIONS',
-	  CLEAR_SUGGESTIONS: 'CLEAR_SUGGESTIONS'
-	
-	};
-	
-	module.exports = SearchSuggestionConstants;
-
-/***/ },
-/* 274 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Store = __webpack_require__(241).Store,
-	    SearchSuggestionConstants = __webpack_require__(273),
-	    Dispatcher = __webpack_require__(232);
-	
-	var SearchSuggestionStore = window.store = new Store(Dispatcher);
-	
-	var _suggestions = [];
-	
-	SearchSuggestionStore.all = function () {
-	  return _suggestions.slice();
-	};
-	
-	SearchSuggestionStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case SearchSuggestionConstants.RECEIVE_SUGGESTIONS:
-	      _suggestions = payload.suggestions;
-	      this.__emitChange();
-	      break;
-	    case SearchSuggestionConstants.CLEAR_SUGGESTIONS:
-	      _suggestions = [];
-	      this.__emitChange();
-	      break;
-	  }
-	};
-	
-	module.exports = SearchSuggestionStore;
-
-/***/ },
-/* 275 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-	
-	var React = __webpack_require__(4),
-	    SearchSuggestionActions = __webpack_require__(271),
-	    TeaActions = __webpack_require__(266);
-	
-	var SearchSuggestion = React.createClass({
-	  displayName: 'SearchSuggestion',
-	
-	  _searchAndNavToIndex: function _searchAndNavToIndex(type, query) {
-	    SearchSuggestionActions.clearSuggestions();
-	    TeaActions.fetchTeas(_defineProperty({}, type, query));
-	    window.location.hash = 'teas/?' + type + '=' + query;
-	  },
-	
-	  _navToShowPage: function _navToShowPage(teaId) {
-	    SearchSuggestionActions.clearSuggestions();
-	    window.location.hash = 'teas/' + this.props.suggestion.tea_id;
-	  },
-	
-	  render: function render() {
-	    var _this = this;
-	
-	    var className = '';
-	
-	    switch (this.props.suggestion.suggestion_type) {
-	      case 'tea':
-	        return React.createElement(
-	          'li',
-	          { onClick: function onClick() {
-	              return _this._navToShowPage(_this.props.suggestion.tea_id);
-	            } },
-	          this.props.suggestion.suggestion
-	        );
-	      case 'region':
-	        className = 'icon-earth';
-	        return React.createElement(
-	          'li',
-	          { onClick: function onClick() {
-	              return _this._searchAndNavToIndex(_this.props.suggestion.suggestion_type, _this.props.suggestion.suggestion);
-	            } },
-	          React.createElement('span', { className: className }),
-	          this.props.suggestion.suggestion
-	        );
-	      case 'tea_type':
-	        className = 'icon-leaf ';
-	        className += this.props.suggestion.suggestion.toLowerCase();
-	        return React.createElement(
-	          'li',
-	          { onClick: function onClick() {
-	              return _this._searchAndNavToIndex(_this.props.suggestion.suggestion_type, _this.props.suggestion.suggestion);
-	            } },
-	          React.createElement('span', { className: className }),
-	          this.props.suggestion.suggestion
-	        );
-	      default:
-	    }
-	  }
-	
-	});
-	
-	module.exports = SearchSuggestion;
 
 /***/ }
 /******/ ]);
