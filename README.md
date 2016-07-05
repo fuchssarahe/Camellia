@@ -16,7 +16,7 @@ At a minimum, this app will satisfy the following criteria:
 - [x] Teas
   - [x] teas hold information on type, region, and steep specifications
   - [x] each tea has a profile page listing details
-- [ ] Tea Search
+- [x] Tea Search
   - [x] search for by tea name
   - [x] search bar is easily accessible from the header of any page
   - [x] search yields an index of teas and minimal details like country and type
@@ -93,7 +93,7 @@ user interface.
   - [x] `SearchBar`
   - [x] `SearchBarSuggestionIndex`
   - [x] `SearchSuggestionItem`
-- [ ] Figure out a way to hide search suggestions a bit better
+- [x] Figure out a way to hide search suggestions a bit better
 
 ### Phase 5: Ownerships (1 day, W2 Th 6pm)
 

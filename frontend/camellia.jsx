@@ -8,6 +8,7 @@ const React = require('react'),
       SessionStore = require('./stores/session_store'),
       TeaIndex = require('./components/tea_index'),
       TeaShow = require('./components/tea_show'),
+      OwnershipApiUtil = window.ownship = require('./utils/ownership_api_util'),
       TeaForm = require('./components/tea_form');
 
 const routes =

@@ -1,6 +1,9 @@
 class User < ActiveRecord::Base
   attr_reader :password
 
+  has_many :owenerships, dependent: :destroy
+  has_many :teas, through: :ownerships
+
   after_initialize :ensure_session_token
 
   validates :username, :session_token, :password_digest, presence: true
