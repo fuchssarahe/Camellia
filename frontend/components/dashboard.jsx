@@ -45,7 +45,7 @@ const Dashboard = React.createClass({
           </section>
 
           <section className="panel_section">
-            <h2 className="panel_section-header">Tea Shelf</h2>
+            <h2 className="panel_section-header">Tea Shelf: {Object.keys(this.state.ownedTeas).length} owned teas</h2>
             <ul className="cf panel_section-content sub-index">
               {
                 Object.keys(this.state.ownedTeas).map( (teaId) =>{

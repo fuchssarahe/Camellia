@@ -26076,6 +26076,11 @@
 	      );
 	    }
 	
+	    var searchBar = React.createElement('div', null);
+	    if (SessionStore.isUserLoggedIn()) {
+	      searchBar = React.createElement(SearchBar, null);
+	    }
+	
 	    return React.createElement(
 	      'div',
 	      null,
@@ -26090,7 +26095,7 @@
 	            { to: '/' },
 	            React.createElement('img', { src: 'https://raw.githubusercontent.com/fuchssarahe/Camellia/master/app/assets/images/camellia_logo.png', alt: 'Camellia Logo' })
 	          ),
-	          React.createElement(SearchBar, null),
+	          searchBar,
 	          buttons
 	        )
 	      ),
@@ -26098,7 +26103,33 @@
 	      React.createElement(
 	        'footer',
 	        { className: 'footer' },
-	        'this will be the footer.'
+	        React.createElement(
+	          'small',
+	          null,
+	          'Want more information on Camellia? Check out the Github repositories for both the site and its creator:'
+	        ),
+	        React.createElement(
+	          'ul',
+	          { className: 'footer-links' },
+	          React.createElement(
+	            'li',
+	            null,
+	            React.createElement(
+	              'a',
+	              { href: 'https://github.com/fuchssarahe/Camellia' },
+	              'Camellia Repo'
+	            )
+	          ),
+	          React.createElement(
+	            'li',
+	            null,
+	            React.createElement(
+	              'a',
+	              { href: 'https://github.com/fuchssarahe' },
+	              'Creator Github'
+	            )
+	          )
+	        )
 	      )
 	    );
 	  }
@@ -26584,14 +26615,7 @@
 	var _currentUser = {};
 	
 	function _login(user) {
-	  var shouldRedirect = !SessionStore.isUserLoggedIn();
-	
 	  _currentUser = user;
-	
-	  if (shouldRedirect) {
-	    window.location.hash = '/dashboard';
-	  }
-	
 	  SessionStore.__emitChange();
 	};
 	
@@ -33075,7 +33099,6 @@
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	var React = __webpack_require__(4),
-	    SessionStore = __webpack_require__(240),
 	    SearchSuggestionActions = __webpack_require__(259),
 	    SearchSuggestionStore = __webpack_require__(263),
 	    SearchSuggestion = __webpack_require__(264),
@@ -33121,12 +33144,6 @@
 	  },
 	
 	  render: function render() {
-	    if (!SessionStore.isUserLoggedIn) {
-	      return React.createElement('div', null);
-	    }
-	
-	    // onBlur={SearchSuggestionActions.clearSuggestions}
-	    // onFocus={this._updateSuggestions}
 	    return React.createElement(
 	      'div',
 	      { className: 'search-container' },
@@ -33535,18 +33552,60 @@
 /* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
-	var React = __webpack_require__(4);
+	var React = __webpack_require__(4),
+	    SearchBar = __webpack_require__(258);
 	
 	var Splash = React.createClass({
-	  displayName: "Splash",
+	  displayName: 'Splash',
+	
+	  _navToBrowse: function _navToBrowse() {
+	    window.location.hash = '/teas/?tea=';
+	  },
 	
 	  render: function render() {
 	    return React.createElement(
-	      "div",
-	      { className: "splash" },
-	      React.createElement("figure", { className: "splash splash--banner" })
+	      'div',
+	      { className: 'splash' },
+	      React.createElement(
+	        'figure',
+	        { className: 'splash splash--banner' },
+	        React.createElement(
+	          'article',
+	          { className: 'splash-search' },
+	          React.createElement(
+	            'h2',
+	            null,
+	            'Explore New Teas and Save your Favorites'
+	          ),
+	          React.createElement(
+	            'h3',
+	            null,
+	            'Try searching by tea, type, or region'
+	          ),
+	          React.createElement(SearchBar, null),
+	          React.createElement(
+	            'h3',
+	            null,
+	            'Or browse to explore'
+	          ),
+	          React.createElement(
+	            'button',
+	            { onClick: this._navToBrowse, className: 'major-button' },
+	            'Explore'
+	          )
+	        )
+	      ),
+	      React.createElement(
+	        'article',
+	        { className: 'site-info' },
+	        React.createElement(
+	          'h2',
+	          null,
+	          'More about Camellia'
+	        )
+	      )
 	    );
 	  }
 	
@@ -34538,7 +34597,9 @@
 	          React.createElement(
 	            'h2',
 	            { className: 'panel_section-header' },
-	            'Tea Shelf'
+	            'Tea Shelf: ',
+	            Object.keys(this.state.ownedTeas).length,
+	            ' owned teas'
 	          ),
 	          React.createElement(
 	            'ul',
@@ -34729,6 +34790,7 @@
 	      return React.createElement(
 	        'div',
 	        null,
+	        React.createElement('br', null),
 	        'Login to manage your personal teas!'
 	      );
 	    }

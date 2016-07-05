@@ -7,14 +7,7 @@ const SessionStore = new Store(Dispatcher);
 let _currentUser = {};
 
 function _login(user) {
-  const shouldRedirect = !SessionStore.isUserLoggedIn();
-
   _currentUser = user;
-
-  if (shouldRedirect) {
-    window.location.hash = '/dashboard'
-  }
-
   SessionStore.__emitChange();
 };
 

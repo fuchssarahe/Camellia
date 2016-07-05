@@ -99,12 +99,12 @@ user interface.
 
 **Objective:** Ownerships belong to a tea and a user. An inventory of ownerships will appear as a list of teas on the dashboard for the user.  
 
-- [ ] create `Ownership` model
-- [ ] build out API, Flux loop, and components for:
-  - [ ] `OwnershipForm`
-  - [ ] `OwnershipIndex`
-  - [ ] `OwnedTeaIndexItem`
-- [ ] Use CSS to style new views
+- [x] create `Ownership` model
+- [x] build out API, Flux loop, and components for:
+  - [x] `OwnershipForm`
+  - [x] `OwnershipIndex`
+  - [x] `OwnedTeaIndexItem`
+- [x] Use CSS to style new views
 
 ### Phase 6: Reviews (1 day, W2 F 6pm)
 

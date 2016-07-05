@@ -56,18 +56,27 @@ const App = React.createClass({
       </ul>
     }
 
+    let searchBar = <div></div>
+    if (SessionStore.isUserLoggedIn()) {
+      searchBar = <SearchBar/>
+    }
+
     return (
       <div>
         <div className="header-holder">
           <header className="site-nav">
           <Link to="/"><img src="https://raw.githubusercontent.com/fuchssarahe/Camellia/master/app/assets/images/camellia_logo.png" alt="Camellia Logo" /></Link>
-          <SearchBar/>
+          {searchBar}
           {buttons}
           </header>
         </div>
         {this.props.children}
         <footer className="footer">
-          this will be the footer.
+          <small>Want more information on Camellia? Check out the Github repositories for both the site and its creator:</small>
+          <ul className='footer-links'>
+            <li><a href='https://github.com/fuchssarahe/Camellia' >Camellia Repo</a></li>
+            <li><a href='https://github.com/fuchssarahe' >Creator Github</a></li>
+          </ul>
         </footer>
       </div>)
   }

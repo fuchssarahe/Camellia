@@ -8,16 +8,62 @@
 .splash--banner {
   // background-image: url('http://res.cloudinary.com/fuchssarahe/image/upload/v1467304927/14861622771_d4487c3e9e_o_b0a3w0.jpg');
   // background-image: url('http://res.cloudinary.com/fuchssarahe/image/upload/v1467306252/3534275860_78f4200942_o_hofmma.jpg');
-  background-image: url('http://res.cloudinary.com/fuchssarahe/image/upload/v1467306252/4986344388_7f06b00049_o_kxzfac.jpg');
+  // background-image: url('http://res.cloudinary.com/fuchssarahe/image/upload/v1467306252/4986344388_7f06b00049_o_kxzfac.jpg');
   // background-image: url('http://res.cloudinary.com/fuchssarahe/image/upload/v1467306254/5005665529_2901d11be5_o_pmbxd6.jpg');
+  background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('http://res.cloudinary.com/fuchssarahe/image/upload/v1467306252/4986344388_7f06b00049_o_kxzfac.jpg');
+  opacity: 0.9;
 
   background-position: center bottom;
   min-height: 600px;
   background-repeat: no-repeat;
   background-size: cover;
   margin: 0;
+  z-index: -1000;
 }
 
 // https://www.flickr.com/photos/mor10/5005665529/in/photolist-8CkkY6-4D1yUf-xCywX-b9Y-8QXGV6-b22Wja-5tVw5W-5tR9ur-5tVvRJ-64kaBj-b22X6x-e34z92-5tR964-5tVvVS-5tR91a-7bkcJE-5tR9ER-bT5NKe-dAoo4-5tR9Av-7Eth8F-b22TYF-dxhMGi-pgfns6-8FpV65-8eArC4-FfD3W-b22NgM-8KQo4-b22RGM-b22Lc4-b22Mek-b22SCP-7aThbV-qUex7r-cfTco-qa9pXB-7XdK5V-6vht1m-oJxcQX-6XGRdR-bqHgcu-NdAed-8FYjt1-4F9mFa-b22Jgg-7ExbQs-5vukJa-auRAC4-7bkcwo
 // https://www.flickr.com/photos/md903152/14861622771/in/photolist-oDgGFn-3Mdzi-t5GnG-7oRtQX-poTJth-Kfb6F-xNXJj-9cdHn4-aTJjgv-b9Z-aTJkSp-pmr378-aTJjFV-4EXtGJ-8tf5Sh-8CkkY6-4D1yUf-xCywX-b9Y-8QXGV6-b22Wja-5tVw5W-5tR9ur-5tVvRJ-64kaBj-b22X6x-e34z92-5tR964-5tVvVS-5tR91a-7bkcJE-5tR9ER-bT5NKe-dAoo4-5tR9Av-7Eth8F-b22TYF-dxhMGi-pgfns6-8FpV65-8eArC4-FfD3W-b22NgM-8KQo4-b22RGM-b22Lc4-b22Mek-b22SCP-7aThbV-qUex7r/
 // https://www.flickr.com/photos/53878168@N02/4986344388/in/photolist-8ACjsY-6wcKfe-7bCZam-6oj65G-9e1nVW-4BTg9-atAwmd-cA3pCQ-5eGSCL-jJCVgX-8yTNmK-b22YkT-5fhvqh-5fd68D-8Bo1C8-gce1GA-bAEBwA-hGHGza-7zzj1a-r9fm9N-e34zaD-5fd6Qa-eHsnGJ-6dDYKK-5SfMzW-9Q5QZU-7VXiKr-e34zcx-5vizw9-8LYoDy-oceJJh-6Kfxbe-3b9Zsz-qnY2S-6oeVCr-nK7yrJ-oSZrJE-5vyEib-9Zaxc-8zi9Tx-tHVw-tHWv-4FWExf-tHV3-6oj5vG-6ojaB9-64BPRh-9Q5RUm-q45Gjy-7W1yQ7
+
+.splash-search {
+  width: 80%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.splash-search > .search-container {
+  margin-bottom: 50px;
+}
+
+.splash-search .tea-search {
+  background: white;
+}
+
+.splash h2, h3 {
+  color: #8ad5a1;
+  font-weight: lighter;
+  text-align: center;
+  padding-bottom: 15px;
+  text-shadow: 1px 1px gray;
+}
+
+.splash h2 {
+  font-size: 56px;
+}
+
+.splash h3 {
+  font-size: 24px;
+}
+
+.site-info {
+  min-height: 300px;
+  background: #41b866;
+}
+
+.site-info h2 {
+  color: white;
+  padding: 30px 0 0 30px;
+  text-align: left;
+}
