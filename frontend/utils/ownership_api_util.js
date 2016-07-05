@@ -13,14 +13,19 @@ const OwnershipApiUtil = {
       url: 'api/teas/' + teaId + '/ownership',
       type: 'DELETE',
       success: callback,
-      error: (resp) => errorCallback('newOwnership', resp)
+      error: (resp) => errorCallback('destroyOwnership', resp)
+    })
+  },
+
+  getOwnedTeas: function (callback, errorCallback) {
+    $.ajax({
+      url: 'api/ownerships',
+      type: 'GET',
+      success: callback,
+      error: errorCallback
     })
   }
-
 
 };
 
 module.exports = OwnershipApiUtil;
-
-
-// ownship.createOwnership(17, () => console.log('success'), () => console.log('error'))

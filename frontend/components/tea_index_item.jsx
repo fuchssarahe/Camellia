@@ -1,6 +1,8 @@
 import { Link } from 'react-router';
 const React = require('react'),
-      TeaStore = require('../stores/tea_store');
+      TeaStore = require('../stores/tea_store'),
+      OwnershipButton = require('./ownership_button'),
+      SessionStore = require('../stores/session_store');
       // ErrorStore = require('../stores/error_store');
 
 const TeaIndexItem = React.createClass({
@@ -27,7 +29,6 @@ const TeaIndexItem = React.createClass({
     } else {
       figureContents = <div className="index-item_image--empty"></div>
     }
-
     return (
       <li className='panel_section'>
         <Link to={'/teas/' + this.props.tea.id}>
@@ -39,6 +40,8 @@ const TeaIndexItem = React.createClass({
               <p><span className={"icon-leaf" + ' ' + color} />Type: {this.props.tea.tea_type}</p>
               <p><span className='icon-earth' />Region: {this.props.tea.region}</p>
               <p><span className="icon-office" />Retailer: {this.props.tea.retailer}</p>
+              <br/>
+              <OwnershipButton teaId={this.props.tea.id}/>
             </li>
             <li className="col col-1-2">
               <figure>

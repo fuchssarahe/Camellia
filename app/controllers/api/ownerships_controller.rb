@@ -23,4 +23,10 @@ class Api::OwnershipsController < ApplicationController
     end
   end
 
+  def index
+    # returns teas owned by a particular user_id
+    @teas = current_user.teas
+    render 'api/teas/index'
+  end
+
 end

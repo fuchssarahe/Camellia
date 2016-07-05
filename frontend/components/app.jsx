@@ -25,20 +25,28 @@ const App = React.createClass({
     window.location.hash = '/login';
   },
 
+  _navToDashBoard: function () {
+    window.location.hash = '/dashboard'
+  },
+
   _logout: function () {
     SessionActions.logout();
     window.location.hash = '/';
   },
 
   _loginGuest: function () {
-    SessionActions.login({username: 'guest', password: '123456'})
+    SessionActions.login({username: 'guest', password: '123456'});
   },
 
   render: function () {
 
     let buttons = "";
     if (SessionStore.isUserLoggedIn()) {
-      buttons = <button className='auth-buttons' onClick={this._logout}>Logout!</button>;
+      buttons =
+        <ul className='auth-buttons'>
+          <li><button onClick={this._navToDashBoard} className='minor-button'>Dashboard</button></li>
+          <li><button onClick={this._logout}>Logout!</button></li>
+        </ul>
     } else {
       buttons =
       <ul className='auth-buttons'>
