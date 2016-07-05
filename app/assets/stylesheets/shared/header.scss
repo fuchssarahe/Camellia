@@ -3,6 +3,7 @@
   min-height: 100px;
   width: 100%;
   display: block;
+  z-index: 1000;
 }
 
 .site-nav {
@@ -37,6 +38,29 @@
 .footer {
   padding: 40px 0 24px 0;
   text-align: center;
+  border-top: 3px solid lightgray;
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.footer-links a {
+  padding: 8px 6px;
+  border: 1px solid #bfcad2;
+  border-radius: 4px;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+  background: darken(#f9f9f9, 10%);
+  overflow: hidden;
+}
+
+.footer-links li {
+  margin: 6px 4px;
 }
 
 .tea-search {

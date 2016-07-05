@@ -1,5 +1,4 @@
 const React = require('react'),
-      SessionStore = require('../stores/session_store'),
       SearchSuggestionActions = require('../actions/search_suggestion_actions'),
       SearchSuggestionStore = require('../stores/search_suggestion_store'),
       SearchSuggestion = require('./search_suggestion'),
@@ -42,14 +41,6 @@ const SearchBar = React.createClass({
   },
 
   render: function () {
-    if (!SessionStore.isUserLoggedIn) {
-      return <div></div>
-    }
-
-
-
-    // onBlur={SearchSuggestionActions.clearSuggestions}
-    // onFocus={this._updateSuggestions}
     return (
       <div className="search-container">
         <form className="tea-search" onSubmit={this._searchAndNavAway}>

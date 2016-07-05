@@ -47,6 +47,7 @@ button {
   margin-left: 10px;
   background: #41b866;
   color: white;
+  text-align: center;
 }
 
 button:hover {
@@ -63,6 +64,17 @@ button:hover {
 .minor-button:hover {
   background: lighten(#41b866, 20%);
   color: white;
+}
+
+.major-button {
+  width: 25%;
+  padding: 20px;
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.major-button:hover {
+
 }
 
 .submit-input {

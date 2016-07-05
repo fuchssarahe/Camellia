@@ -14,7 +14,7 @@ const OwnershipButton = React.createClass({
 
   render: function () {
     if (!SessionStore.isUserLoggedIn()) {
-      return (<div>Login to manage your personal teas!</div>);
+      return (<div><br/>Login to manage your personal teas!</div>);
     }
 
     let buttonText = 'Add to your Tea Shelf';
