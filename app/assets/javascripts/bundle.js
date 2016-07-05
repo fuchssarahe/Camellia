@@ -34211,7 +34211,6 @@
 	              'Retailer: ',
 	              this.props.tea.retailer
 	            ),
-	            React.createElement('br', null),
 	            React.createElement(OwnershipButton, { teaId: this.props.tea.id })
 	          ),
 	          React.createElement(
@@ -34579,7 +34578,7 @@
 	
 	    return React.createElement(
 	      'li',
-	      null,
+	      { className: 'owned-tea-item' },
 	      React.createElement(
 	        'figure',
 	        null,
@@ -34735,10 +34734,10 @@
 	    }
 	
 	    var buttonText = 'Add to your Tea Shelf';
-	    var className = '';
+	    var className = 'ownership-button';
 	    if (OwnedTeaStore.find(this.props.teaId)) {
 	      buttonText = 'Remove from Shelf';
-	      className = 'minor-button';
+	      className = 'ownership-button minor-button';
 	    }
 	
 	    return React.createElement(

@@ -18,10 +18,10 @@ const OwnershipButton = React.createClass({
     }
 
     let buttonText = 'Add to your Tea Shelf';
-    let className = ''
+    let className = 'ownership-button'
     if (OwnedTeaStore.find(this.props.teaId)) {
       buttonText = 'Remove from Shelf'
-      className = 'minor-button'
+      className = 'ownership-button minor-button'
     }
 
     return (

@@ -40,7 +40,6 @@ const TeaIndexItem = React.createClass({
               <p><span className={"icon-leaf" + ' ' + color} />Type: {this.props.tea.tea_type}</p>
               <p><span className='icon-earth' />Region: {this.props.tea.region}</p>
               <p><span className="icon-office" />Retailer: {this.props.tea.retailer}</p>
-              <br/>
               <OwnershipButton teaId={this.props.tea.id}/>
             </li>
             <li className="col col-1-2">

@@ -12,7 +12,7 @@ const OwnedTeaItem = React.createClass({
     }
 
     return (
-      <li>
+      <li className='owned-tea-item'>
         <figure>{figureContents}</figure>
         {this.props.tea.name}, {this.props.tea.tea_type}
         <OwnershipButton teaId={this.props.tea.id}/>
