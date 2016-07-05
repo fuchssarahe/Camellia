@@ -17,6 +17,10 @@ class ApplicationController < ActionController::Base
     session[:session_token] = nil
   end
 
+  def ensure_logged_in
+    render json: {base: ['no user logged in']}, status: 404 unless current_user
+  end
+
   protected
   def user_params
     params.require(:user).permit(:username, :password)

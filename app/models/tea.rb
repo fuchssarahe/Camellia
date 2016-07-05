@@ -1,5 +1,6 @@
 class Tea < ActiveRecord::Base
-  # attr_reader :image
+  has_many :ownerships, dependent: :destroy
+  has_many :owners, through: :ownerships, source: :users
 
   validates :name, :tea_type, :region, :steep_time, :temperature, :leaf_quantity, :leaf_density, :retailer, presence: true
   validates :tea_type, inclusion: { in: %w(Black Red White Dark Yellow Green Oolong Herbal Other) }

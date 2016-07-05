@@ -57,6 +57,7 @@
 	    SessionStore = __webpack_require__(240),
 	    TeaIndex = __webpack_require__(271),
 	    TeaShow = __webpack_require__(275),
+	    OwnershipApiUtil = window.ownship = __webpack_require__(276),
 	    TeaForm = __webpack_require__(273);
 	
 	var routes = React.createElement(
@@ -34371,6 +34372,41 @@
 	});
 	
 	module.exports = TeaShow;
+
+/***/ },
+/* 276 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var OwnershipApiUtil = {
+	  createOwnership: function createOwnership(teaId, callback, errorCallback) {
+	    $.ajax({
+	      url: 'api/teas/' + teaId + '/ownership',
+	      type: 'POST',
+	      success: callback,
+	      error: function error(resp) {
+	        return errorCallback('newOwnership', resp);
+	      }
+	    });
+	  },
+	
+	  destroyOwnership: function destroyOwnership(teaId, callback, errorCallback) {
+	    $.ajax({
+	      url: 'api/teas/' + teaId + '/ownership',
+	      type: 'DELETE',
+	      success: callback,
+	      error: function error(resp) {
+	        return errorCallback('newOwnership', resp);
+	      }
+	    });
+	  }
+	
+	};
+	
+	module.exports = OwnershipApiUtil;
+	
+	// ownship.createOwnership(17, () => console.log('success'), () => console.log('error'))
 
 /***/ }
 /******/ ]);
