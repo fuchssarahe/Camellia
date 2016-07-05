@@ -2,7 +2,6 @@ const React = require('react'),
       TeaStore = require('../stores/tea_store'),
       TeaActions = require('../actions/tea_actions'),
       TeaForm = require('./tea_form'),
-      // ErrorStore = require('../stores/error_store'),
       TeaIndexItem = require('./tea_index_item');
 
 const TeaIndex = React.createClass({
@@ -11,15 +10,8 @@ const TeaIndex = React.createClass({
   },
 
   componentWillMount: function () {
-    // console.log(this.props.params);
-    // TeaActions.fetchTeas({this.props.params});
+    TeaActions.fetchTeas(this.props.location.query);
     this.listener = TeaStore.addListener(this._onChange);
-    // this.errorListener = TeaStore.addListener();
-  },
-
-  componentWillReceiveProps: function (newProps) {
-    console.log(newProps.params);
-    // TeaActions.fetchTeas(newProps.params.query);
   },
 
   _onChange: function () {
@@ -28,15 +20,9 @@ const TeaIndex = React.createClass({
 
   componentWillUnmount: function () {
     this.listener.remove();
-    // this.errorListener.remove();
-  },
-
-  _navToTeaForm: function () {
-    window.location.hash = 'teas/new';
   },
 
   render: function () {
-    const buttonToSave = <button onClick={this._navToTeaForm}>Create New Tea</button>;
     return (
       <div className="cf container">
         <ul className='panel panel_main'>

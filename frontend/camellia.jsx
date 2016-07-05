@@ -15,7 +15,7 @@ const routes =
     <IndexRoute component={Splash} />
     <Route path='signup' component={AuthForm} onEnter={ensureNotLoggedIn} />
     <Route path='login' component={AuthForm} onEnter={ensureNotLoggedIn} />
-    <Route path='teas' component={TeaIndex} >
+    <Route path='teas/' component={TeaIndex} >
       <Route path='new' component={TeaForm} />
     </Route>
     <Route path='teas/:id' component={TeaShow} />
