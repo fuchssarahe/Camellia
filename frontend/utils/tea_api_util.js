@@ -1,8 +1,8 @@
 const TeaApiUtil = {
-  fetchTeas: function (params, callback, errorCallback) {
+  fetchTeas: function (params = null, callback, errorCallback) {
     $.ajax({
       type: 'GET',
-      data: {tea: params},
+      data: params ? {search_params: params} : {},
       url: 'api/teas',
       success: callback,
       error: errorCallback

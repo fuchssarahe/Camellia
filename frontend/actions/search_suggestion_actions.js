@@ -6,10 +6,18 @@ const SearchSuggestionApiUtil = require('../utils/search_suggestion_api_util'),
 
 const SearchSuggestionActions = {
   fetchSuggestions: function (search_params) {
-    if (search_params.tea) {
+    const searchType = Object.keys(search_params)[0];
+
+    //  clear out suggestions if query is empty
+    if (search_params[searchType] === '') {
+      this.clearSuggestions();
+
+    // make api call if searching for teas
+    } else if (search_params.tea) {
       SearchSuggestionApiUtil.getSuggestions(search_params, this.receiveSuggestions, ErrorActions.setErrors);
+
+    // search constants if region or type
     } else {
-      const searchType = Object.keys(search_params)[0];
       const suggestions = _getMatchingCategories(searchType, search_params[searchType])
       this.receiveSuggestions(suggestions)
     }
@@ -23,12 +31,23 @@ const SearchSuggestionActions = {
     }
     Dispatcher.dispatch(payload)
   },
+
+  clearSuggestions: function () {
+    ErrorActions.clearErrors();
+    const payload = {
+      actionType: SearchSuggestionConstants.CLEAR_SUGGESTIONS,
+    }
+    Dispatcher.dispatch(payload)
+  }
 }
+
+
+
+// Private methods
 
 
 function _getMatchingCategories(searchType, query) {
   const matchers = [];
-
 
   // find correct constant to search
   let categories;
@@ -41,7 +60,6 @@ function _getMatchingCategories(searchType, query) {
       break;
     default:
   }
-
 
   // find matching values
   let i = 0;

@@ -16,6 +16,10 @@ SearchSuggestionStore.__onDispatch = function (payload) {
       _suggestions = payload.suggestions;
       this.__emitChange();
       break;
+    case SearchSuggestionConstants.CLEAR_SUGGESTIONS:
+      _suggestions = [];
+      this.__emitChange();
+      break;
   }
 };
 

@@ -10,33 +10,27 @@ class Tea < ActiveRecord::Base
     self.image_public_id = upload_params['url']
   end
 
-  def search(parameters, limit = nil)
+  def self.search(parameters, limit = nil)
     if parameters[:tea]
-      # should return tea information
-
-      selector = 'id, name as search_name'
-
-      suggestions = Tea.where("UPPER(name) LIKE :search_params OR description LIKE :search_params", {search_params: '%' + search_params[:tea].upcase + '%'})
-      suggestion_type = 'tea'
-
+      # 'tea' will only be a key of parameters if users are searching under the tea field
+      teas = Tea.where("UPPER(name) LIKE :search_parameters OR UPPER(description) LIKE :search_parameters", {search_parameters: '%' + parameters[:tea].upcase + '%'})
     else
-      # should return either region or tea type names
-
-      column = search_params.keys[0]
-      selector = column + ' as search_name'
-
-      suggestions = Tea.distinct.where("UPPER(#{column}) LIKE :search_params", {search_params: '%' + search_params[column].upcase + '%'})
-      suggestion_type = column
+      query_string = ''
+      parameters.each do |key, value|
+        query_string = query_string + 'UPPER(' + key + ')' + ' LIKE ' + "'%#{value.upcase}%'"
+      end
+      teas = Tea.where(query_string)
     end
 
-
-
     if limit
-      # returns search suggestions
-      return [suggestions.limit(limit).select(selector), suggestion_type]
+      # (limit param determines whether a suggestion is needed or not)
+      selector = 'id, name as search_name'
+      suggestion_type = 'tea'
+      return [teas.limit(limit).select(selector), suggestion_type]
+
     else
       # returns full tea detail
-      return suggestions
+      return teas
     end
   end
 
