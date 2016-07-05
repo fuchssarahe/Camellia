@@ -20,10 +20,10 @@ At a minimum, this app will satisfy the following criteria:
   - [x] search for by tea name
   - [x] search bar is easily accessible from the header of any page
   - [x] search yields an index of teas and minimal details like country and type
-- [ ] Tea Inventory
-  - [ ] users can add teas to their personal inventory
-  - [ ] owned teas will appear on the dashboard for the user
-  - [ ] owned teas aren't visible to other users
+- [x] Tea Inventory
+  - [x] users can add teas to their personal inventory
+  - [x] owned teas will appear on the dashboard for the user
+  - [x] owned teas aren't visible to other users
 - [ ] Reviews
   - [ ] users can review teas
   - [ ] reviews appear on the profile for a tea
