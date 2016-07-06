@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160705165946) do
+ActiveRecord::Schema.define(version: 20160706170026) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,6 +26,23 @@ ActiveRecord::Schema.define(version: 20160705165946) do
   add_index "ownerships", ["tea_id"], name: "index_ownerships_on_tea_id", using: :btree
   add_index "ownerships", ["user_id", "tea_id"], name: "index_ownerships_on_user_id_and_tea_id", unique: true, using: :btree
   add_index "ownerships", ["user_id"], name: "index_ownerships_on_user_id", using: :btree
+
+  create_table "reviews", force: :cascade do |t|
+    t.integer  "user_id",       null: false
+    t.string   "tea_id",        null: false
+    t.integer  "rating",        null: false
+    t.text     "body",          null: false
+    t.integer  "steep_time"
+    t.integer  "leaf_quantity"
+    t.integer  "temperature"
+    t.integer  "leaf_density"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "reviews", ["tea_id", "user_id"], name: "index_reviews_on_tea_id_and_user_id", unique: true, using: :btree
+  add_index "reviews", ["tea_id"], name: "index_reviews_on_tea_id", using: :btree
+  add_index "reviews", ["user_id"], name: "index_reviews_on_user_id", using: :btree
 
   create_table "teas", force: :cascade do |t|
     t.string   "name",            null: false
