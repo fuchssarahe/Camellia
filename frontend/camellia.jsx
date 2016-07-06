@@ -15,12 +15,12 @@ const React = require('react'),
 const routes =
   <Route path='/' component={App} >
     <IndexRoute component={Splash} />
-    <Route path='signup' component={AuthForm} onEnter={ensureNotLoggedIn} />
-    <Route path='login' component={AuthForm} onEnter={ensureNotLoggedIn} />
-    <Route path='teas' component={TeaIndex} onEnter={ensureLoggedIn}/>
+    <Route path='signup' component={AuthForm} />
+    <Route path='login' component={AuthForm} />
+    <Route path='teas' component={TeaIndex} />
     <Route path='teas/new' component={CreateTea} />
     <Route path='teas/:id' component={TeaShow} />
-    <Route path='dashboard' component={Dashboard} onEnter={ensureLoggedIn}/>
+    <Route path='dashboard' component={Dashboard}/>
   </Route>;
 
 $(
@@ -43,7 +43,6 @@ function ensureLoggedIn() {
 
 function ensureNotLoggedIn() {
   if (SessionStore.isUserLoggedIn()) {
-    console.log('about to update hash');
     hashHistory.push('/');
   }
 };
