@@ -59,7 +59,8 @@
 	    TeaShow = __webpack_require__(279),
 	    TeaForm = __webpack_require__(273),
 	    Dashboard = __webpack_require__(280),
-	    ReviewApiUtil = window.rev = __webpack_require__(283),
+	    ReviewActions = window.actions = __webpack_require__(286),
+	    ReviewStore = window.store = __webpack_require__(284),
 	    CreateTea = __webpack_require__(282);
 	
 	var routes = React.createElement(
@@ -34981,7 +34982,7 @@
 	    });
 	  },
 	
-	  fetchReviews: function fetchReviews(paramHash, callback, errorCallback) {
+	  getReviews: function getReviews(paramHash, callback, errorCallback) {
 	    $.ajax({
 	      url: 'api/reviews',
 	      type: 'GET',
@@ -34991,7 +34992,7 @@
 	    });
 	  },
 	
-	  fetchSingleReview: function fetchSingleReview(reviewId, callback, errorCallback) {
+	  getSingleReview: function getSingleReview(reviewId, callback, errorCallback) {
 	    $.ajax({
 	      url: 'api/reviews/' + reviewId,
 	      type: 'GET',
@@ -35016,6 +35017,132 @@
 	// rev.createReview({user_id: 3, tea_id: 3, rating: 4, body: 'I love tea', steep_time: 3, leaf_quantity: 1, temperature: 90, leaf_density: 10}, (resp) => console.log(resp), (resp) => console.log('err', resp))
 	// rev.fetchSingleReview(61, (resp) => console.log(resp), (resp) => console.log('err', resp))
 	// rev.destroyReview(61, (resp) => console.log(resp), (resp) => console.log('err', resp))
+
+/***/ },
+/* 284 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Store = __webpack_require__(241).Store,
+	    ReviewConstants = __webpack_require__(285),
+	    Dispatcher = __webpack_require__(232);
+	
+	var ReviewStore = new Store(Dispatcher);
+	
+	var _reviews = {};
+	
+	function _setReviews(newReviews) {
+	  _reviews = {};
+	  newReviews.forEach(function (review) {
+	    _reviews[review.id] = review;
+	  });
+	};
+	
+	ReviewStore.all = function () {
+	  var reviewsCopy = {};
+	
+	  Object.keys(_reviews).forEach(function (reviewId) {
+	    reviewsCopy[reviewId] = _reviews[reviewId];
+	  });
+	  return reviewsCopy;
+	};
+	
+	ReviewStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case ReviewConstants.RECEIVE_REVIEWS:
+	      _setReviews(payload.reviews);
+	      this.__emitChange();
+	      break;
+	    case ReviewConstants.RECEIVE_REVIEW:
+	      _reviews[payload.review.id] = payload.review;
+	      this.__emitChange();
+	      break;
+	    case ReviewConstants.REMOVE_REVIEW:
+	      delete _reviews[payload.review.id];
+	      this.__emitChange();
+	    default:
+	  }
+	};
+	
+	ReviewStore.find = function (reviewId) {
+	  return _reviews[reviewId];
+	};
+	
+	module.exports = ReviewStore;
+
+/***/ },
+/* 285 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var ReviewConstants = {
+	  RECEIVE_REVIEWS: 'RECEIVE_REVIEWS',
+	  RECEIVE_REVIEW: 'RECEIVE_REVIEW',
+	  REMOVE_REVIEW: 'REMOVE_REVIEW'
+	
+	};
+	
+	module.exports = ReviewConstants;
+
+/***/ },
+/* 286 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var ReviewConstants = __webpack_require__(285),
+	    ReviewApiUtil = __webpack_require__(283),
+	    ErrorActions = __webpack_require__(238),
+	    Dispatcher = __webpack_require__(232);
+	
+	var ReviewActions = {
+	  fetchReviews: function fetchReviews(paramHash) {
+	    ReviewApiUtil.getReviews(paramHash, ReviewActions.receiveReviews, ErrorActions.setErrors);
+	  },
+	
+	  fetchSingleReview: function fetchSingleReview(reviewId) {
+	    ReviewApiUtil.getSingleReview(reviewId, ReviewActions.receiveSingleReview, ErrorActions.setErrors);
+	  },
+	
+	  createReview: function createReview(reviewParams) {
+	    ReviewApiUtil.createReview(reviewParams, ReviewActions.receiveSingleReview, ErrorActions.setErrors);
+	  },
+	
+	  destroyReview: function destroyReview(reviewId) {
+	    ReviewApiUtil.destroyReview(reviewId, ReviewActions.removeReview, ErrorActions.setErrors);
+	  },
+	
+	  receiveSingleReview: function receiveSingleReview(review) {
+	    ErrorActions.clearErrors();
+	    var payload = {
+	      actionType: ReviewConstants.RECEIVE_REVIEW,
+	      review: review
+	    };
+	    Dispatcher.dispatch(payload);
+	  },
+	
+	  receiveReviews: function receiveReviews(reviews) {
+	    ErrorActions.clearErrors();
+	    var payload = {
+	      actionType: ReviewConstants.RECEIVE_REVIEWS,
+	      reviews: reviews
+	    };
+	    Dispatcher.dispatch(payload);
+	  },
+	
+	  removeReview: function removeReview(review) {
+	    ErrorActions.clearErrors();
+	    var payload = {
+	      actionType: ReviewConstants.REMOVE_REVIEW,
+	      review: review
+	    };
+	    Dispatcher.dispatch(payload);
+	  }
+	};
+	
+	module.exports = ReviewActions;
 
 /***/ }
 /******/ ]);

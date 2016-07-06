@@ -9,7 +9,7 @@ const ReviewApiUtil = {
     })
   },
 
-  fetchReviews: function (paramHash, callback, errorCallback) {
+  getReviews: function (paramHash, callback, errorCallback) {
     $.ajax({
       url: 'api/reviews',
       type: 'GET',
@@ -19,7 +19,7 @@ const ReviewApiUtil = {
     })
   },
 
-  fetchSingleReview: function (reviewId, callback, errorCallback) {
+  getSingleReview: function (reviewId, callback, errorCallback) {
     $.ajax({
       url: 'api/reviews/' + reviewId,
       type: 'GET',
