@@ -25,6 +25,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'bcrypt', '~> 3.1.7'
 gem 'autoprefixer-rails'
 gem 'cloudinary'
+gem 'faker'
 
 # Use Unicorn as the app server
 # gem 'unicorn'
