@@ -1,7 +1,8 @@
 const React = require('react'),
       TeaStore = require('../stores/tea_store'),
       TeaActions = require('../actions/tea_actions'),
-      OwnershipButton = require('./ownership_button');
+      OwnershipButton = require('./ownership_button'),
+      TeaReviewIndex = require('./tea_review_index');
 
 const TeaShow = React.createClass({
   getInitialState: function () {
@@ -91,6 +92,10 @@ const TeaShow = React.createClass({
                 </ul>
               </li>
             </ul>
+          </section>
+          <section className='panel_section'>
+            <h2 className="panel_section-header">Reviews</h2>
+            <TeaReviewIndex className='panel_section-content' teaId={this.props.params.id}/>
           </section>
         </article>
 

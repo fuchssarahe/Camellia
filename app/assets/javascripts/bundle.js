@@ -34594,7 +34594,8 @@
 	var React = __webpack_require__(4),
 	    TeaStore = __webpack_require__(272),
 	    TeaActions = __webpack_require__(265),
-	    OwnershipButton = __webpack_require__(275);
+	    OwnershipButton = __webpack_require__(275),
+	    TeaReviewIndex = __webpack_require__(287);
 	
 	var TeaShow = React.createClass({
 	  displayName: 'TeaShow',
@@ -34767,6 +34768,16 @@
 	              )
 	            )
 	          )
+	        ),
+	        React.createElement(
+	          'section',
+	          { className: 'panel_section' },
+	          React.createElement(
+	            'h2',
+	            { className: 'panel_section-header' },
+	            'Reviews'
+	          ),
+	          React.createElement(TeaReviewIndex, { className: 'panel_section-content', teaId: this.props.params.id })
 	        )
 	      )
 	    );
@@ -35026,17 +35037,30 @@
 	
 	var Store = __webpack_require__(241).Store,
 	    ReviewConstants = __webpack_require__(285),
-	    Dispatcher = __webpack_require__(232);
+	    Dispatcher = __webpack_require__(232),
+	    SessionStore = __webpack_require__(240);
 	
 	var ReviewStore = new Store(Dispatcher);
 	
 	var _reviews = {};
+	var _currentUserReviews = [];
 	
 	function _setReviews(newReviews) {
 	  _reviews = {};
 	  newReviews.forEach(function (review) {
 	    _reviews[review.id] = review;
+	    _processReviewForCurrentUser(review);
 	  });
+	};
+	
+	function _processReviewForCurrentUser(review, shouldDelete) {
+	  if (shouldDelete === true) {
+	    var index = _currentUserReviews.indexOf(review);
+	    _currentUserReviews.splice(index, 1);
+	  }
+	  if (SessionStore.isUserLoggedIn() && view.user_id === SessionStore.currentUser().id) {
+	    _currentUserReviews.push(review);
+	  }
 	};
 	
 	ReviewStore.all = function () {
@@ -35056,10 +35080,12 @@
 	      break;
 	    case ReviewConstants.RECEIVE_REVIEW:
 	      _reviews[payload.review.id] = payload.review;
+	      _processReviewForCurrentUser(review);
 	      this.__emitChange();
 	      break;
 	    case ReviewConstants.REMOVE_REVIEW:
 	      delete _reviews[payload.review.id];
+	      _processReviewForCurrentUser(review, true);
 	      this.__emitChange();
 	    default:
 	  }
@@ -35067,6 +35093,12 @@
 	
 	ReviewStore.find = function (reviewId) {
 	  return _reviews[reviewId];
+	};
+	
+	ReviewStore.findUserReview = function (teaId) {
+	  pertinentReviews = [];
+	  Object.keys(_currentUserReviews);
+	  return _currentUserReviews;
 	};
 	
 	module.exports = ReviewStore;
@@ -35143,6 +35175,116 @@
 	};
 	
 	module.exports = ReviewActions;
+
+/***/ },
+/* 287 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _reactRouter = __webpack_require__(1);
+	
+	var React = __webpack_require__(4),
+	    ReviewActions = __webpack_require__(286),
+	    ReviewStore = __webpack_require__(284),
+	    ReviewIndexItem = __webpack_require__(288);
+	
+	var TeaReviewIndex = React.createClass({
+	  displayName: 'TeaReviewIndex',
+	
+	  getInitialState: function getInitialState() {
+	    return { reviews: ReviewStore.all() };
+	  },
+	
+	  componentWillMount: function componentWillMount() {
+	    ReviewActions.fetchReviews({ tea_id: this.props.teaId });
+	    this.listener = ReviewStore.addListener(this._onChange);
+	  },
+	
+	  _onChange: function _onChange() {
+	    this.setState({ reviews: ReviewStore.all() });
+	  },
+	
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.listener.remove();
+	  },
+	
+	  render: function render() {
+	    var _this = this;
+	
+	    return React.createElement(
+	      'ul',
+	      null,
+	      Object.keys(this.state.reviews).map(function (reviewId) {
+	        var review = _this.state.reviews[reviewId];
+	        return React.createElement(ReviewIndexItem, { key: review.id, review: review });
+	      })
+	    );
+	  }
+	});
+	
+	module.exports = TeaReviewIndex;
+
+/***/ },
+/* 288 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _reactRouter = __webpack_require__(1);
+	
+	var React = __webpack_require__(4),
+	    ReviewRating = __webpack_require__(289);
+	
+	var ReviewIndexItem = React.createClass({
+	  displayName: 'ReviewIndexItem',
+	
+	  render: function render() {
+	    return React.createElement(
+	      'li',
+	      { className: 'review-index-item' },
+	      React.createElement(ReviewRating, { rating: this.props.review.rating }),
+	      this.props.review.body
+	    );
+	  }
+	});
+	
+	module.exports = ReviewIndexItem;
+
+/***/ },
+/* 289 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _reactRouter = __webpack_require__(1);
+	
+	var React = __webpack_require__(4);
+	
+	var ReviewRating = React.createClass({
+	  displayName: 'ReviewRating',
+	
+	  render: function render() {
+	    var ratingClass = 'rating-container';
+	    var scoreClass = '';
+	
+	    if (this.props.rating) {
+	      scoreClass += 'rating-' + this.props.rating;
+	    }
+	
+	    return React.createElement(
+	      'div',
+	      { className: ratingClass },
+	      React.createElement(
+	        'div',
+	        { className: scoreClass },
+	        this.props.rating
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = ReviewRating;
 
 /***/ }
 /******/ ]);

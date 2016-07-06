@@ -1,3 +1,39 @@
 // Place all the styles related to the reviews controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.review-index-item {
+
+}
+
+.rating-container {
+  width: 100px;
+  height: auto;
+  background: url('https://raw.githubusercontent.com/fuchssarahe/Camellia/master/app/assets/images/rating-background.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.rated {
+  background: yellow;
+}
+
+.rating-5 {
+  width: 100px;
+}
+
+.rating-4 {
+ width: 80px;
+}
+
+.rating-3 {
+  width: 60px;
+}
+
+.rating-2 {
+  width: 40px;
+}
+
+.rating-1 {
+  width: 20px;
+}
