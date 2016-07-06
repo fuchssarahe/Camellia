@@ -59,6 +59,7 @@
 	    TeaShow = __webpack_require__(279),
 	    TeaForm = __webpack_require__(273),
 	    Dashboard = __webpack_require__(280),
+	    ReviewApiUtil = window.rev = __webpack_require__(283),
 	    CreateTea = __webpack_require__(282);
 	
 	var routes = React.createElement(
@@ -34960,6 +34961,61 @@
 	});
 	
 	module.exports = CreateTea;
+
+/***/ },
+/* 283 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var ReviewApiUtil = {
+	  createReview: function createReview(reviewParams, callback, errorCallback) {
+	    $.ajax({
+	      url: 'api/reviews',
+	      type: 'POST',
+	      data: { review: reviewParams },
+	      success: callback,
+	      error: function error(resp) {
+	        return errorCallback('createReview', resp);
+	      }
+	    });
+	  },
+	
+	  fetchReviews: function fetchReviews(paramHash, callback, errorCallback) {
+	    $.ajax({
+	      url: 'api/reviews',
+	      type: 'GET',
+	      data: { review: paramHash },
+	      success: callback,
+	      error: errorCallback
+	    });
+	  },
+	
+	  fetchSingleReview: function fetchSingleReview(reviewId, callback, errorCallback) {
+	    $.ajax({
+	      url: 'api/reviews/' + reviewId,
+	      type: 'GET',
+	      success: callback,
+	      error: errorCallback
+	    });
+	  },
+	
+	  destroyReview: function destroyReview(reviewId, callback, errorCallback) {
+	    $.ajax({
+	      url: 'api/reviews/' + reviewId,
+	      type: 'DELETE',
+	      success: callback,
+	      error: errorCallback
+	    });
+	  }
+	};
+	
+	module.exports = ReviewApiUtil;
+	
+	// rev.fetchReviews({user_id: 3}, (resp) => console.log(resp), (resp) => console.log('err', resp))
+	// rev.createReview({user_id: 3, tea_id: 3, rating: 4, body: 'I love tea', steep_time: 3, leaf_quantity: 1, temperature: 90, leaf_density: 10}, (resp) => console.log(resp), (resp) => console.log('err', resp))
+	// rev.fetchSingleReview(61, (resp) => console.log(resp), (resp) => console.log('err', resp))
+	// rev.destroyReview(61, (resp) => console.log(resp), (resp) => console.log('err', resp))
 
 /***/ }
 /******/ ]);
