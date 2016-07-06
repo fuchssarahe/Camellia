@@ -10,6 +10,7 @@ const React = require('react'),
       TeaShow = require('./components/tea_show'),
       TeaForm = require('./components/tea_form'),
       Dashboard = require('./components/dashboard'),
+      ReviewApiUtil = window.rev = require('./utils/review_api_util'),
       CreateTea = require('./components/create_tea');
 
 const routes =
