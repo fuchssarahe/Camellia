@@ -48,7 +48,6 @@ button {
   background: #41b866;
   color: white;
   text-align: center;
-  white-space: nowrap;
 }
 
 button:hover {
@@ -60,6 +59,7 @@ button:hover {
   background: white;
   color: #41b866;
   border: 1px solid #41b866 ;
+  white-space: nowrap;
 }
 
 .minor-button:hover {
