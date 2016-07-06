@@ -17,7 +17,7 @@ const AuthForm = React.createClass({
 
   _onChange: function () {
     if ( SessionStore.isUserLoggedIn() ) {
-      hashHistory.push('/')
+      hashHistory.push('/');
     }
   },
 
@@ -47,7 +47,7 @@ const AuthForm = React.createClass({
   },
 
   _closeModal: function () {
-    hashHistory.push('/')
+    hashHistory.goBack();
   },
 
   componentWillUnmount: function () {

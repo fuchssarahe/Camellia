@@ -4,11 +4,23 @@ const React = require('react'),
       SessionStore = require('../stores/session_store');
 
 const OwnershipButton = React.createClass({
+  componentWillMount: function () {
+    this.listener = SessionStore.addListener(this._onChange);
+  },
+
+  _onChange: function () {
+    this.forceUpdate();
+  },
+
+  componentWillUnmount: function () {
+    this.listener.remove();
+  },
+
   _toggleOwnership: function () {
     if (OwnedTeaStore.find(this.props.teaId)) {
-      OwnershipActions.destroyOwnership(this.props.teaId)
+      OwnershipActions.destroyOwnership(this.props.teaId);
     } else {
-      OwnershipActions.createOwnership(this.props.teaId)
+      OwnershipActions.createOwnership(this.props.teaId);
     }
   },
 

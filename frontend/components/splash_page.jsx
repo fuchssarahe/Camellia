@@ -1,9 +1,24 @@
 import { hashHistory } from 'react-router';
 const React = require('react'),
-      SearchBar = require('./search_bar');
+      SearchBar = require('./search_bar'),
+      SessionStore = require('../stores/session_store');
 
 
 const Splash = React.createClass({
+  componentWillMount: function () {
+    this.listener = SessionStore.addListener(this._onBeingLoggedIn)
+  },
+
+  componentWillUnmount: function () {
+    this.listener.remove()
+  },
+
+  _onBeingLoggedIn: function () {
+    if (SessionStore.isUserLoggedIn()) {
+      hashHistory.push('/dashboard')
+    }
+  },
+
   _navToBrowse: function () {
     hashHistory.push('/teas/?tea=');
   },

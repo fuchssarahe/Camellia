@@ -29,6 +29,14 @@ const App = React.createClass({
     hashHistory.push('/dashboard');
   },
 
+  _navToCreateTea: function () {
+    hashHistory.push('/teas/new')
+  },
+
+  _navToExplore: function () {
+    hashHistory.push('/teas/?tea=')
+  },
+
   _logout: function () {
     SessionActions.logout();
     hashHistory.push('/');
@@ -44,7 +52,9 @@ const App = React.createClass({
     if (SessionStore.isUserLoggedIn()) {
       buttons =
         <ul className='auth-buttons'>
+          <li><button onClick={this._navToExplore} className='minor-button'>Explore</button></li>
           <li><button onClick={this._navToDashBoard} className='minor-button'>Dashboard</button></li>
+          <li><button onClick={this._navToCreateTea} className='minor-button'>Add New Tea</button></li>
           <li><button onClick={this._logout}>Logout!</button></li>
         </ul>
     } else {
@@ -56,8 +66,14 @@ const App = React.createClass({
       </ul>
     }
 
+    // let searchBar = <div></div>
+    // if (SessionStore.isUserLoggedIn()) {
+    //   searchBar = <SearchBar/>
+    // }
+
     let searchBar = <div></div>
-    if (SessionStore.isUserLoggedIn()) {
+    const url = window.location.hash
+    if (url.length > 12 && url.includes('login') === false && url.includes('signup') === false) {
       searchBar = <SearchBar/>
     }
 

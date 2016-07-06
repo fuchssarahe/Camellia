@@ -65,12 +65,12 @@
 	  _reactRouter.Route,
 	  { path: '/', component: App },
 	  React.createElement(_reactRouter.IndexRoute, { component: Splash }),
-	  React.createElement(_reactRouter.Route, { path: 'signup', component: AuthForm, onEnter: ensureNotLoggedIn }),
-	  React.createElement(_reactRouter.Route, { path: 'login', component: AuthForm, onEnter: ensureNotLoggedIn }),
-	  React.createElement(_reactRouter.Route, { path: 'teas', component: TeaIndex, onEnter: ensureLoggedIn }),
+	  React.createElement(_reactRouter.Route, { path: 'signup', component: AuthForm }),
+	  React.createElement(_reactRouter.Route, { path: 'login', component: AuthForm }),
+	  React.createElement(_reactRouter.Route, { path: 'teas', component: TeaIndex }),
 	  React.createElement(_reactRouter.Route, { path: 'teas/new', component: CreateTea }),
 	  React.createElement(_reactRouter.Route, { path: 'teas/:id', component: TeaShow }),
-	  React.createElement(_reactRouter.Route, { path: 'dashboard', component: Dashboard, onEnter: ensureLoggedIn })
+	  React.createElement(_reactRouter.Route, { path: 'dashboard', component: Dashboard })
 	);
 	
 	$(function () {
@@ -93,7 +93,6 @@
 	
 	function ensureNotLoggedIn() {
 	  if (SessionStore.isUserLoggedIn()) {
-	    console.log('about to update hash');
 	    _reactRouter.hashHistory.push('/');
 	  }
 	};
@@ -26005,6 +26004,14 @@
 	    _reactRouter.hashHistory.push('/dashboard');
 	  },
 	
+	  _navToCreateTea: function _navToCreateTea() {
+	    _reactRouter.hashHistory.push('/teas/new');
+	  },
+	
+	  _navToExplore: function _navToExplore() {
+	    _reactRouter.hashHistory.push('/teas/?tea=');
+	  },
+	
 	  _logout: function _logout() {
 	    SessionActions.logout();
 	    _reactRouter.hashHistory.push('/');
@@ -26026,8 +26033,26 @@
 	          null,
 	          React.createElement(
 	            'button',
+	            { onClick: this._navToExplore, className: 'minor-button' },
+	            'Explore'
+	          )
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          React.createElement(
+	            'button',
 	            { onClick: this._navToDashBoard, className: 'minor-button' },
 	            'Dashboard'
+	          )
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          React.createElement(
+	            'button',
+	            { onClick: this._navToCreateTea, className: 'minor-button' },
+	            'Add New Tea'
 	          )
 	        ),
 	        React.createElement(
@@ -26074,8 +26099,14 @@
 	      );
 	    }
 	
+	    // let searchBar = <div></div>
+	    // if (SessionStore.isUserLoggedIn()) {
+	    //   searchBar = <SearchBar/>
+	    // }
+	
 	    var searchBar = React.createElement('div', null);
-	    if (SessionStore.isUserLoggedIn()) {
+	    var url = window.location.hash;
+	    if (url.length > 12 && url.includes('login') === false && url.includes('signup') === false) {
 	      searchBar = React.createElement(SearchBar, null);
 	    }
 	
@@ -33566,10 +33597,25 @@
 	var _reactRouter = __webpack_require__(1);
 	
 	var React = __webpack_require__(4),
-	    SearchBar = __webpack_require__(258);
+	    SearchBar = __webpack_require__(258),
+	    SessionStore = __webpack_require__(240);
 	
 	var Splash = React.createClass({
 	  displayName: 'Splash',
+	
+	  componentWillMount: function componentWillMount() {
+	    this.listener = SessionStore.addListener(this._onBeingLoggedIn);
+	  },
+	
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.listener.remove();
+	  },
+	
+	  _onBeingLoggedIn: function _onBeingLoggedIn() {
+	    if (SessionStore.isUserLoggedIn()) {
+	      _reactRouter.hashHistory.push('/dashboard');
+	    }
+	  },
 	
 	  _navToBrowse: function _navToBrowse() {
 	    _reactRouter.hashHistory.push('/teas/?tea=');
@@ -33684,7 +33730,7 @@
 	  },
 	
 	  _closeModal: function _closeModal() {
-	    _reactRouter.hashHistory.push('/');
+	    _reactRouter.hashHistory.goBack();
 	  },
 	
 	  componentWillUnmount: function componentWillUnmount() {
@@ -34339,6 +34385,18 @@
 	
 	var OwnershipButton = React.createClass({
 	  displayName: 'OwnershipButton',
+	
+	  componentWillMount: function componentWillMount() {
+	    this.listener = SessionStore.addListener(this._onChange);
+	  },
+	
+	  _onChange: function _onChange() {
+	    this.forceUpdate();
+	  },
+	
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.listener.remove();
+	  },
 	
 	  _toggleOwnership: function _toggleOwnership() {
 	    if (OwnedTeaStore.find(this.props.teaId)) {
