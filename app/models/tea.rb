@@ -2,7 +2,7 @@ class Tea < ActiveRecord::Base
   has_many :ownerships, dependent: :destroy
   has_many :owners, through: :ownerships, source: :user
   has_many :reviews, dependent: :destroy
-  
+
   validates :name, uniqueness: true
   validates :name, :tea_type, :region, :steep_time, :temperature, :leaf_quantity, :leaf_density, :retailer, presence: true
   validates :tea_type, inclusion: { in: %w(Black Red White Dark Yellow Green Oolong Herbal Other), message: "is not a valid tea type" }
@@ -18,13 +18,13 @@ class Tea < ActiveRecord::Base
   def self.search(parameters, limit = nil)
     if parameters[:tea]
       # 'tea' will only be a key of parameters if users are searching under the tea field
-      teas = Tea.where("UPPER(name) LIKE :search_parameters OR UPPER(description) LIKE :search_parameters", {search_parameters: '%' + parameters[:tea].upcase + '%'})
+      teas = Tea.where("UPPER(name) LIKE :search_parameters OR UPPER(description) LIKE :search_parameters", {search_parameters: '%' + parameters[:tea].upcase + '%'}).includes(:reviews)
     else
       query_string = ''
       parameters.each do |key, value|
         query_string = query_string + 'UPPER(' + key + ')' + ' LIKE ' + "'%#{value.upcase}%'"
       end
-      teas = Tea.where(query_string)
+      teas = Tea.where(query_string).includes(:reviews)
     end
 
     if limit
@@ -37,6 +37,14 @@ class Tea < ActiveRecord::Base
       # returns full tea detail
       return teas
     end
+  end
+
+  def rating
+    value = self.reviews.average(:rating)
+    if value
+      return value.to_i
+    end
+    nil
   end
 
 end

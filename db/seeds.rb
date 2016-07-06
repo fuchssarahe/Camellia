@@ -66,8 +66,8 @@ users = {}
   users[i] = User.create!(username: Faker::Internet.user_name, password: Faker::Internet.password)
   positivity = rand(15)
   teas = [rand(5), rand(5)+5, rand(5)+10, rand(6)+15]
-  Review.create!(user_id: users[i].id, tea_id: teas[0], rating: (positivity % 5), body: possible_reviews[positivity], steep_time: rand(10)*0.5, leaf_quantity: rand(6)*0.5, temperature: (rand(120 - 65) + 65), leaf_density: (rand(30 - 5) + 5) )
-  Review.create!(user_id: users[i].id, tea_id: teas[1], rating: (positivity % 5), body: possible_reviews[positivity], steep_time: rand(10)*0.5, leaf_quantity: rand(6)*0.5, temperature: (rand(120 - 65) + 65), leaf_density: (rand(30 - 5) + 5) )
-  Review.create!(user_id: users[i].id, tea_id: teas[2], rating: (positivity % 5), body: possible_reviews[positivity], steep_time: rand(10)*0.5, leaf_quantity: rand(6)*0.5, temperature: (rand(120 - 65) + 65), leaf_density: (rand(30 - 5) + 5) )
-  Review.create!(user_id: users[i].id, tea_id: teas[3], rating: (positivity % 5), body: possible_reviews[positivity], steep_time: rand(10)*0.5, leaf_quantity: rand(6)*0.5, temperature: (rand(120 - 65) + 65), leaf_density: (rand(30 - 5) + 5) )
+  Review.create!(user_id: users[i].id, tea_id: teas[0], rating: (positivity % 5 + 1), body: possible_reviews[positivity], steep_time: rand(10)*0.5, leaf_quantity: rand(6)*0.5, temperature: (rand(120 - 65) + 65), leaf_density: (rand(30 - 5) + 5) )
+  Review.create!(user_id: users[i].id, tea_id: teas[1], rating: (positivity % 5 + 1), body: possible_reviews[positivity], steep_time: rand(10)*0.5, leaf_quantity: rand(6)*0.5, temperature: (rand(120 - 65) + 65), leaf_density: (rand(30 - 5) + 5) )
+  Review.create!(user_id: users[i].id, tea_id: teas[2], rating: (positivity % 5 + 1), body: possible_reviews[positivity], steep_time: rand(10)*0.5, leaf_quantity: rand(6)*0.5, temperature: (rand(120 - 65) + 65), leaf_density: (rand(30 - 5) + 5) )
+  Review.create!(user_id: users[i].id, tea_id: teas[3], rating: (positivity % 5 + 1), body: possible_reviews[positivity], steep_time: rand(10)*0.5, leaf_quantity: rand(6)*0.5, temperature: (rand(120 - 65) + 65), leaf_density: (rand(30 - 5) + 5) )
 end

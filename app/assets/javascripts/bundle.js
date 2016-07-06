@@ -34295,13 +34295,13 @@
 	var React = __webpack_require__(4),
 	    TeaStore = __webpack_require__(272),
 	    OwnershipButton = __webpack_require__(275),
-	    SessionStore = __webpack_require__(240);
+	    SessionStore = __webpack_require__(240),
+	    ReviewRating = __webpack_require__(289);
 	
 	var TeaIndexItem = React.createClass({
 	  displayName: 'TeaIndexItem',
 	
 	  render: function render() {
-	
 	    var color = this.props.tea.tea_type.toLowerCase();
 	    if (color === 'other') {
 	      color = "";
@@ -34334,6 +34334,7 @@
 	                this.props.tea.name
 	              )
 	            ),
+	            React.createElement(ReviewRating, { rating: this.props.tea.rating }),
 	            React.createElement(
 	              'p',
 	              null,
@@ -35265,22 +35266,24 @@
 	  displayName: 'ReviewRating',
 	
 	  render: function render() {
-	    var ratingClass = 'rating-container';
-	    var scoreClass = '';
-	
 	    if (this.props.rating) {
-	      scoreClass += 'rating-' + this.props.rating;
-	    }
-	
-	    return React.createElement(
-	      'div',
-	      { className: ratingClass },
-	      React.createElement(
+	      var scoreClass = 'rated rating-' + this.props.rating;
+	      return React.createElement(
 	        'div',
-	        { className: scoreClass },
-	        this.props.rating
-	      )
-	    );
+	        { className: 'rating-container' },
+	        React.createElement('div', { className: scoreClass })
+	      );
+	    } else {
+	      return React.createElement(
+	        'div',
+	        { className: 'unrated' },
+	        React.createElement(
+	          'button',
+	          { className: 'minor-button' },
+	          'Be the first to review this tea!'
+	        )
+	      );
+	    }
 	  }
 	});
 	

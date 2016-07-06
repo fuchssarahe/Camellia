@@ -3,37 +3,50 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 .review-index-item {
-
+  padding: 10px 20px;
 }
 
 .rating-container {
   width: 100px;
   height: auto;
-  background: url('https://raw.githubusercontent.com/fuchssarahe/Camellia/master/app/assets/images/rating-background.png');
+  background: url('https://raw.githubusercontent.com/fuchssarahe/Camellia/master/app/assets/images/rating_images/camellia_rating-1.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.rated {
+  padding: 10px 0;
+  width: 100%;
+  height: 18px;
+  background: url('https://raw.githubusercontent.com/fuchssarahe/Camellia/master/app/assets/images/rating_images/camellia_rating-5.png');
   background-repeat: no-repeat;
   background-size: cover;
 }
 
-.rated {
-  background: yellow;
+.rated--by-current-user {
+  background: url('https://github.com/fuchssarahe/Camellia/blob/master/app/assets/images/rating_images/rating-5.png');
 }
 
-.rating-5 {
-  width: 100px;
-}
-
-.rating-4 {
- width: 80px;
-}
-
-.rating-3 {
-  width: 60px;
-}
-
-.rating-2 {
-  width: 40px;
+.unrated {
+  padding: 10px;
 }
 
 .rating-1 {
-  width: 20px;
+  width: 18%;
+}
+
+.rating-2 {
+  width: 38%;
+}
+
+.rating-3 {
+  width: 56%;
+}
+
+.rating-4 {
+  width: 73%;
+}
+
+.rating-5 {
+  width: 100%;
 }
