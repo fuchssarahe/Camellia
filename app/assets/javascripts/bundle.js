@@ -34579,6 +34579,13 @@
 	      timeUnits = 'minutes';
 	    }
 	
+	    var figureContents = void 0;
+	    if (this.state.tea.image_public_id) {
+	      figureContents = React.createElement('img', { src: this.state.tea.image_public_id, alt: 'Tea Image', className: 'index-item_image' });
+	    } else {
+	      figureContents = React.createElement('div', { className: 'index-item_image--empty profile_image--empty' });
+	    }
+	
 	    return React.createElement(
 	      'div',
 	      { className: 'cf container' },
@@ -34588,7 +34595,7 @@
 	        React.createElement(
 	          'figure',
 	          { className: 'panel_section' },
-	          React.createElement('img', { src: this.state.tea.image_public_id, alt: 'Tea Image', className: 'profile-img' })
+	          figureContents
 	        ),
 	        React.createElement(
 	          'section',
@@ -34599,11 +34606,15 @@
 	            'Your Review'
 	          ),
 	          React.createElement(
-	            'p',
+	            'div',
 	            { className: 'panel_section-content' },
-	            'You haven\'t reviewed this tea yet!'
-	          ),
-	          React.createElement(OwnershipButton, { teaId: this.state.tea.id })
+	            React.createElement(
+	              'p',
+	              null,
+	              ' You haven\'t reviewed this tea yet!'
+	            ),
+	            React.createElement(OwnershipButton, { teaId: this.state.tea.id, className: 'panel_section-content' })
+	          )
 	        )
 	      ),
 	      React.createElement(
