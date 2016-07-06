@@ -7,10 +7,9 @@ Rails.application.routes.draw do
     resource :session, only: [:create, :destroy, :show]
     resources :teas, only: [:create, :show, :index] do
       resource :ownership, only: [:create, :destroy]
-      resources :reviews, only: [:create, :destroy, :show]
     end
     resources :ownerships, only: [:index]
-    resources :reviews, only: [:index]
+    resources :reviews, only: [:index, :show, :create, :destroy]
     resources :search_suggestions, only: [:index]
   end
 end

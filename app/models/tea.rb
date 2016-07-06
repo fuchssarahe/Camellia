@@ -1,7 +1,8 @@
 class Tea < ActiveRecord::Base
   has_many :ownerships, dependent: :destroy
   has_many :owners, through: :ownerships, source: :user
-
+  has_many :reviews, dependent: :destroy
+  
   validates :name, uniqueness: true
   validates :name, :tea_type, :region, :steep_time, :temperature, :leaf_quantity, :leaf_density, :retailer, presence: true
   validates :tea_type, inclusion: { in: %w(Black Red White Dark Yellow Green Oolong Herbal Other), message: "is not a valid tea type" }

@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
 
   has_many :ownerships, dependent: :destroy
   has_many :teas, through: :ownerships
+  has_many :reviews
 
   after_initialize :ensure_session_token
 
