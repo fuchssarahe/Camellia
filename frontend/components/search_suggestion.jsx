@@ -1,3 +1,4 @@
+import { hashHistory } from 'react-router';
 const React = require('react'),
       SearchSuggestionActions = require('../actions/search_suggestion_actions'),
       TeaActions = require('../actions/tea_actions');
@@ -7,12 +8,12 @@ const SearchSuggestion = React.createClass({
   _searchAndNavToIndex: function (type, query) {
     SearchSuggestionActions.clearSuggestions();
     TeaActions.fetchTeas( { [type]: query } );
-    window.location.hash = `teas/?${type}=${query}`;
+    hashHistory.push(`teas/?${type}=${query}`);
   },
 
   _navToShowPage: function (teaId) {
     SearchSuggestionActions.clearSuggestions();
-    window.location.hash = 'teas/' + this.props.suggestion.tea_id;
+    hashHistory.push('teas/' + this.props.suggestion.tea_id);
   },
 
   render: function () {

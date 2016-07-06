@@ -56,9 +56,10 @@
 	    AuthForm = __webpack_require__(268),
 	    SessionStore = __webpack_require__(240),
 	    TeaIndex = __webpack_require__(271),
-	    TeaShow = __webpack_require__(275),
+	    TeaShow = __webpack_require__(279),
 	    TeaForm = __webpack_require__(273),
-	    Dashboard = __webpack_require__(277);
+	    Dashboard = __webpack_require__(280),
+	    CreateTea = __webpack_require__(282);
 	
 	var routes = React.createElement(
 	  _reactRouter.Route,
@@ -66,11 +67,8 @@
 	  React.createElement(_reactRouter.IndexRoute, { component: Splash }),
 	  React.createElement(_reactRouter.Route, { path: 'signup', component: AuthForm, onEnter: ensureNotLoggedIn }),
 	  React.createElement(_reactRouter.Route, { path: 'login', component: AuthForm, onEnter: ensureNotLoggedIn }),
-	  React.createElement(
-	    _reactRouter.Route,
-	    { path: 'teas/', component: TeaIndex },
-	    React.createElement(_reactRouter.Route, { path: 'new', component: TeaForm })
-	  ),
+	  React.createElement(_reactRouter.Route, { path: 'teas', component: TeaIndex, onEnter: ensureLoggedIn }),
+	  React.createElement(_reactRouter.Route, { path: 'teas/new', component: CreateTea }),
 	  React.createElement(_reactRouter.Route, { path: 'teas/:id', component: TeaShow }),
 	  React.createElement(_reactRouter.Route, { path: 'dashboard', component: Dashboard, onEnter: ensureLoggedIn })
 	);
@@ -89,14 +87,14 @@
 	
 	function ensureLoggedIn() {
 	  if (!SessionStore.isUserLoggedIn()) {
-	    window.location.hash = '/login';
+	    _reactRouter.hashHistory.push('/login');
 	  }
 	};
 	
 	function ensureNotLoggedIn() {
 	  if (SessionStore.isUserLoggedIn()) {
 	    console.log('about to update hash');
-	    window.location.hash = '/';
+	    _reactRouter.hashHistory.push('/');
 	  }
 	};
 
@@ -25996,20 +25994,20 @@
 	  },
 	
 	  _navToSignup: function _navToSignup() {
-	    window.location.hash = '/signup';
+	    _reactRouter.hashHistory.push('/signup');
 	  },
 	
 	  _navToLogin: function _navToLogin() {
-	    window.location.hash = '/login';
+	    _reactRouter.hashHistory.push('/login');
 	  },
 	
 	  _navToDashBoard: function _navToDashBoard() {
-	    window.location.hash = '/dashboard';
+	    _reactRouter.hashHistory.push('/dashboard');
 	  },
 	
 	  _logout: function _logout() {
 	    SessionActions.logout();
-	    window.location.hash = '/';
+	    _reactRouter.hashHistory.push('/');
 	  },
 	
 	  _loginGuest: function _loginGuest() {
@@ -33096,6 +33094,8 @@
 
 	'use strict';
 	
+	var _reactRouter = __webpack_require__(1);
+	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	var React = __webpack_require__(4),
@@ -33139,8 +33139,8 @@
 	    event.preventDefault();
 	    SearchSuggestionActions.clearSuggestions();
 	
-	    TeaActions.fetchTeas(_defineProperty({}, this.state.searchType, this.state.query));
-	    window.location.hash = 'teas/?' + this.state.searchType + '=' + this.state.query;
+	    // window.location.hash = `teas/?${this.state.searchType}=${this.state.query}`;
+	    _reactRouter.hashHistory.push('teas/?' + this.state.searchType + '=' + this.state.query);
 	  },
 	
 	  render: function render() {
@@ -33328,6 +33328,7 @@
 	var TeaConstants = {
 	            RECEIVE_TEAS: 'RECEIVE_TEAS',
 	            RECEIVE_TEA: 'RECEIVE_TEA',
+	            RECEIVE_NEW_TEA: 'RECEIVE_NEW_TEA',
 	            RECEIVE_OWNED_TEAS: 'RECEIVE_OWNED_TEAS',
 	            RECEIVE_OWNED_TEA: 'RECEIVE_OWNED_TEA',
 	            REMOVE_OWNED_TEA: 'REMOVE_OWNED_TEA',
@@ -33379,6 +33380,8 @@
 
 	'use strict';
 	
+	var _reactRouter = __webpack_require__(1);
+	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	var React = __webpack_require__(4),
@@ -33391,12 +33394,12 @@
 	  _searchAndNavToIndex: function _searchAndNavToIndex(type, query) {
 	    SearchSuggestionActions.clearSuggestions();
 	    TeaActions.fetchTeas(_defineProperty({}, type, query));
-	    window.location.hash = 'teas/?' + type + '=' + query;
+	    _reactRouter.hashHistory.push('teas/?' + type + '=' + query);
 	  },
 	
 	  _navToShowPage: function _navToShowPage(teaId) {
 	    SearchSuggestionActions.clearSuggestions();
-	    window.location.hash = 'teas/' + this.props.suggestion.tea_id;
+	    _reactRouter.hashHistory.push('teas/' + this.props.suggestion.tea_id);
 	  },
 	
 	  render: function render() {
@@ -33463,7 +33466,7 @@
 	  },
 	
 	  createTea: function createTea(tea) {
-	    TeaApiUtil.createTea(tea, this.receiveSingleTea, ErrorActions.setErrors);
+	    TeaApiUtil.createTea(tea, this.receiveNewTea, ErrorActions.setErrors);
 	  },
 	
 	  receiveTeas: function receiveTeas(teas) {
@@ -33479,6 +33482,15 @@
 	    ErrorActions.clearErrors();
 	    var payload = {
 	      actionType: TeaConstants.RECEIVE_TEA,
+	      tea: tea
+	    };
+	    Dispatcher.dispatch(payload);
+	  },
+	
+	  receiveNewTea: function receiveNewTea(tea) {
+	    ErrorActions.clearErrors();
+	    var payload = {
+	      actionType: TeaConstants.RECEIVE_NEW_TEA,
 	      tea: tea
 	    };
 	    Dispatcher.dispatch(payload);
@@ -33521,7 +33533,6 @@
 	  createTea: function createTea(tea, callback, errorCallback) {
 	    var data = new FormData();
 	    Object.keys(tea).forEach(function (property) {
-	      console.log(property);
 	      if (property === 'image') {
 	        data.append('tea[' + property + ']', tea[property], tea[property].name);
 	      } else {
@@ -33538,9 +33549,7 @@
 	      data: data,
 	      success: callback,
 	      error: function error(err) {
-	        console.log('err');
-	        console.log(err);
-	        errorCallback('newTea', err);
+	        return errorCallback('newTea', err);
 	      }
 	    });
 	  }
@@ -33554,6 +33563,8 @@
 
 	'use strict';
 	
+	var _reactRouter = __webpack_require__(1);
+	
 	var React = __webpack_require__(4),
 	    SearchBar = __webpack_require__(258);
 	
@@ -33561,7 +33572,7 @@
 	  displayName: 'Splash',
 	
 	  _navToBrowse: function _navToBrowse() {
-	    window.location.hash = '/teas/?tea=';
+	    _reactRouter.hashHistory.push('/teas/?tea=');
 	  },
 	
 	  render: function render() {
@@ -33619,6 +33630,8 @@
 
 	'use strict';
 	
+	var _reactRouter = __webpack_require__(1);
+	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	var React = __webpack_require__(4),
@@ -33641,7 +33654,7 @@
 	
 	  _onChange: function _onChange() {
 	    if (SessionStore.isUserLoggedIn()) {
-	      window.location.hash = '/';
+	      _reactRouter.hashHistory.push('/');
 	    }
 	  },
 	
@@ -33671,7 +33684,7 @@
 	  },
 	
 	  _closeModal: function _closeModal() {
-	    window.location.hash = '/';
+	    _reactRouter.hashHistory.push('/');
 	  },
 	
 	  componentWillUnmount: function componentWillUnmount() {
@@ -33859,7 +33872,10 @@
 	    TeaStore = __webpack_require__(272),
 	    TeaActions = __webpack_require__(265),
 	    TeaForm = __webpack_require__(273),
-	    TeaIndexItem = __webpack_require__(274);
+	    TeaIndexItem = __webpack_require__(274),
+	    SessionStore = __webpack_require__(240),
+	    OwnedTeaActions = __webpack_require__(277),
+	    OwnedTeaStore = __webpack_require__(276);
 	
 	var TeaIndex = React.createClass({
 	  displayName: 'TeaIndex',
@@ -33870,15 +33886,26 @@
 	
 	  componentWillMount: function componentWillMount() {
 	    TeaActions.fetchTeas(this.props.location.query);
+	
+	    if (SessionStore.isUserLoggedIn()) {
+	      OwnedTeaActions.fetchOwnedTeas();
+	    }
+	
 	    this.listener = TeaStore.addListener(this._onChange);
+	    this.ownedListener = OwnedTeaStore.addListener(this._onOwnedTeaChange);
 	  },
 	
 	  _onChange: function _onChange() {
 	    this.setState({ teas: TeaStore.all() });
 	  },
 	
+	  _onOwnedTeaChange: function _onOwnedTeaChange() {
+	    this.forceUpdate();
+	  },
+	
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.listener.remove();
+	    this.ownedListener.remove();
 	  },
 	
 	  render: function render() {
@@ -33914,7 +33941,7 @@
 	          React.createElement(
 	            'h2',
 	            { className: 'panel_section-header' },
-	            'Can\'t find what you\'re looking for? Add a new tea!'
+	            'Can\'t find what you\'re looking for? Add a new tea to Camellia!'
 	          ),
 	          React.createElement(TeaForm, { className: 'panel_section-content' })
 	        )
@@ -33938,6 +33965,7 @@
 	var TeaStore = new Store(Dispatcher);
 	
 	var _teas = {};
+	var _newestTeaId = null;
 	
 	function setTeas(newTeas) {
 	  _teas = {};
@@ -33965,12 +33993,23 @@
 	      _teas[payload.tea.id] = payload.tea;
 	      this.__emitChange();
 	      break;
+	    case TeaConstants.RECEIVE_NEW_TEA:
+	      _teas[payload.tea.id] = payload.tea;
+	      _newestTeaId = payload.tea.id;
+	      this.__emitChange();
 	    default:
 	  }
 	};
 	
 	TeaStore.find = function (id) {
 	  return _teas[id];
+	};
+	
+	TeaStore.newestId = function () {
+	  // calling newestId will reset the newest Tea Id
+	  var id = _newestTeaId;
+	  _newestTeaId = null;
+	  return id;
 	};
 	
 	module.exports = TeaStore;
@@ -33981,12 +34020,15 @@
 
 	'use strict';
 	
+	var _reactRouter = __webpack_require__(1);
+	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	var React = __webpack_require__(4),
 	    ErrorStore = __webpack_require__(269),
 	    TeaActions = __webpack_require__(265),
 	    TeaConstants = __webpack_require__(262),
+	    TeaStore = __webpack_require__(272),
 	    Errors = __webpack_require__(270);
 	
 	var TeaForm = React.createClass({
@@ -34009,8 +34051,8 @@
 	  },
 	
 	  componentWillMount: function componentWillMount() {
-	    console.log('mounting form');
 	    this.errorListener = ErrorStore.addListener(this._onErrors);
+	    this.listener = TeaStore.addListener(this._onCreation);
 	  },
 	
 	  _onErrors: function _onErrors() {
@@ -34019,8 +34061,16 @@
 	    }
 	  },
 	
+	  _onCreation: function _onCreation() {
+	    var id = TeaStore.newestId();
+	    if (id !== null) {
+	      _reactRouter.hashHistory.push('teas/' + id);
+	    }
+	  },
+	
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.errorListener.remove();
+	    this.listener.remove();
 	  },
 	
 	  _handleInput: function _handleInput(event, property) {
@@ -34032,10 +34082,8 @@
 	  },
 	
 	  _handleSubmit: function _handleSubmit(event) {
-	    console.log(this.state);
 	    event.preventDefault();
 	    TeaActions.createTea(this.state);
-	    // window.location.history
 	  },
 	
 	  render: function render() {
@@ -34198,22 +34246,11 @@
 	
 	var React = __webpack_require__(4),
 	    TeaStore = __webpack_require__(272),
-	    OwnershipButton = __webpack_require__(281),
+	    OwnershipButton = __webpack_require__(275),
 	    SessionStore = __webpack_require__(240);
-	// ErrorStore = require('../stores/error_store');
 	
 	var TeaIndexItem = React.createClass({
 	  displayName: 'TeaIndexItem',
-	
-	  componentWillMount: function componentWillMount() {
-	    this.listener = TeaStore.addListener();
-	    // this.errorListener = ErrorStore.addListener();
-	  },
-	
-	  componentWillUnmount: function componentWillUnmount() {
-	    this.listener.remove();
-	    // this.errorListener.remove();
-	  },
 	
 	  render: function render() {
 	
@@ -34296,9 +34333,208 @@
 	'use strict';
 	
 	var React = __webpack_require__(4),
+	    OwnedTeaStore = __webpack_require__(276),
+	    OwnershipActions = __webpack_require__(277),
+	    SessionStore = __webpack_require__(240);
+	
+	var OwnershipButton = React.createClass({
+	  displayName: 'OwnershipButton',
+	
+	  _toggleOwnership: function _toggleOwnership() {
+	    if (OwnedTeaStore.find(this.props.teaId)) {
+	      OwnershipActions.destroyOwnership(this.props.teaId);
+	    } else {
+	      OwnershipActions.createOwnership(this.props.teaId);
+	    }
+	  },
+	
+	  render: function render() {
+	    if (!SessionStore.isUserLoggedIn()) {
+	      return React.createElement(
+	        'div',
+	        null,
+	        React.createElement('br', null),
+	        'Login to manage your personal teas!'
+	      );
+	    }
+	
+	    var buttonText = 'Add to your Tea Shelf';
+	    var className = 'ownership-button';
+	    if (OwnedTeaStore.find(this.props.teaId)) {
+	      buttonText = 'Remove from Shelf';
+	      className = 'ownership-button minor-button';
+	    }
+	
+	    return React.createElement(
+	      'button',
+	      { onClick: this._toggleOwnership, className: className },
+	      buttonText
+	    );
+	  }
+	});
+	
+	module.exports = OwnershipButton;
+
+/***/ },
+/* 276 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Store = __webpack_require__(241).Store,
+	    TeaConstants = __webpack_require__(262),
+	    Dispatcher = __webpack_require__(232);
+	
+	var OwnedTeaStore = new Store(Dispatcher);
+	
+	var _teas = {};
+	
+	function setTeas(newTeas) {
+	  _teas = {};
+	  newTeas.forEach(function (tea) {
+	    _teas[tea.id] = tea;
+	  });
+	};
+	
+	OwnedTeaStore.all = function () {
+	  var teasCopy = {};
+	
+	  Object.keys(_teas).forEach(function (teaId) {
+	    teasCopy[teaId] = _teas[teaId];
+	  });
+	  return teasCopy;
+	};
+	
+	OwnedTeaStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case TeaConstants.RECEIVE_OWNED_TEAS:
+	      setTeas(payload.teas);
+	      this.__emitChange();
+	      break;
+	    case TeaConstants.RECEIVE_OWNED_TEA:
+	      _teas[payload.tea.id] = payload.tea;
+	      this.__emitChange();
+	      break;
+	    case TeaConstants.REMOVE_OWNED_TEA:
+	      delete _teas[payload.tea.id];
+	      this.__emitChange();
+	      break;
+	    default:
+	  }
+	};
+	
+	OwnedTeaStore.find = function (id) {
+	  return _teas[id];
+	};
+	
+	module.exports = OwnedTeaStore;
+
+/***/ },
+/* 277 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var TeaConstants = __webpack_require__(262),
+	    OwnershipApiUtil = __webpack_require__(278),
+	    ErrorActions = __webpack_require__(238),
+	    Dispatcher = __webpack_require__(232);
+	
+	var OwnedTeaActions = {
+	  createOwnership: function createOwnership(teaId) {
+	    OwnershipApiUtil.createOwnership(teaId, OwnedTeaActions.receiveSingleTea, ErrorActions.setErrors);
+	  },
+	
+	  destroyOwnership: function destroyOwnership(teaId) {
+	    OwnershipApiUtil.destroyOwnership(teaId, OwnedTeaActions.removeSingleTea, ErrorActions.setErrors);
+	  },
+	
+	  fetchOwnedTeas: function fetchOwnedTeas() {
+	    OwnershipApiUtil.getOwnedTeas(OwnedTeaActions.receiveTeas, ErrorActions.setErrors);
+	  },
+	
+	  receiveTeas: function receiveTeas(teas) {
+	    ErrorActions.clearErrors();
+	    var payload = {
+	      actionType: TeaConstants.RECEIVE_OWNED_TEAS,
+	      teas: teas
+	    };
+	    Dispatcher.dispatch(payload);
+	  },
+	
+	  receiveSingleTea: function receiveSingleTea(tea) {
+	    ErrorActions.clearErrors();
+	    var payload = {
+	      actionType: TeaConstants.RECEIVE_OWNED_TEA,
+	      tea: tea
+	    };
+	    Dispatcher.dispatch(payload);
+	  },
+	
+	  removeSingleTea: function removeSingleTea(tea) {
+	    ErrorActions.clearErrors();
+	    var payload = {
+	      actionType: TeaConstants.REMOVE_OWNED_TEA,
+	      tea: tea
+	    };
+	    Dispatcher.dispatch(payload);
+	  }
+	};
+	
+	module.exports = OwnedTeaActions;
+
+/***/ },
+/* 278 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var OwnershipApiUtil = {
+	  createOwnership: function createOwnership(teaId, callback, errorCallback) {
+	    $.ajax({
+	      url: 'api/teas/' + teaId + '/ownership',
+	      type: 'POST',
+	      success: callback,
+	      error: function error(resp) {
+	        return errorCallback('newOwnership', resp);
+	      }
+	    });
+	  },
+	
+	  destroyOwnership: function destroyOwnership(teaId, callback, errorCallback) {
+	    $.ajax({
+	      url: 'api/teas/' + teaId + '/ownership',
+	      type: 'DELETE',
+	      success: callback,
+	      error: function error(resp) {
+	        return errorCallback('destroyOwnership', resp);
+	      }
+	    });
+	  },
+	
+	  getOwnedTeas: function getOwnedTeas(callback, errorCallback) {
+	    $.ajax({
+	      url: 'api/ownerships',
+	      type: 'GET',
+	      success: callback,
+	      error: errorCallback
+	    });
+	  }
+	
+	};
+	
+	module.exports = OwnershipApiUtil;
+
+/***/ },
+/* 279 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(4),
 	    TeaStore = __webpack_require__(272),
 	    TeaActions = __webpack_require__(265),
-	    OwnershipButton = __webpack_require__(281);
+	    OwnershipButton = __webpack_require__(275);
 	
 	var TeaShow = React.createClass({
 	  displayName: 'TeaShow',
@@ -34469,58 +34705,16 @@
 	module.exports = TeaShow;
 
 /***/ },
-/* 276 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var OwnershipApiUtil = {
-	  createOwnership: function createOwnership(teaId, callback, errorCallback) {
-	    $.ajax({
-	      url: 'api/teas/' + teaId + '/ownership',
-	      type: 'POST',
-	      success: callback,
-	      error: function error(resp) {
-	        return errorCallback('newOwnership', resp);
-	      }
-	    });
-	  },
-	
-	  destroyOwnership: function destroyOwnership(teaId, callback, errorCallback) {
-	    $.ajax({
-	      url: 'api/teas/' + teaId + '/ownership',
-	      type: 'DELETE',
-	      success: callback,
-	      error: function error(resp) {
-	        return errorCallback('destroyOwnership', resp);
-	      }
-	    });
-	  },
-	
-	  getOwnedTeas: function getOwnedTeas(callback, errorCallback) {
-	    $.ajax({
-	      url: 'api/ownerships',
-	      type: 'GET',
-	      success: callback,
-	      error: errorCallback
-	    });
-	  }
-	
-	};
-	
-	module.exports = OwnershipApiUtil;
-
-/***/ },
-/* 277 */
+/* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(4),
 	    SessionStore = __webpack_require__(240),
-	    OwnedTeaStore = __webpack_require__(280),
-	    OwnershipActions = __webpack_require__(279),
-	    OwnedTeaItem = __webpack_require__(278);
+	    OwnedTeaStore = __webpack_require__(276),
+	    OwnershipActions = __webpack_require__(277),
+	    OwnedTeaItem = __webpack_require__(281);
 	
 	var Dashboard = React.createClass({
 	  displayName: 'Dashboard',
@@ -34617,14 +34811,14 @@
 	module.exports = Dashboard;
 
 /***/ },
-/* 278 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(4),
-	    OwnershipActions = __webpack_require__(279),
-	    OwnershipButton = __webpack_require__(281);
+	    OwnershipActions = __webpack_require__(277),
+	    OwnershipButton = __webpack_require__(275);
 	
 	var OwnedTeaItem = React.createClass({
 	  displayName: 'OwnedTeaItem',
@@ -34656,161 +34850,41 @@
 	module.exports = OwnedTeaItem;
 
 /***/ },
-/* 279 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var TeaConstants = __webpack_require__(262),
-	    OwnershipApiUtil = __webpack_require__(276),
-	    ErrorActions = __webpack_require__(238),
-	    Dispatcher = __webpack_require__(232);
-	
-	var OwnedTeaActions = {
-	  createOwnership: function createOwnership(teaId) {
-	    OwnershipApiUtil.createOwnership(teaId, OwnedTeaActions.receiveSingleTea, ErrorActions.setErrors);
-	  },
-	
-	  destroyOwnership: function destroyOwnership(teaId) {
-	    OwnershipApiUtil.destroyOwnership(teaId, OwnedTeaActions.removeSingleTea, ErrorActions.setErrors);
-	  },
-	
-	  fetchOwnedTeas: function fetchOwnedTeas() {
-	    OwnershipApiUtil.getOwnedTeas(OwnedTeaActions.receiveTeas, ErrorActions.setErrors);
-	  },
-	
-	  receiveTeas: function receiveTeas(teas) {
-	    ErrorActions.clearErrors();
-	    var payload = {
-	      actionType: TeaConstants.RECEIVE_OWNED_TEAS,
-	      teas: teas
-	    };
-	    Dispatcher.dispatch(payload);
-	  },
-	
-	  receiveSingleTea: function receiveSingleTea(tea) {
-	    ErrorActions.clearErrors();
-	    var payload = {
-	      actionType: TeaConstants.RECEIVE_OWNED_TEA,
-	      tea: tea
-	    };
-	    Dispatcher.dispatch(payload);
-	  },
-	
-	  removeSingleTea: function removeSingleTea(tea) {
-	    ErrorActions.clearErrors();
-	    var payload = {
-	      actionType: TeaConstants.REMOVE_OWNED_TEA,
-	      tea: tea
-	    };
-	    Dispatcher.dispatch(payload);
-	  }
-	};
-	
-	module.exports = OwnedTeaActions;
-
-/***/ },
-/* 280 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Store = __webpack_require__(241).Store,
-	    TeaConstants = __webpack_require__(262),
-	    Dispatcher = __webpack_require__(232);
-	
-	var OwnedTeaStore = new Store(Dispatcher);
-	
-	var _teas = {};
-	
-	function setTeas(newTeas) {
-	  _teas = {};
-	  newTeas.forEach(function (tea) {
-	    _teas[tea.id] = tea;
-	  });
-	};
-	
-	OwnedTeaStore.all = function () {
-	  var teasCopy = {};
-	
-	  Object.keys(_teas).forEach(function (teaId) {
-	    teasCopy[teaId] = _teas[teaId];
-	  });
-	  return teasCopy;
-	};
-	
-	OwnedTeaStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case TeaConstants.RECEIVE_OWNED_TEAS:
-	      setTeas(payload.teas);
-	      this.__emitChange();
-	      break;
-	    case TeaConstants.RECEIVE_OWNED_TEA:
-	      _teas[payload.tea.id] = payload.tea;
-	      this.__emitChange();
-	      break;
-	    case TeaConstants.REMOVE_OWNED_TEA:
-	      delete _teas[payload.tea.id];
-	      this.__emitChange();
-	      break;
-	    default:
-	  }
-	};
-	
-	OwnedTeaStore.find = function (id) {
-	  return _teas[id];
-	};
-	
-	module.exports = OwnedTeaStore;
-
-/***/ },
-/* 281 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(4),
-	    OwnedTeaStore = __webpack_require__(280),
-	    OwnershipActions = __webpack_require__(279),
-	    SessionStore = __webpack_require__(240);
+	    TeaForm = __webpack_require__(273);
 	
-	var OwnershipButton = React.createClass({
-	  displayName: 'OwnershipButton',
-	
-	  _toggleOwnership: function _toggleOwnership() {
-	    if (OwnedTeaStore.find(this.props.teaId)) {
-	      OwnershipActions.destroyOwnership(this.props.teaId);
-	    } else {
-	      OwnershipActions.createOwnership(this.props.teaId);
-	    }
-	  },
+	var CreateTea = React.createClass({
+	  displayName: 'CreateTea',
 	
 	  render: function render() {
-	    if (!SessionStore.isUserLoggedIn()) {
-	      return React.createElement(
-	        'div',
-	        null,
-	        React.createElement('br', null),
-	        'Login to manage your personal teas!'
-	      );
-	    }
-	
-	    var buttonText = 'Add to your Tea Shelf';
-	    var className = 'ownership-button';
-	    if (OwnedTeaStore.find(this.props.teaId)) {
-	      buttonText = 'Remove from Shelf';
-	      className = 'ownership-button minor-button';
-	    }
-	
 	    return React.createElement(
-	      'button',
-	      { onClick: this._toggleOwnership, className: className },
-	      buttonText
+	      'div',
+	      { className: 'container' },
+	      React.createElement(
+	        'div',
+	        { className: 'standalone-tea-form' },
+	        React.createElement(
+	          'h1',
+	          null,
+	          'Add a new tea to Camellia!'
+	        ),
+	        React.createElement(
+	          'h2',
+	          null,
+	          'As soon as you add a new tea, the tea will belong to the Camellia Tea Shelf. You\'ll have the ability to review the tea or add it to your personal Tea Shelf once it has been added here!'
+	        ),
+	        React.createElement(TeaForm, null)
+	      )
 	    );
 	  }
 	});
 	
-	module.exports = OwnershipButton;
+	module.exports = CreateTea;
 
 /***/ }
 /******/ ]);

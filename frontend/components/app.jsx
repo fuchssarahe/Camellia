@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link, hashHistory } from 'react-router';
 const React = require('react'),
       SessionActions = require('../actions/session_actions'),
       SessionStore = require('../stores/session_store'),
@@ -18,20 +18,20 @@ const App = React.createClass({
   },
 
   _navToSignup: function () {
-    window.location.hash = '/signup';
+    hashHistory.push('/signup');
   },
 
   _navToLogin: function () {
-    window.location.hash = '/login';
+    hashHistory.push('/login');
   },
 
   _navToDashBoard: function () {
-    window.location.hash = '/dashboard'
+    hashHistory.push('/dashboard');
   },
 
   _logout: function () {
     SessionActions.logout();
-    window.location.hash = '/';
+    hashHistory.push('/');
   },
 
   _loginGuest: function () {

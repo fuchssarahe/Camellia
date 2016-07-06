@@ -5,6 +5,7 @@ const Store = require('flux/utils').Store,
 const TeaStore = new Store(Dispatcher);
 
 let _teas = {};
+let _newestTeaId = null;
 
 function setTeas(newTeas) {
   _teas = {};
@@ -32,12 +33,23 @@ TeaStore.__onDispatch = function (payload) {
       _teas[payload.tea.id] = payload.tea;
       this.__emitChange();
       break;
+    case TeaConstants.RECEIVE_NEW_TEA:
+      _teas[payload.tea.id] = payload.tea;
+      _newestTeaId = payload.tea.id;
+      this.__emitChange()
     default:
   }
 };
 
 TeaStore.find = function (id) {
   return _teas[id];
+};
+
+TeaStore.newestId = function () {
+  // calling newestId will reset the newest Tea Id
+  const id = _newestTeaId;
+  _newestTeaId = null;
+  return id;
 };
 
 module.exports = TeaStore;

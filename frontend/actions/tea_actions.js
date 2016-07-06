@@ -13,7 +13,7 @@ const TeaActions = {
   },
 
   createTea: function (tea) {
-    TeaApiUtil.createTea(tea, this.receiveSingleTea, ErrorActions.setErrors)
+    TeaApiUtil.createTea(tea, this.receiveNewTea, ErrorActions.setErrors)
   },
 
   receiveTeas: function (teas) {
@@ -29,6 +29,15 @@ const TeaActions = {
     ErrorActions.clearErrors();
     const payload = {
       actionType: TeaConstants.RECEIVE_TEA,
+      tea: tea
+    }
+    Dispatcher.dispatch(payload);
+  },
+
+  receiveNewTea: function (tea) {
+    ErrorActions.clearErrors();
+    const payload = {
+      actionType: TeaConstants.RECEIVE_NEW_TEA,
       tea: tea
     }
     Dispatcher.dispatch(payload);

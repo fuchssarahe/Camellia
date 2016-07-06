@@ -1,3 +1,4 @@
+import { hashHistory } from 'react-router'
 const React = require('react'),
       SessionStore = require('../stores/session_store'),
       ErrorStore = require('../stores/errors_store'),
@@ -16,7 +17,7 @@ const AuthForm = React.createClass({
 
   _onChange: function () {
     if ( SessionStore.isUserLoggedIn() ) {
-      window.location.hash = '/';
+      hashHistory.push('/')
     }
   },
 
@@ -46,7 +47,7 @@ const AuthForm = React.createClass({
   },
 
   _closeModal: function () {
-    window.location.hash = '/';
+    hashHistory.push('/')
   },
 
   componentWillUnmount: function () {
