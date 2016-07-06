@@ -1,3 +1,4 @@
+import { Link } from 'react-router';
 const React = require('react'),
       OwnershipActions = require('../actions/ownership_actions'),
       OwnershipButton = require('./ownership_button');
@@ -13,8 +14,10 @@ const OwnedTeaItem = React.createClass({
 
     return (
       <li className='owned-tea-item'>
-        <figure>{figureContents}</figure>
-        {this.props.tea.name}, {this.props.tea.tea_type}
+        <Link to={'teas/' + this.props.tea.id}>
+          <figure>{figureContents}</figure>
+          {this.props.tea.name}, {this.props.tea.tea_type}
+        </Link>
         <OwnershipButton teaId={this.props.tea.id}/>
       </li>
     )

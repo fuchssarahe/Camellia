@@ -34885,6 +34885,8 @@
 
 	'use strict';
 	
+	var _reactRouter = __webpack_require__(1);
+	
 	var React = __webpack_require__(4),
 	    OwnershipActions = __webpack_require__(277),
 	    OwnershipButton = __webpack_require__(275);
@@ -34904,13 +34906,17 @@
 	      'li',
 	      { className: 'owned-tea-item' },
 	      React.createElement(
-	        'figure',
-	        null,
-	        figureContents
+	        _reactRouter.Link,
+	        { to: 'teas/' + this.props.tea.id },
+	        React.createElement(
+	          'figure',
+	          null,
+	          figureContents
+	        ),
+	        this.props.tea.name,
+	        ', ',
+	        this.props.tea.tea_type
 	      ),
-	      this.props.tea.name,
-	      ', ',
-	      this.props.tea.tea_type,
 	      React.createElement(OwnershipButton, { teaId: this.props.tea.id })
 	    );
 	  }

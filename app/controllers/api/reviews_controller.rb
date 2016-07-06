@@ -1,14 +1,17 @@
 class Api::ReviewsController < ApplicationController
 
+  before_action :ensure_logged_in, only: [:create, :destroy]
+
   def index
-    if review_params[:tea_id]
-      @reviews = Review.find_by(tea_id: review_params[:tea_id])
-    elsif review_params[:user_id]
-      @reviews = Review.find_by(user_id: review_params[:user_id])
+    unless params[:review]
+      render json: {base: ['no valid search parameters were found']}, status: 404
+      return
     end
 
-    unless @reviews
-      render json: {base: ['no valid search parameters were found']}, status: 404
+    if review_params[:tea_id]
+      @reviews = Tea.find(review_params[:tea_id]).reviews
+    elsif review_params[:user_id]
+      @reviews = User.find(review_params[:user_id]).reviews
     end
   end
 
@@ -22,10 +25,11 @@ class Api::ReviewsController < ApplicationController
 
   def create
     @review = Review.new(review_params)
+    @review.user_id = current_user.id
     if @review.save
       render :show
     else
-      render json: @review.errors, status 401
+      render json: @review.errors, status: 401
     end
   end
 
