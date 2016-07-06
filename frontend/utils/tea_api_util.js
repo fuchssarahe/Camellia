@@ -21,7 +21,6 @@ const TeaApiUtil = {
   createTea: function (tea, callback, errorCallback) {
     const data = new FormData();
     Object.keys(tea).forEach( (property) => {
-      console.log(property);
       if (property === 'image') {
         data.append(`tea[${property}]`, tea[property], tea[property].name)
       } else {
@@ -37,11 +36,7 @@ const TeaApiUtil = {
       processData: false,
       data: data,
       success: callback,
-      error: (err) => {
-        console.log('err');
-        console.log(err);
-        errorCallback('newTea', err);
-      }
+      error: (err) => errorCallback('newTea', err)
     })
   }
 }

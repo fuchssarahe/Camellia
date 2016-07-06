@@ -9,16 +9,16 @@ const React = require('react'),
       TeaIndex = require('./components/tea_index'),
       TeaShow = require('./components/tea_show'),
       TeaForm = require('./components/tea_form'),
-      Dashboard = require('./components/dashboard');
+      Dashboard = require('./components/dashboard'),
+      CreateTea = require('./components/create_tea');
 
 const routes =
   <Route path='/' component={App} >
     <IndexRoute component={Splash} />
     <Route path='signup' component={AuthForm} onEnter={ensureNotLoggedIn} />
     <Route path='login' component={AuthForm} onEnter={ensureNotLoggedIn} />
-    <Route path='teas/' component={TeaIndex} >
-      <Route path='new' component={TeaForm} />
-    </Route>
+    <Route path='teas' component={TeaIndex} onEnter={ensureLoggedIn}/>
+    <Route path='teas/new' component={CreateTea} />
     <Route path='teas/:id' component={TeaShow} />
     <Route path='dashboard' component={Dashboard} onEnter={ensureLoggedIn}/>
   </Route>;
@@ -37,13 +37,13 @@ $(
 
 function ensureLoggedIn() {
   if (!SessionStore.isUserLoggedIn()) {
-    window.location.hash = '/login'
+    hashHistory.push('/login');
   }
 };
 
 function ensureNotLoggedIn() {
   if (SessionStore.isUserLoggedIn()) {
     console.log('about to update hash');
-    window.location.hash = '/'
+    hashHistory.push('/');
   }
 };

@@ -1,3 +1,4 @@
+import { hashHistory } from 'react-router';
 const React = require('react'),
       SearchSuggestionActions = require('../actions/search_suggestion_actions'),
       SearchSuggestionStore = require('../stores/search_suggestion_store'),
@@ -36,8 +37,8 @@ const SearchBar = React.createClass({
     event.preventDefault();
     SearchSuggestionActions.clearSuggestions();
 
-    TeaActions.fetchTeas( { [this.state.searchType]: this.state.query } );
-    window.location.hash = `teas/?${this.state.searchType}=${this.state.query}`;
+    // window.location.hash = `teas/?${this.state.searchType}=${this.state.query}`;
+    hashHistory.push(`teas/?${this.state.searchType}=${this.state.query}`);
   },
 
   render: function () {

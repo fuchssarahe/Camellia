@@ -3,19 +3,8 @@ const React = require('react'),
       TeaStore = require('../stores/tea_store'),
       OwnershipButton = require('./ownership_button'),
       SessionStore = require('../stores/session_store');
-      // ErrorStore = require('../stores/error_store');
 
 const TeaIndexItem = React.createClass({
-  componentWillMount: function () {
-    this.listener = TeaStore.addListener();
-    // this.errorListener = ErrorStore.addListener();
-  },
-
-  componentWillUnmount: function () {
-    this.listener.remove();
-    // this.errorListener.remove();
-  },
-
   render: function () {
 
     let color = this.props.tea.tea_type.toLowerCase()

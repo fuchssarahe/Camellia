@@ -1,10 +1,11 @@
+import { hashHistory } from 'react-router';
 const React = require('react'),
       SearchBar = require('./search_bar');
 
 
 const Splash = React.createClass({
   _navToBrowse: function () {
-    window.location.hash = '/teas/?tea='
+    hashHistory.push('/teas/?tea=');
   },
 
   render: function () {

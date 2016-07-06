@@ -1,7 +1,9 @@
+import { hashHistory } from 'react-router';
 const React = require('react'),
       ErrorStore = require('../stores/errors_store'),
       TeaActions = require('../actions/tea_actions'),
       TeaConstants = require('../constants/tea_constants'),
+      TeaStore = require('../stores/tea_store'),
       Errors = require('./errors');
 
 const TeaForm = React.createClass({
@@ -22,8 +24,8 @@ const TeaForm = React.createClass({
   },
 
   componentWillMount: function () {
-    console.log('mounting form');
     this.errorListener = ErrorStore.addListener(this._onErrors);
+    this.listener = TeaStore.addListener(this._onCreation)
   },
 
   _onErrors: function () {
@@ -32,8 +34,16 @@ const TeaForm = React.createClass({
     }
   },
 
+  _onCreation: function () {
+    const id = TeaStore.newestId()
+    if (id !== null) {
+      hashHistory.push( 'teas/' + id );
+    }
+  },
+
   componentWillUnmount: function () {
     this.errorListener.remove();
+    this.listener.remove();
   },
 
   _handleInput: function (event, property) {
@@ -45,10 +55,8 @@ const TeaForm = React.createClass({
   },
 
   _handleSubmit: function (event) {
-    console.log(this.state);
     event.preventDefault();
     TeaActions.createTea(this.state);
-    // window.location.history
   },
 
   render: function () {
