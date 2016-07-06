@@ -44,16 +44,25 @@ const TeaShow = React.createClass({
       timeUnits = 'minutes'
     }
 
+    let figureContents;
+    if (this.state.tea.image_public_id) {
+      figureContents = <img src={this.state.tea.image_public_id} alt="Tea Image" className="index-item_image"/>
+    } else {
+      figureContents = <div className="index-item_image--empty profile_image--empty"></div>
+    }
+
     return (
       <div className="cf container">
         <aside className='panel panel_left'>
           <figure className="panel_section">
-            <img src={this.state.tea.image_public_id} alt="Tea Image" className="profile-img"/>
+            {figureContents}
           </figure>
           <section className='panel_section'>
             <h2 className='panel_section-header'>Your Review</h2>
-            <p className='panel_section-content'>You haven't reviewed this tea yet!</p>
-            <OwnershipButton teaId={this.state.tea.id}/>
+            <div className='panel_section-content'>
+              <p> You haven't reviewed this tea yet!</p>
+              <OwnershipButton teaId={this.state.tea.id} className='panel_section-content'/>
+            </div>
           </section>
         </aside>
 
