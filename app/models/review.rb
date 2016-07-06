@@ -5,6 +5,7 @@ belongs_to :user
 
 validates :user_id, :tea_id, :rating, :body, presence: true
 validates :user_id, uniqueness: { scope: :tea_id }
+validates :rating, inclusion: { in: (1..5) }
 
 
 

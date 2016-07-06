@@ -2,11 +2,11 @@ import { Link } from 'react-router';
 const React = require('react'),
       TeaStore = require('../stores/tea_store'),
       OwnershipButton = require('./ownership_button'),
-      SessionStore = require('../stores/session_store');
+      SessionStore = require('../stores/session_store'),
+      ReviewRating = require('./review_rating');
 
 const TeaIndexItem = React.createClass({
   render: function () {
-
     let color = this.props.tea.tea_type.toLowerCase()
     if (color === 'other') {
       color = ""
@@ -26,6 +26,7 @@ const TeaIndexItem = React.createClass({
               <div className="panel_main-subheading">
                 <p>{this.props.tea.name}</p>
               </div>
+              <ReviewRating rating={this.props.tea.rating} />
               <p><span className={"icon-leaf" + ' ' + color} />Type: {this.props.tea.tea_type}</p>
               <p><span className='icon-earth' />Region: {this.props.tea.region}</p>
               <p><span className="icon-office" />Retailer: {this.props.tea.retailer}</p>
