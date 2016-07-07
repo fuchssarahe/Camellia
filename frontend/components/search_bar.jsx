@@ -46,13 +46,13 @@ const SearchBar = React.createClass({
     let placeholderText;
     switch (this.state.searchType) {
       case 'tea':
-        placeholderText = 'bright and...';
+        placeholderText = 'bright or smokey...';
         break;
       case 'region':
         placeholderText = 'China';
         break;
       case 'tea_type':
-        placeholderText = 'Herbal';  
+        placeholderText = 'Herbal';
         break;
       default:
 

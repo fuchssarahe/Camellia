@@ -33189,7 +33189,7 @@
 	    var placeholderText = void 0;
 	    switch (this.state.searchType) {
 	      case 'tea':
-	        placeholderText = 'bright and...';
+	        placeholderText = 'bright or smokey...';
 	        break;
 	      case 'region':
 	        placeholderText = 'China';
