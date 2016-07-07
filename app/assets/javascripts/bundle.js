@@ -33836,7 +33836,6 @@
 	};
 	
 	ErrorsStore.form = function () {
-	  console.log('registering form');
 	  return _form;
 	};
 	
@@ -34823,7 +34822,6 @@
 	  },
 	
 	  _onReviewChange: function _onReviewChange() {
-	    console.log('review change');
 	    this.setState({ currentUserReview: ReviewStore.currentUserReview(parseInt(this.props.params.id)) });
 	  },
 	
@@ -35093,13 +35091,13 @@
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.listener.remove();
 	    this.teaListener.remove();
+	    this.reviewListener.remove();
 	  },
 	
 	  render: function render() {
 	    var _this = this;
 	
 	    var fullReviews = void 0;
-	    console.log(this.state.reviews);
 	    var reviews = Object.keys(this.state.reviews);
 	    if (this.state.reviews === {}) {
 	      fullReviews = "You haven't reviewed any teas yet!";
@@ -35108,7 +35106,7 @@
 	        var review = _this.state.reviews[reviewId];
 	        return React.createElement(
 	          'li',
-	          { style: { width: '100%' } },
+	          { style: { width: '100%' }, key: reviewId },
 	          React.createElement(
 	            _reactRouter.Link,
 	            { to: 'teas/' + review.tea_id },
@@ -35453,7 +35451,7 @@
 	    );
 	    return React.createElement(
 	      'div',
-	      { className: 'review-form-wrapper' },
+	      null,
 	      React.createElement(Errors, { errors: this.state.errors }),
 	      React.createElement(
 	        'form',

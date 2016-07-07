@@ -79,7 +79,7 @@ const ReviewForm = React.createClass({
       </div>
     )
     return (
-      <div className='review-form-wrapper'>
+      <div>
         <Errors errors={this.state.errors}/>
         <form onSubmit={this._handleSubmit} className='review-form'>
           <label>Select a Rating:*

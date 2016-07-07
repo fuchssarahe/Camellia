@@ -32,7 +32,6 @@ const TeaShow = React.createClass({
   },
 
   _onReviewChange: function () {
-    console.log('review change');
     this.setState( {currentUserReview: ReviewStore.currentUserReview(parseInt(this.props.params.id))} )
   },
 
