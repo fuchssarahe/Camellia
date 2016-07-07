@@ -31,18 +31,18 @@ class Tea < ActiveRecord::Base
 
     if limit
       # (limit param determines whether a suggestion is needed or not)
-      selector = 'id, SUBSTR(description, 1, 6) as description_part, name as search_name'
+      selector = 'id, name as search_name'
       suggestion_type = 'tea'
 
-      suggestions = teas.limit(limit).select(selector)
-      p suggestions
-      suggestions.each do |tea|
-        # p tea.description
-        p tea.description_part
-        # unless tea.description.upcase.include?(parameters[:tea].upcase)
-        # end
-        p tea
-      end
+      # suggestions = teas.limit(limit).select(selector)
+      # p suggestions
+      # suggestions.each do |tea|
+      #   # p tea.description
+      #   p tea.description_part
+      #   # unless tea.description.upcase.include?(parameters[:tea].upcase)
+      #   # end
+      #   p tea
+      # end
       return [teas.limit(limit).select(selector), suggestion_type]
 
     else
