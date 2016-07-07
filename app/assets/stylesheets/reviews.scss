@@ -12,6 +12,7 @@
   background: url('https://raw.githubusercontent.com/fuchssarahe/Camellia/master/app/assets/images/rating_images/camellia_rating-1.png');
   background-repeat: no-repeat;
   background-size: contain;
+  position: relative;
 }
 
 .rated {
@@ -24,11 +25,38 @@
 }
 
 .rated--by-current-user {
-  background: url('https://github.com/fuchssarahe/Camellia/blob/master/app/assets/images/rating_images/rating-5.png');
+  background: url('https://raw.githubusercontent.com/fuchssarahe/Camellia/master/app/assets/images/rating_images/rating-5.png');
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .unrated {
   padding: 10px;
+}
+
+.height-giver {
+  padding: 10px;
+  height: 18px;
+}
+
+.rating-selection-fields {
+  width: 100px;
+  height: 20px;
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  position: absolute;
+}
+
+.rating-selection-fields > li {
+  width: 16px;
+  height: 20px;
+}
+
+.rating-selector {
+  width: 100px;
+  height: 20px;
+  position: absolute;
 }
 
 .rating-1 {
@@ -49,4 +77,28 @@
 
 .rating-5 {
   width: 100%;
+}
+
+.rating-selector-1 {
+  width: 20%;
+}
+
+.rating-selector-2 {
+  width: 38%;
+}
+
+.rating-selector-3 {
+  width: 56%;
+}
+
+.rating-selector-4 {
+  width: 73%;
+}
+
+.rating-selector-5 {
+  width: 90%;
+}
+
+.profile-button {
+  margin-top: 12px;
 }

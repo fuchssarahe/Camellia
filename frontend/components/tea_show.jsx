@@ -7,7 +7,11 @@ const React = require('react'),
 
 const TeaShow = React.createClass({
   getInitialState: function () {
-    return {tea: TeaStore.find(parseInt(this.props.params.id)), shouldShowReview: false}
+    let showReview = false;
+    if (window.location.hash.includes('review')) {
+      showReview = true;
+    }
+    return {tea: TeaStore.find(parseInt(this.props.params.id)), shouldShowReview: showReview}
   },
 
   componentWillMount: function () {
@@ -71,7 +75,7 @@ const TeaShow = React.createClass({
           <section className='panel_section'>
             <h2 className='panel_section-header'>Your Review</h2>
             <div className='panel_section-content'>
-              <p> You haven't reviewed this tea yet!</p>
+              <button className='minor-button profile-button' onClick={this._mountReviewForm}>Add Review</button>
               <OwnershipButton teaId={this.state.tea.id} className='panel_section-content'/>
             </div>
           </section>

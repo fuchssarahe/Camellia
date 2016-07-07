@@ -22,7 +22,9 @@ const routes =
     <Route path='login' component={AuthForm} />
     <Route path='teas' component={TeaIndex} />
     <Route path='teas/new' component={CreateTea} />
-    <Route path='teas/:id' component={TeaShow} />
+    <Route path='teas/:id' component={TeaShow} >
+      <Route path='review' component={TeaShow} />
+    </Route>
     <Route path='dashboard' component={Dashboard}/>
   </Route>;
 

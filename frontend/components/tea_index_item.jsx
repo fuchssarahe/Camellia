@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link, hashHistory } from 'react-router';
 const React = require('react'),
       TeaStore = require('../stores/tea_store'),
       OwnershipButton = require('./ownership_button'),
@@ -6,6 +6,11 @@ const React = require('react'),
       ReviewRating = require('./review_rating');
 
 const TeaIndexItem = React.createClass({
+  _navToShowWithReview: function (event) {
+    event.preventDefault();
+    hashHistory.push('/teas/' + this.props.tea.id + '/review')
+  },
+
   render: function () {
     let color = this.props.tea.tea_type.toLowerCase()
     if (color === 'other') {
@@ -26,7 +31,7 @@ const TeaIndexItem = React.createClass({
               <div className="panel_main-subheading">
                 <p>{this.props.tea.name}</p>
               </div>
-              <ReviewRating rating={this.props.tea.rating} currentUserRating={this.props.current_user_rating}/>
+              <ReviewRating rating={this.props.tea.rating} currentUserRating={this.props.current_user_rating} onClick={this._navToShowWithReview}/>
               <p><span className={"icon-leaf" + ' ' + color} />Type: {this.props.tea.tea_type}</p>
               <p><span className='icon-earth' />Region: {this.props.tea.region}</p>
               <p><span className="icon-office" />Retailer: {this.props.tea.retailer}</p>

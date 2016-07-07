@@ -72,7 +72,11 @@
 	  React.createElement(_reactRouter.Route, { path: 'login', component: AuthForm }),
 	  React.createElement(_reactRouter.Route, { path: 'teas', component: TeaIndex }),
 	  React.createElement(_reactRouter.Route, { path: 'teas/new', component: CreateTea }),
-	  React.createElement(_reactRouter.Route, { path: 'teas/:id', component: TeaShow }),
+	  React.createElement(
+	    _reactRouter.Route,
+	    { path: 'teas/:id', component: TeaShow },
+	    React.createElement(_reactRouter.Route, { path: 'review', component: TeaShow })
+	  ),
 	  React.createElement(_reactRouter.Route, { path: 'dashboard', component: Dashboard })
 	);
 	
@@ -34228,7 +34232,7 @@
 	          'label',
 	          null,
 	          'Temperature (in degrees Celcius)',
-	          React.createElement('input', { type: 'text',
+	          React.createElement('input', { type: 'number',
 	            onChange: function onChange(event) {
 	              return _this._handleInput(event, 'temperature');
 	            },
@@ -34239,7 +34243,8 @@
 	          'label',
 	          null,
 	          'Leaf Quantity (teaspoons per 8 ounces of liquid)',
-	          React.createElement('input', { type: 'float',
+	          React.createElement('input', { type: 'number',
+	            step: '0.25',
 	            onChange: function onChange(event) {
 	              return _this._handleInput(event, 'leaf_quantity');
 	            },
@@ -34302,6 +34307,11 @@
 	var TeaIndexItem = React.createClass({
 	  displayName: 'TeaIndexItem',
 	
+	  _navToShowWithReview: function _navToShowWithReview(event) {
+	    event.preventDefault();
+	    _reactRouter.hashHistory.push('/teas/' + this.props.tea.id + '/review');
+	  },
+	
 	  render: function render() {
 	    var color = this.props.tea.tea_type.toLowerCase();
 	    if (color === 'other') {
@@ -34335,7 +34345,7 @@
 	                this.props.tea.name
 	              )
 	            ),
-	            React.createElement(ReviewRating, { rating: this.props.tea.rating, currentUserRating: this.props.current_user_rating }),
+	            React.createElement(ReviewRating, { rating: this.props.tea.rating, currentUserRating: this.props.current_user_rating, onClick: this._navToShowWithReview }),
 	            React.createElement(
 	              'p',
 	              null,
@@ -34409,7 +34419,8 @@
 	    this.ownedListener.remove();
 	  },
 	
-	  _toggleOwnership: function _toggleOwnership() {
+	  _toggleOwnership: function _toggleOwnership(event) {
+	    event.preventDefault();
 	    if (OwnedTeaStore.find(this.props.teaId)) {
 	      OwnershipActions.destroyOwnership(this.props.teaId);
 	    } else {
@@ -34613,7 +34624,11 @@
 	  displayName: 'TeaShow',
 	
 	  getInitialState: function getInitialState() {
-	    return { tea: TeaStore.find(parseInt(this.props.params.id)), shouldShowReview: false };
+	    var showReview = false;
+	    if (window.location.hash.includes('review')) {
+	      showReview = true;
+	    }
+	    return { tea: TeaStore.find(parseInt(this.props.params.id)), shouldShowReview: showReview };
 	  },
 	
 	  componentWillMount: function componentWillMount() {
@@ -34695,9 +34710,9 @@
 	            'div',
 	            { className: 'panel_section-content' },
 	            React.createElement(
-	              'p',
-	              null,
-	              ' You haven\'t reviewed this tea yet!'
+	              'button',
+	              { className: 'minor-button profile-button', onClick: this._mountReviewForm },
+	              'Add Review'
 	            ),
 	            React.createElement(OwnershipButton, { teaId: this.state.tea.id, className: 'panel_section-content' })
 	          )
@@ -35328,16 +35343,148 @@
 
 	'use strict';
 	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
 	var React = __webpack_require__(4);
 	
 	var ReviewForm = React.createClass({
 	  displayName: 'ReviewForm',
 	
+	  getInitialState: function getInitialState() {
+	    return {
+	      tea_id: this.props.id,
+	      rating: '',
+	      body: '',
+	      steep_time: '',
+	      leaf_quantity: '',
+	      temperature: '',
+	      leaf_density: '',
+	      ratingClass: 'rating-selector-5'
+	    };
+	  },
+	
+	  _handleSubmit: function _handleSubmit() {},
+	
+	  _handleInput: function _handleInput(event, property, rating) {
+	    if (property === 'rating') {
+	      this.setState({ rating: rating });
+	      return;
+	    }
+	    this.setState(_defineProperty({}, property, event.target.value));
+	  },
+	
+	  _updateClass: function _updateClass(event, rating) {
+	    if (rating === '') {
+	      rating = 5;
+	    }
+	    this.setState({ ratingClass: 'rating-selector-' + rating });
+	  },
+	
 	  render: function render() {
-	    return React.createElement(
+	    var _this = this;
+	
+	    var ratingSelector = React.createElement(
 	      'div',
-	      null,
-	      'Hellow from review form.'
+	      { className: 'rating-container' },
+	      React.createElement('div', { className: 'rated--by-current-user rating-selector ' + this.state.ratingClass }),
+	      React.createElement(
+	        'ul',
+	        { className: 'rating-selection-fields', onMouseOut: function onMouseOut(event) {
+	            return _this._updateClass(event, _this.state.rating);
+	          } },
+	        React.createElement('li', { className: 'li1', onMouseEnter: function onMouseEnter(event) {
+	            return _this._updateClass(event, 1);
+	          }, onClick: function onClick(event) {
+	            return _this._handleInput(event, 'rating', 1);
+	          } }),
+	        React.createElement('li', { className: 'li2', onMouseEnter: function onMouseEnter(event) {
+	            return _this._updateClass(event, 2);
+	          }, onClick: function onClick(event) {
+	            return _this._handleInput(event, 'rating', 2);
+	          } }),
+	        React.createElement('li', { className: 'li3', onMouseEnter: function onMouseEnter(event) {
+	            return _this._updateClass(event, 3);
+	          }, onClick: function onClick(event) {
+	            return _this._handleInput(event, 'rating', 3);
+	          } }),
+	        React.createElement('li', { className: 'li4', onMouseEnter: function onMouseEnter(event) {
+	            return _this._updateClass(event, 4);
+	          }, onClick: function onClick(event) {
+	            return _this._handleInput(event, 'rating', 4);
+	          } }),
+	        React.createElement('li', { className: 'li5', onMouseEnter: function onMouseEnter(event) {
+	            return _this._updateClass(event, 5);
+	          }, onClick: function onClick(event) {
+	            return _this._handleInput(event, 'rating', 5);
+	          } })
+	      ),
+	      React.createElement('div', { className: 'height-giver' })
+	    );
+	    return React.createElement(
+	      'form',
+	      { onSubmit: this._handleSubmit, className: 'review_form' },
+	      React.createElement(
+	        'label',
+	        null,
+	        'Rating',
+	        ratingSelector
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Review',
+	        React.createElement('textarea', { onChange: function onChange(event) {
+	            return _this._handleInput(event, 'body');
+	          },
+	          placeholder: 'Wow! What a yummy tea!',
+	          value: this.state.body })
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Steep Time (in minutes)',
+	        React.createElement('input', { type: 'number',
+	          step: '0.25',
+	          onChange: function onChange(event) {
+	            return _this._handleInput(event, 'steep_time');
+	          },
+	          value: this.state.steep_time,
+	          placeholder: '0' })
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Temperature (in degrees Celcius)',
+	        React.createElement('input', { type: 'number',
+	          onChange: function onChange(event) {
+	            return _this._handleInput(event, 'temperature');
+	          },
+	          value: this.state.temperature,
+	          placeholder: '80' })
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Leaf Quantity (teaspoons per 8 ounces of liquid)',
+	        React.createElement('input', { type: 'number',
+	          step: '0.25',
+	          onChange: function onChange(event) {
+	            return _this._handleInput(event, 'leaf_quantity');
+	          },
+	          value: this.state.leaf_quantity,
+	          placeholder: '1.5' })
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Leaf Density (grams per ounce)',
+	        React.createElement('input', { type: 'number',
+	          onChange: function onChange(event) {
+	            return _this._handleInput(event, 'leaf_density');
+	          },
+	          value: this.state.leaf_density,
+	          placeholder: '30' })
+	      )
 	    );
 	  }
 	});

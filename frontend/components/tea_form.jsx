@@ -108,14 +108,15 @@ const TeaForm = React.createClass({
           </label>
 
           <label>Temperature (in degrees Celcius)
-            <input type="text"
+            <input type="number"
                    onChange={(event) => this._handleInput(event, 'temperature')}
                    value={this.state.temperature}
                    placeholder='80'/>
           </label>
 
           <label>Leaf Quantity (teaspoons per 8 ounces of liquid)
-            <input type="float"
+            <input type="number"
+                   step="0.25"
                    onChange={(event) => this._handleInput(event, 'leaf_quantity')}
                    value={this.state.leaf_quantity}
                    placeholder='1.5'/>
