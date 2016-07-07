@@ -17,8 +17,8 @@ const OwnedTeaItem = React.createClass({
         <Link to={'teas/' + this.props.tea.id}>
           <figure>{figureContents}</figure>
           {this.props.tea.name}, {this.props.tea.tea_type}
+          <OwnershipButton teaId={this.props.tea.id}/>
         </Link>
-        <OwnershipButton teaId={this.props.tea.id}/>
       </li>
     )
   }

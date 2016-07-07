@@ -79,14 +79,14 @@ const ReviewForm = React.createClass({
       </div>
     )
     return (
-      <div>
+      <div className='review-form-wrapper'>
         <Errors errors={this.state.errors}/>
-        <form onSubmit={this._handleSubmit} className='review_form'>
+        <form onSubmit={this._handleSubmit} className='review-form'>
           <label>Select a Rating:*
             {ratingSelector}
           </label>
 
-          <label>Review Body:*
+          <label>What did you think?*
             <textarea onChange={(event) => this._handleInput(event, 'body')}
                       placeholder='Wow! What a yummy tea!'
                       value={this.state.body}></textarea>

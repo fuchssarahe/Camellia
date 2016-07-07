@@ -45,5 +45,18 @@ ReviewStore.find = function (reviewId) {
   return _reviews[reviewId];
 };
 
+ReviewStore.currentUserReview = function (teaId) {
+  let result = null;
+  if (SessionStore.isUserLoggedIn()) {
+    Object.keys(_reviews).forEach( (reviewId) => {
+      const review = _reviews[reviewId];
+      if (review.user_id === SessionStore.currentUser().id) {
+        result = review;
+      }
+    });
+  }
+  return result;
+};
+
 
 module.exports = ReviewStore;

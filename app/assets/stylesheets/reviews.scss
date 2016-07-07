@@ -6,6 +6,20 @@
   padding: 10px 20px;
 }
 
+.review-form-wrapper {
+  padding: 10px 20px;
+}
+
+// .review-form {
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: middle;
+// }
+
+.review-form input, textarea {
+    width: 100%;
+}
+
 .rating-container {
   margin: 10px;
   width: 105px;
@@ -82,4 +96,8 @@
 
 .profile-button {
   margin-top: 12px;
+}
+
+.timestamp {
+  border-top: 1px solid #bfcad2;
 }

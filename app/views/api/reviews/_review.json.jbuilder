@@ -1,6 +1,7 @@
 json.extract! review, :id,
                       :user_id,
                       :username,
+                      :tea_name,
                       :tea_id,
                       :rating,
                       :body,
