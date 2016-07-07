@@ -22,7 +22,7 @@ const Errors = React.createClass({
 function parseErrors(errors) {
   return Object.keys(errors).map( (field) => {
     const parsedErrorsForField = errors[field].join(", ")
-    if (field === 'base') {
+    if (field === 'base' || field === 'user_id') {
       return <li key={field}>{'Oops! ' + parsedErrorsForField[0].toUpperCase() + parsedErrorsForField.slice(1) + '!'}</li>
     };
 

@@ -3,7 +3,8 @@ const React = require('react'),
       TeaActions = require('../actions/tea_actions'),
       OwnershipButton = require('./ownership_button'),
       TeaReviewIndex = require('./tea_review_index'),
-      ReviewForm = require('./review_form');
+      ReviewForm = require('./review_form'),
+      ReviewRating = require('./review_rating');
 
 const TeaShow = React.createClass({
   getInitialState: function () {
@@ -63,7 +64,12 @@ const TeaShow = React.createClass({
 
     let reviewForm;
     if (this.state.shouldShowReview) {
-      reviewForm = <section className='panel_section'><ReviewForm teaId={this.props.params.id}/></section>
+      reviewForm = <section className='panel_section'><h2 className='panel_section-header'>Add Review</h2><ReviewForm teaId={this.props.params.id}/></section>
+    }
+
+    let reviewRating;
+    if (this.state.tea.rating) {
+      reviewRating = <li><ReviewRating rating={this.state.tea.rating} /></li>
     }
 
     return (
@@ -93,6 +99,7 @@ const TeaShow = React.createClass({
             <ul className="cf panel_section-content">
               <li className="col col-1-2">
                 <ul>
+                  {reviewRating}
                   <li><span className='icon-pencil2' /> {this.state.tea.description}</li>
                   <li><span className='icon-office'/> Retailer: {this.state.tea.retailer}</li>
                 </ul>

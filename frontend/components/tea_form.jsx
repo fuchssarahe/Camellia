@@ -64,20 +64,20 @@ const TeaForm = React.createClass({
       <div>
         <Errors errors={this.state.errors} />
         <form onSubmit={this._handleSubmit} className="tea_form">
-          <label>Name
+          <label>Name:*
             <input type="text"
                    onChange={(event) => this._handleInput(event, 'name')}
                    value={this.state.name}
                    placeholder='Dragonwell'/>
           </label>
 
-          <label>Description
+          <label>Description:*
             <textarea onChange={(event) => this._handleInput(event, 'description')}
                       placeholder='Dragonwell is a variety of pan-roasted green tea...'
                       value={this.state.description}></textarea>
           </label>
 
-          <label>Type
+          <label>Type:*
             <select onChange={(event) => this._handleInput(event, 'tea_type')}>
               <option hidden style={{display: 'none'}} >Select a type!</option>
               {
@@ -88,7 +88,7 @@ const TeaForm = React.createClass({
             </select>
           </label>
 
-          <label>Region
+          <label>Region:*
             <select onChange={(event) => this._handleInput(event, 'region')}>
               <option hidden style={{display: 'none'}}>Select a region!</option>
               {
@@ -99,7 +99,7 @@ const TeaForm = React.createClass({
             </select>
           </label>
 
-          <label>Steep Time (in minutes)
+          <label>Steep Time (in minutes):*
             <input type="number"
                    step="0.25"
                    onChange={(event) => this._handleInput(event, 'steep_time')}
@@ -107,14 +107,14 @@ const TeaForm = React.createClass({
                    placeholder='0'/>
           </label>
 
-          <label>Temperature (in degrees Celcius)
+          <label>Temperature (in degrees Celcius):*
             <input type="number"
                    onChange={(event) => this._handleInput(event, 'temperature')}
                    value={this.state.temperature}
                    placeholder='80'/>
           </label>
 
-          <label>Leaf Quantity (teaspoons per 8 ounces of liquid)
+          <label>Leaf Quantity (teaspoons per 8 ounces of liquid):*
             <input type="number"
                    step="0.25"
                    onChange={(event) => this._handleInput(event, 'leaf_quantity')}
@@ -122,21 +122,21 @@ const TeaForm = React.createClass({
                    placeholder='1.5'/>
           </label>
 
-          <label>Leaf Density (grams per ounce)
+          <label>Leaf Density (grams per ounce):*
             <input type="number"
                    onChange={(event) => this._handleInput(event, 'leaf_density')}
                    value={this.state.leaf_density}
                    placeholder='30'/>
           </label>
 
-          <label>Retailer
+          <label>Retailer:*
             <input type="text"
                    onChange={(event) => this._handleInput(event, 'retailer')}
                    value={this.state.retailer}
                    placeholder='Louisville Tea Company'/>
           </label>
 
-          <label>Image
+          <label>Image:
             <input type="file"
                    accept="image/*"
                    ref='image'
