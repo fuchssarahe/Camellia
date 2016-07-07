@@ -34429,7 +34429,9 @@
 	  },
 	
 	  _onChange: function _onChange() {
-	    this.forceUpdate();
+	    if (SessionStore.isUserLoggedIn()) {
+	      OwnershipActions.fetchOwnedTeas();
+	    }
 	  },
 	
 	  _onOwnedTeaChange: function _onOwnedTeaChange() {
