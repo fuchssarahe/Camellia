@@ -26079,6 +26079,15 @@
 	          null,
 	          React.createElement(
 	            'button',
+	            { onClick: this._navToExplore, className: 'minor-button' },
+	            'Explore'
+	          )
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          React.createElement(
+	            'button',
 	            { onClick: this._navToSignup, className: 'minor-button' },
 	            'Sign Up'
 	          )
@@ -33950,6 +33959,11 @@
 	    this.ownedListener = OwnedTeaStore.addListener(this._onOwnedTeaChange);
 	  },
 	
+	  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
+	    console.log(this.props);
+	    console.log(newProps);
+	  },
+	
 	  _onChange: function _onChange() {
 	    this.setState({ teas: TeaStore.all() });
 	  },
@@ -34403,7 +34417,9 @@
 	  displayName: 'OwnershipButton',
 	
 	  componentWillMount: function componentWillMount() {
-	    OwnershipActions.fetchOwnedTeas();
+	    if (SessionStore.isUserLoggedIn()) {
+	      OwnershipActions.fetchOwnedTeas();
+	    }
 	    this.listener = SessionStore.addListener(this._onChange);
 	    this.ownedListener = OwnedTeaStore.addListener(this._onOwnedTeaChange);
 	  },
@@ -34796,7 +34812,8 @@
 	    ReviewForm = __webpack_require__(287),
 	    ReviewRating = __webpack_require__(279),
 	    ReviewStore = __webpack_require__(285),
-	    FullUserReview = __webpack_require__(288);
+	    FullUserReview = __webpack_require__(288),
+	    SessionStore = __webpack_require__(240);
 	
 	var TeaShow = React.createClass({
 	  displayName: 'TeaShow',
@@ -34888,12 +34905,14 @@
 	    var reviewButton = void 0;
 	    if (this.state.currentUserReview) {
 	      reviewButton = React.createElement(FullUserReview, { review: this.state.currentUserReview });
-	    } else {
+	    } else if (SessionStore.isUserLoggedIn()) {
 	      reviewButton = React.createElement(
 	        'button',
 	        { className: 'minor-button', onClick: this._mountReviewForm },
 	        'Add Review'
 	      );
+	    } else {
+	      reviewButton = 'Login to review this tea!';
 	    }
 	
 	    return React.createElement(

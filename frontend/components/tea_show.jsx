@@ -6,7 +6,8 @@ const React = require('react'),
       ReviewForm = require('./review_form'),
       ReviewRating = require('./review_rating'),
       ReviewStore = require('../stores/review_store'),
-      FullUserReview = require('./full_user_review');
+      FullUserReview = require('./full_user_review'),
+      SessionStore = require('../stores/session_store');
 
 const TeaShow = React.createClass({
   getInitialState: function () {
@@ -83,8 +84,10 @@ const TeaShow = React.createClass({
     let reviewButton;
     if (this.state.currentUserReview) {
       reviewButton = <FullUserReview review={this.state.currentUserReview} />
-    } else {
+    } else if (SessionStore.isUserLoggedIn()){
       reviewButton = <button className='minor-button' onClick={this._mountReviewForm}>Add Review</button>
+    } else {
+      reviewButton = 'Login to review this tea!'
     }
 
     return (

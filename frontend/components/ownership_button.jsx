@@ -5,7 +5,9 @@ const React = require('react'),
 
 const OwnershipButton = React.createClass({
   componentWillMount: function () {
-    OwnershipActions.fetchOwnedTeas();
+    if (SessionStore.isUserLoggedIn()) {
+      OwnershipActions.fetchOwnedTeas();
+    }
     this.listener = SessionStore.addListener(this._onChange);
     this.ownedListener = OwnedTeaStore.addListener(this._onOwnedTeaChange)
   },
