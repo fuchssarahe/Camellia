@@ -34325,7 +34325,11 @@
 	
 	  _navToShowWithReview: function _navToShowWithReview(event) {
 	    event.preventDefault();
-	    _reactRouter.hashHistory.push('/teas/' + this.props.tea.id + '/review');
+	    if (SessionStore.isUserLoggedIn()) {
+	      _reactRouter.hashHistory.push('/teas/' + this.props.tea.id + '/review');
+	    } else {
+	      _reactRouter.hashHistory.push('/login');
+	    }
 	  },
 	
 	  render: function render() {
@@ -34804,6 +34808,8 @@
 
 	'use strict';
 	
+	var _reactRouter = __webpack_require__(1);
+	
 	var React = __webpack_require__(4),
 	    TeaStore = __webpack_require__(272),
 	    TeaActions = __webpack_require__(265),
@@ -34850,7 +34856,11 @@
 	  },
 	
 	  _mountReviewForm: function _mountReviewForm() {
-	    this.setState({ shouldShowReview: true });
+	    if (SessionStore.isUserLoggedIn()) {
+	      this.setState({ shouldShowReview: true });
+	    } else {
+	      _reactRouter.hashHistory.push('/login');
+	    }
 	  },
 	
 	  render: function render() {
@@ -34874,7 +34884,7 @@
 	
 	    var figureContents = void 0;
 	    if (this.state.tea.image_public_id) {
-	      figureContents = React.createElement('img', { src: this.state.tea.image_public_id, alt: 'Tea Image', className: 'index-item_image' });
+	      figureContents = React.createElement('img', { src: this.state.tea.image_public_id, alt: 'Tea Image', className: 'profile_image' });
 	    } else {
 	      figureContents = React.createElement('div', { className: 'index-item_image--empty profile_image--empty' });
 	    }

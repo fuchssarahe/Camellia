@@ -1,3 +1,4 @@
+import { hashHistory } from 'react-router';
 const React = require('react'),
       TeaStore = require('../stores/tea_store'),
       TeaActions = require('../actions/tea_actions'),
@@ -42,7 +43,11 @@ const TeaShow = React.createClass({
   },
 
   _mountReviewForm: function () {
-    this.setState({shouldShowReview: true})
+    if (SessionStore.isUserLoggedIn()) {
+      this.setState({shouldShowReview: true})
+    } else {
+      hashHistory.push('/login')
+    }
   },
 
   render: function () {
@@ -66,7 +71,7 @@ const TeaShow = React.createClass({
 
     let figureContents;
     if (this.state.tea.image_public_id) {
-      figureContents = <img src={this.state.tea.image_public_id} alt="Tea Image" className="index-item_image"/>
+      figureContents = <img src={this.state.tea.image_public_id} alt="Tea Image" className="profile_image"/>
     } else {
       figureContents = <div className="index-item_image--empty profile_image--empty"></div>
     }

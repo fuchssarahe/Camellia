@@ -8,7 +8,11 @@ const React = require('react'),
 const TeaIndexItem = React.createClass({
   _navToShowWithReview: function (event) {
     event.preventDefault();
-    hashHistory.push('/teas/' + this.props.tea.id + '/review')
+    if (SessionStore.isUserLoggedIn()) {
+      hashHistory.push('/teas/' + this.props.tea.id + '/review')
+    } else {
+      hashHistory.push('/login')
+    }
   },
 
   render: function () {

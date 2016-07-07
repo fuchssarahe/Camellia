@@ -132,6 +132,8 @@
   margin: auto;
   height: auto;
   max-height: 150px;
+  width: 100%;
+  max-width: 250px;
 }
 
 .index-item_image--empty {
@@ -145,4 +147,12 @@
 
 .profile_image--empty {
   height: 200px;
+}
+
+.profile_image {
+  padding: 20px;
+  height: 100%;
+  width: 100%;
+  max-width: 400px;
+  max-height: 300px;
 }
