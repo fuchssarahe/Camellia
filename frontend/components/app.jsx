@@ -66,11 +66,6 @@ const App = React.createClass({
       </ul>
     }
 
-    // let searchBar = <div></div>
-    // if (SessionStore.isUserLoggedIn()) {
-    //   searchBar = <SearchBar/>
-    // }
-
     let searchBar = <div></div>
     const url = window.location.hash
     if (url.length > 12 && url.includes('login') === false && url.includes('signup') === false) {

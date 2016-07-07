@@ -49,15 +49,16 @@
   border-top: 1px solid #BFCAD2;
 }
 
-.search-suggestions > li {
+.search-suggestion {
   border: 1px solid #BFCAD2;
   border-top: 0;
   width: 100%;
-  padding: 0 4px;
+  padding: 12px 4px;
   background: white;
+  margin: 0;
 }
 
-.search-suggestions > li:hover {
+.search-suggestions > .search-suggestion:hover {
   background: darken(#f9f9f9, 10%);
 }
 

@@ -26104,11 +26104,6 @@
 	      );
 	    }
 	
-	    // let searchBar = <div></div>
-	    // if (SessionStore.isUserLoggedIn()) {
-	    //   searchBar = <SearchBar/>
-	    // }
-	
 	    var searchBar = React.createElement('div', null);
 	    var url = window.location.hash;
 	    if (url.length > 12 && url.includes('login') === false && url.includes('signup') === false) {
@@ -33441,7 +33436,7 @@
 	  render: function render() {
 	    var _this = this;
 	
-	    var className = '';
+	    var className = 'search-suggestion';
 	
 	    switch (this.props.suggestion.suggestion_type) {
 	      case 'tea':
@@ -33449,7 +33444,7 @@
 	          'li',
 	          { onClick: function onClick() {
 	              return _this._navToShowPage(_this.props.suggestion.tea_id);
-	            } },
+	            }, className: className },
 	          React.createElement(
 	            'p',
 	            null,
