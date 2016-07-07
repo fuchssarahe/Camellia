@@ -33959,11 +33959,6 @@
 	    this.ownedListener = OwnedTeaStore.addListener(this._onOwnedTeaChange);
 	  },
 	
-	  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
-	    console.log(this.props);
-	    console.log(newProps);
-	  },
-	
 	  _onChange: function _onChange() {
 	    this.setState({ teas: TeaStore.all() });
 	  },

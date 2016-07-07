@@ -23,11 +23,6 @@ const TeaIndex = React.createClass({
     this.ownedListener = OwnedTeaStore.addListener(this._onOwnedTeaChange);
   },
 
-  componentWillReceiveProps: function (newProps) {
-    console.log(this.props);
-    console.log(newProps);
-  },
-
   _onChange: function () {
     this.setState({ teas: TeaStore.all() })
   },
