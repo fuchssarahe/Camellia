@@ -56,13 +56,13 @@
 	    AuthForm = __webpack_require__(268),
 	    SessionStore = __webpack_require__(240),
 	    TeaIndex = __webpack_require__(271),
-	    TeaShow = __webpack_require__(279),
+	    TeaShow = __webpack_require__(283),
 	    TeaForm = __webpack_require__(273),
-	    Dashboard = __webpack_require__(280),
-	    ReviewActions = window.actions = __webpack_require__(286),
-	    ReviewStore = window.store = __webpack_require__(284),
-	    CreateTea = __webpack_require__(282),
-	    ReviewForm = __webpack_require__(290);
+	    Dashboard = __webpack_require__(288),
+	    ReviewActions = window.actions = __webpack_require__(280),
+	    ReviewStore = window.store = __webpack_require__(285),
+	    CreateTea = __webpack_require__(290),
+	    ReviewForm = __webpack_require__(287);
 	
 	var routes = React.createElement(
 	  _reactRouter.Route,
@@ -33836,6 +33836,7 @@
 	};
 	
 	ErrorsStore.form = function () {
+	  console.log('registering form');
 	  return _form;
 	};
 	
@@ -34099,7 +34100,7 @@
 	      leaf_density: '',
 	      retailer: '',
 	      image: '',
-	      errors: ErrorStore.formErrors()
+	      errors: ErrorStore.formErrors('newTea')
 	    };
 	  },
 	
@@ -34302,7 +34303,7 @@
 	    TeaStore = __webpack_require__(272),
 	    OwnershipButton = __webpack_require__(275),
 	    SessionStore = __webpack_require__(240),
-	    ReviewRating = __webpack_require__(289);
+	    ReviewRating = __webpack_require__(279);
 	
 	var TeaIndexItem = React.createClass({
 	  displayName: 'TeaIndexItem',
@@ -34613,12 +34614,185 @@
 
 	'use strict';
 	
+	var _reactRouter = __webpack_require__(1);
+	
+	var React = __webpack_require__(4),
+	    SessionStore = __webpack_require__(240),
+	    ReviewActions = __webpack_require__(280);
+	
+	var ReviewRating = React.createClass({
+	  displayName: 'ReviewRating',
+	
+	  render: function render() {
+	    if (this.props.rating) {
+	      var scoreClass = void 0;
+	      if (this.props.currentUserRating) {
+	        scoreClass = 'rated rating-' + this.props.currentUserRating;
+	        scoreClass += ' rated--by-current-user';
+	      } else {
+	        scoreClass = 'rated rating-' + this.props.rating;
+	      }
+	      return React.createElement(
+	        'div',
+	        { className: 'rating-container' },
+	        React.createElement('div', { className: scoreClass })
+	      );
+	    } else {
+	      return React.createElement(
+	        'div',
+	        { className: 'unrated' },
+	        React.createElement(
+	          'button',
+	          { className: 'minor-button', onClick: this.props.onClick },
+	          'Be the first to review this tea!'
+	        )
+	      );
+	    }
+	  }
+	});
+	
+	module.exports = ReviewRating;
+
+/***/ },
+/* 280 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var ReviewConstants = __webpack_require__(281),
+	    ReviewApiUtil = __webpack_require__(282),
+	    ErrorActions = __webpack_require__(238),
+	    Dispatcher = __webpack_require__(232);
+	
+	var ReviewActions = {
+	  fetchReviews: function fetchReviews(paramHash) {
+	    ReviewApiUtil.getReviews(paramHash, ReviewActions.receiveReviews, ErrorActions.setErrors);
+	  },
+	
+	  fetchSingleReview: function fetchSingleReview(reviewId) {
+	    ReviewApiUtil.getSingleReview(reviewId, ReviewActions.receiveSingleReview, ErrorActions.setErrors);
+	  },
+	
+	  createReview: function createReview(reviewParams) {
+	    ReviewApiUtil.createReview(reviewParams, ReviewActions.receiveSingleReview, ErrorActions.setErrors);
+	  },
+	
+	  destroyReview: function destroyReview(reviewId) {
+	    ReviewApiUtil.destroyReview(reviewId, ReviewActions.removeReview, ErrorActions.setErrors);
+	  },
+	
+	  receiveSingleReview: function receiveSingleReview(review) {
+	    ErrorActions.clearErrors();
+	    var payload = {
+	      actionType: ReviewConstants.RECEIVE_REVIEW,
+	      review: review
+	    };
+	    Dispatcher.dispatch(payload);
+	  },
+	
+	  receiveReviews: function receiveReviews(reviews) {
+	    ErrorActions.clearErrors();
+	    var payload = {
+	      actionType: ReviewConstants.RECEIVE_REVIEWS,
+	      reviews: reviews
+	    };
+	    Dispatcher.dispatch(payload);
+	  },
+	
+	  removeReview: function removeReview(review) {
+	    ErrorActions.clearErrors();
+	    var payload = {
+	      actionType: ReviewConstants.REMOVE_REVIEW,
+	      review: review
+	    };
+	    Dispatcher.dispatch(payload);
+	  }
+	};
+	
+	module.exports = ReviewActions;
+
+/***/ },
+/* 281 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var ReviewConstants = {
+	  RECEIVE_REVIEWS: 'RECEIVE_REVIEWS',
+	  RECEIVE_REVIEW: 'RECEIVE_REVIEW',
+	  REMOVE_REVIEW: 'REMOVE_REVIEW'
+	
+	};
+	
+	module.exports = ReviewConstants;
+
+/***/ },
+/* 282 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var ReviewApiUtil = {
+	  createReview: function createReview(reviewParams, callback, errorCallback) {
+	    $.ajax({
+	      url: 'api/reviews',
+	      type: 'POST',
+	      data: { review: reviewParams },
+	      success: callback,
+	      error: function error(err) {
+	        return errorCallback('createReview', err);
+	      }
+	    });
+	  },
+	
+	  getReviews: function getReviews(paramHash, callback, errorCallback) {
+	    $.ajax({
+	      url: 'api/reviews',
+	      type: 'GET',
+	      data: { review: paramHash },
+	      success: callback,
+	      error: errorCallback
+	    });
+	  },
+	
+	  getSingleReview: function getSingleReview(reviewId, callback, errorCallback) {
+	    $.ajax({
+	      url: 'api/reviews/' + reviewId,
+	      type: 'GET',
+	      success: callback,
+	      error: errorCallback
+	    });
+	  },
+	
+	  destroyReview: function destroyReview(reviewId, callback, errorCallback) {
+	    $.ajax({
+	      url: 'api/reviews/' + reviewId,
+	      type: 'DELETE',
+	      success: callback,
+	      error: errorCallback
+	    });
+	  }
+	};
+	
+	module.exports = ReviewApiUtil;
+	
+	// rev.fetchReviews({user_id: 3}, (resp) => console.log(resp), (resp) => console.log('err', resp))
+	// rev.createReview({user_id: 3, tea_id: 3, rating: 4, body: 'I love tea', steep_time: 3, leaf_quantity: 1, temperature: 90, leaf_density: 10}, (resp) => console.log(resp), (resp) => console.log('err', resp))
+	// rev.fetchSingleReview(61, (resp) => console.log(resp), (resp) => console.log('err', resp))
+	// rev.destroyReview(61, (resp) => console.log(resp), (resp) => console.log('err', resp))
+
+/***/ },
+/* 283 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
 	var React = __webpack_require__(4),
 	    TeaStore = __webpack_require__(272),
 	    TeaActions = __webpack_require__(265),
 	    OwnershipButton = __webpack_require__(275),
-	    TeaReviewIndex = __webpack_require__(287),
-	    ReviewForm = __webpack_require__(290);
+	    TeaReviewIndex = __webpack_require__(284),
+	    ReviewForm = __webpack_require__(287);
 	
 	var TeaShow = React.createClass({
 	  displayName: 'TeaShow',
@@ -34683,7 +34857,7 @@
 	      reviewForm = React.createElement(
 	        'section',
 	        { className: 'panel_section' },
-	        React.createElement(ReviewForm, null)
+	        React.createElement(ReviewForm, { teaId: this.props.params.id })
 	      );
 	    }
 	
@@ -34828,7 +35002,348 @@
 	module.exports = TeaShow;
 
 /***/ },
-/* 280 */
+/* 284 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _reactRouter = __webpack_require__(1);
+	
+	var React = __webpack_require__(4),
+	    ReviewActions = __webpack_require__(280),
+	    ReviewStore = __webpack_require__(285),
+	    SessionStore = __webpack_require__(240),
+	    ReviewIndexItem = __webpack_require__(286),
+	    ReviewRating = __webpack_require__(279);
+	
+	var TeaReviewIndex = React.createClass({
+	  displayName: 'TeaReviewIndex',
+	
+	  getInitialState: function getInitialState() {
+	    return { reviews: ReviewStore.all() };
+	  },
+	
+	  componentWillMount: function componentWillMount() {
+	    ReviewActions.fetchReviews({ tea_id: this.props.teaId });
+	    this.listener = ReviewStore.addListener(this._onChange);
+	    this.userListener = SessionStore.addListener(this._onUserChange);
+	  },
+	
+	  _onChange: function _onChange() {
+	    this.setState({ reviews: ReviewStore.all() });
+	  },
+	
+	  _onUserChange: function _onUserChange() {
+	    // if a user logs in, the review information on the page will need to be updated
+	    if (SessionStore.isUserLoggedIn()) {
+	      ReviewActions.fetchReviews({ tea_id: this.props.teaId });
+	    }
+	  },
+	
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.listener.remove();
+	    this.userListener.remove();
+	  },
+	
+	  render: function render() {
+	    var _this = this;
+	
+	    var reviews = Object.keys(this.state.reviews);
+	    if (reviews.length < 1) {
+	      return React.createElement(
+	        'div',
+	        null,
+	        React.createElement(ReviewRating, { onClick: this.props.onClick })
+	      );
+	    }
+	
+	    return React.createElement(
+	      'ul',
+	      null,
+	      reviews.map(function (reviewId) {
+	        var review = _this.state.reviews[reviewId];
+	        return React.createElement(ReviewIndexItem, { key: review.id, review: review });
+	      })
+	    );
+	  }
+	});
+	
+	module.exports = TeaReviewIndex;
+
+/***/ },
+/* 285 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var Store = __webpack_require__(241).Store,
+	    ReviewConstants = __webpack_require__(281),
+	    Dispatcher = __webpack_require__(232),
+	    SessionStore = __webpack_require__(240);
+	
+	var ReviewStore = new Store(Dispatcher);
+	
+	var _reviews = {};
+	
+	function _setReviews(newReviews) {
+	  _reviews = {};
+	  newReviews.forEach(function (review) {
+	    _reviews[review.id] = review;
+	  });
+	};
+	
+	ReviewStore.all = function () {
+	  var reviewsCopy = {};
+	
+	  Object.keys(_reviews).forEach(function (reviewId) {
+	    reviewsCopy[reviewId] = _reviews[reviewId];
+	  });
+	  return reviewsCopy;
+	};
+	
+	ReviewStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case ReviewConstants.RECEIVE_REVIEWS:
+	      _setReviews(payload.reviews);
+	      this.__emitChange();
+	      break;
+	    case ReviewConstants.RECEIVE_REVIEW:
+	      _reviews[payload.review.id] = payload.review;
+	      this.__emitChange();
+	      break;
+	    case ReviewConstants.REMOVE_REVIEW:
+	      delete _reviews[payload.review.id];
+	      this.__emitChange();
+	    default:
+	  }
+	};
+	
+	ReviewStore.find = function (reviewId) {
+	  return _reviews[reviewId];
+	};
+	
+	module.exports = ReviewStore;
+
+/***/ },
+/* 286 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _reactRouter = __webpack_require__(1);
+	
+	var React = __webpack_require__(4),
+	    ReviewRating = __webpack_require__(279);
+	
+	var ReviewIndexItem = React.createClass({
+	  displayName: 'ReviewIndexItem',
+	
+	  render: function render() {
+	    return React.createElement(
+	      'li',
+	      { className: 'review-index-item' },
+	      React.createElement(ReviewRating, { rating: this.props.review.rating, currentUserRating: this.props.review.current_user_rating }),
+	      this.props.review.body
+	    );
+	  }
+	});
+	
+	module.exports = ReviewIndexItem;
+
+/***/ },
+/* 287 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _reactRouter = __webpack_require__(1);
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	var React = __webpack_require__(4),
+	    ReviewActions = __webpack_require__(280),
+	    Errors = __webpack_require__(270),
+	    ErrorStore = __webpack_require__(269),
+	    ReviewStore = __webpack_require__(285);
+	
+	var ReviewForm = React.createClass({
+	  displayName: 'ReviewForm',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      tea_id: this.props.teaId,
+	      rating: '',
+	      body: '',
+	      steep_time: '',
+	      leaf_quantity: '',
+	      temperature: '',
+	      leaf_density: '',
+	      ratingClass: 'rating-selector-5',
+	      errors: ErrorStore.formErrors('createReview')
+	    };
+	  },
+	
+	  componentWillMount: function componentWillMount() {
+	    this.errorListener = ErrorStore.addListener(this._onErrors);
+	    this.listener = ReviewStore.addListener(this._onCreation);
+	  },
+	
+	  _onErrors: function _onErrors() {
+	    console.log('got into onErrors');
+	    if (ErrorStore.form() === 'createReview') {
+	      this.setState({ errors: ErrorStore.formErrors('createReview') });
+	    }
+	  },
+	
+	  _onCreation: function _onCreation() {
+	    _reactRouter.hashHistory.push('teas/' + this.props.teaId);
+	  },
+	
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.errorListener.remove();
+	    this.listener.remove();
+	  },
+	
+	  _handleSubmit: function _handleSubmit(event) {
+	    event.preventDefault();
+	    ReviewActions.createReview(this.state);
+	  },
+	
+	  _handleInput: function _handleInput(event, property, rating) {
+	    if (property === 'rating') {
+	      console.log('updating rating ', rating);
+	      this.setState({ rating: rating });
+	      return;
+	    }
+	    this.setState(_defineProperty({}, property, event.target.value));
+	  },
+	
+	  _updateClass: function _updateClass(event, rating) {
+	    if (rating === '') {
+	      rating = 5;
+	    }
+	    this.setState({ ratingClass: 'rating-selector-' + rating });
+	  },
+	
+	  render: function render() {
+	    var _this = this;
+	
+	    var ratingSelector = React.createElement(
+	      'div',
+	      { className: 'rating-container' },
+	      React.createElement('div', { className: 'rated--by-current-user rating-selector ' + this.state.ratingClass }),
+	      React.createElement(
+	        'ul',
+	        { className: 'rating-selection-fields', onMouseOut: function onMouseOut(event) {
+	            return _this._updateClass(event, _this.state.rating);
+	          } },
+	        React.createElement('li', { className: 'li1', onMouseEnter: function onMouseEnter(event) {
+	            return _this._updateClass(event, 1);
+	          }, onClick: function onClick(event) {
+	            return _this._handleInput(event, 'rating', 1);
+	          } }),
+	        React.createElement('li', { className: 'li2', onMouseEnter: function onMouseEnter(event) {
+	            return _this._updateClass(event, 2);
+	          }, onClick: function onClick(event) {
+	            return _this._handleInput(event, 'rating', 2);
+	          } }),
+	        React.createElement('li', { className: 'li3', onMouseEnter: function onMouseEnter(event) {
+	            return _this._updateClass(event, 3);
+	          }, onClick: function onClick(event) {
+	            return _this._handleInput(event, 'rating', 3);
+	          } }),
+	        React.createElement('li', { className: 'li4', onMouseEnter: function onMouseEnter(event) {
+	            return _this._updateClass(event, 4);
+	          }, onClick: function onClick(event) {
+	            return _this._handleInput(event, 'rating', 4);
+	          } }),
+	        React.createElement('li', { className: 'li5', onMouseEnter: function onMouseEnter(event) {
+	            return _this._updateClass(event, 5);
+	          }, onClick: function onClick(event) {
+	            return _this._handleInput(event, 'rating', 5);
+	          } })
+	      ),
+	      React.createElement('div', { className: 'height-giver' })
+	    );
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(Errors, { errors: this.state.errors }),
+	      React.createElement(
+	        'form',
+	        { onSubmit: this._handleSubmit, className: 'review_form' },
+	        React.createElement(
+	          'label',
+	          null,
+	          'Rating',
+	          ratingSelector
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Review',
+	          React.createElement('textarea', { onChange: function onChange(event) {
+	              return _this._handleInput(event, 'body');
+	            },
+	            placeholder: 'Wow! What a yummy tea!',
+	            value: this.state.body })
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Steep Time (in minutes)',
+	          React.createElement('input', { type: 'number',
+	            step: '0.25',
+	            onChange: function onChange(event) {
+	              return _this._handleInput(event, 'steep_time');
+	            },
+	            value: this.state.steep_time,
+	            placeholder: '0' })
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Temperature (in degrees Celcius)',
+	          React.createElement('input', { type: 'number',
+	            onChange: function onChange(event) {
+	              return _this._handleInput(event, 'temperature');
+	            },
+	            value: this.state.temperature,
+	            placeholder: '80' })
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Leaf Quantity (teaspoons per 8 ounces of liquid)',
+	          React.createElement('input', { type: 'number',
+	            step: '0.25',
+	            onChange: function onChange(event) {
+	              return _this._handleInput(event, 'leaf_quantity');
+	            },
+	            value: this.state.leaf_quantity,
+	            placeholder: '1.5' })
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Leaf Density (grams per ounce)',
+	          React.createElement('input', { type: 'number',
+	            onChange: function onChange(event) {
+	              return _this._handleInput(event, 'leaf_density');
+	            },
+	            value: this.state.leaf_density,
+	            placeholder: '30' })
+	        ),
+	        React.createElement('input', { type: 'submit', value: 'Add Review!', className: 'submit-input' })
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = ReviewForm;
+
+/***/ },
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34837,7 +35352,7 @@
 	    SessionStore = __webpack_require__(240),
 	    OwnedTeaStore = __webpack_require__(276),
 	    OwnershipActions = __webpack_require__(277),
-	    OwnedTeaItem = __webpack_require__(281);
+	    OwnedTeaItem = __webpack_require__(289);
 	
 	var Dashboard = React.createClass({
 	  displayName: 'Dashboard',
@@ -34934,7 +35449,7 @@
 	module.exports = Dashboard;
 
 /***/ },
-/* 281 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34979,7 +35494,7 @@
 	module.exports = OwnedTeaItem;
 
 /***/ },
-/* 282 */
+/* 290 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35014,482 +35529,6 @@
 	});
 	
 	module.exports = CreateTea;
-
-/***/ },
-/* 283 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var ReviewApiUtil = {
-	  createReview: function createReview(reviewParams, callback, errorCallback) {
-	    $.ajax({
-	      url: 'api/reviews',
-	      type: 'POST',
-	      data: { review: reviewParams },
-	      success: callback,
-	      error: function error(resp) {
-	        return errorCallback('createReview', resp);
-	      }
-	    });
-	  },
-	
-	  getReviews: function getReviews(paramHash, callback, errorCallback) {
-	    $.ajax({
-	      url: 'api/reviews',
-	      type: 'GET',
-	      data: { review: paramHash },
-	      success: callback,
-	      error: errorCallback
-	    });
-	  },
-	
-	  getSingleReview: function getSingleReview(reviewId, callback, errorCallback) {
-	    $.ajax({
-	      url: 'api/reviews/' + reviewId,
-	      type: 'GET',
-	      success: callback,
-	      error: errorCallback
-	    });
-	  },
-	
-	  destroyReview: function destroyReview(reviewId, callback, errorCallback) {
-	    $.ajax({
-	      url: 'api/reviews/' + reviewId,
-	      type: 'DELETE',
-	      success: callback,
-	      error: errorCallback
-	    });
-	  }
-	};
-	
-	module.exports = ReviewApiUtil;
-	
-	// rev.fetchReviews({user_id: 3}, (resp) => console.log(resp), (resp) => console.log('err', resp))
-	// rev.createReview({user_id: 3, tea_id: 3, rating: 4, body: 'I love tea', steep_time: 3, leaf_quantity: 1, temperature: 90, leaf_density: 10}, (resp) => console.log(resp), (resp) => console.log('err', resp))
-	// rev.fetchSingleReview(61, (resp) => console.log(resp), (resp) => console.log('err', resp))
-	// rev.destroyReview(61, (resp) => console.log(resp), (resp) => console.log('err', resp))
-
-/***/ },
-/* 284 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var Store = __webpack_require__(241).Store,
-	    ReviewConstants = __webpack_require__(285),
-	    Dispatcher = __webpack_require__(232),
-	    SessionStore = __webpack_require__(240);
-	
-	var ReviewStore = new Store(Dispatcher);
-	
-	var _reviews = {};
-	
-	function _setReviews(newReviews) {
-	  _reviews = {};
-	  newReviews.forEach(function (review) {
-	    _reviews[review.id] = review;
-	  });
-	};
-	
-	ReviewStore.all = function () {
-	  var reviewsCopy = {};
-	
-	  Object.keys(_reviews).forEach(function (reviewId) {
-	    reviewsCopy[reviewId] = _reviews[reviewId];
-	  });
-	  return reviewsCopy;
-	};
-	
-	ReviewStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case ReviewConstants.RECEIVE_REVIEWS:
-	      _setReviews(payload.reviews);
-	      this.__emitChange();
-	      break;
-	    case ReviewConstants.RECEIVE_REVIEW:
-	      _reviews[payload.review.id] = payload.review;
-	      this.__emitChange();
-	      break;
-	    case ReviewConstants.REMOVE_REVIEW:
-	      delete _reviews[payload.review.id];
-	      this.__emitChange();
-	    default:
-	  }
-	};
-	
-	ReviewStore.find = function (reviewId) {
-	  return _reviews[reviewId];
-	};
-	
-	module.exports = ReviewStore;
-
-/***/ },
-/* 285 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var ReviewConstants = {
-	  RECEIVE_REVIEWS: 'RECEIVE_REVIEWS',
-	  RECEIVE_REVIEW: 'RECEIVE_REVIEW',
-	  REMOVE_REVIEW: 'REMOVE_REVIEW'
-	
-	};
-	
-	module.exports = ReviewConstants;
-
-/***/ },
-/* 286 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var ReviewConstants = __webpack_require__(285),
-	    ReviewApiUtil = __webpack_require__(283),
-	    ErrorActions = __webpack_require__(238),
-	    Dispatcher = __webpack_require__(232);
-	
-	var ReviewActions = {
-	  fetchReviews: function fetchReviews(paramHash) {
-	    ReviewApiUtil.getReviews(paramHash, ReviewActions.receiveReviews, ErrorActions.setErrors);
-	  },
-	
-	  fetchSingleReview: function fetchSingleReview(reviewId) {
-	    ReviewApiUtil.getSingleReview(reviewId, ReviewActions.receiveSingleReview, ErrorActions.setErrors);
-	  },
-	
-	  createReview: function createReview(reviewParams) {
-	    ReviewApiUtil.createReview(reviewParams, ReviewActions.receiveSingleReview, ErrorActions.setErrors);
-	  },
-	
-	  destroyReview: function destroyReview(reviewId) {
-	    ReviewApiUtil.destroyReview(reviewId, ReviewActions.removeReview, ErrorActions.setErrors);
-	  },
-	
-	  receiveSingleReview: function receiveSingleReview(review) {
-	    ErrorActions.clearErrors();
-	    var payload = {
-	      actionType: ReviewConstants.RECEIVE_REVIEW,
-	      review: review
-	    };
-	    Dispatcher.dispatch(payload);
-	  },
-	
-	  receiveReviews: function receiveReviews(reviews) {
-	    ErrorActions.clearErrors();
-	    var payload = {
-	      actionType: ReviewConstants.RECEIVE_REVIEWS,
-	      reviews: reviews
-	    };
-	    Dispatcher.dispatch(payload);
-	  },
-	
-	  removeReview: function removeReview(review) {
-	    ErrorActions.clearErrors();
-	    var payload = {
-	      actionType: ReviewConstants.REMOVE_REVIEW,
-	      review: review
-	    };
-	    Dispatcher.dispatch(payload);
-	  }
-	};
-	
-	module.exports = ReviewActions;
-
-/***/ },
-/* 287 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _reactRouter = __webpack_require__(1);
-	
-	var React = __webpack_require__(4),
-	    ReviewActions = __webpack_require__(286),
-	    ReviewStore = __webpack_require__(284),
-	    SessionStore = __webpack_require__(240),
-	    ReviewIndexItem = __webpack_require__(288),
-	    ReviewRating = __webpack_require__(289);
-	
-	var TeaReviewIndex = React.createClass({
-	  displayName: 'TeaReviewIndex',
-	
-	  getInitialState: function getInitialState() {
-	    return { reviews: ReviewStore.all() };
-	  },
-	
-	  componentWillMount: function componentWillMount() {
-	    ReviewActions.fetchReviews({ tea_id: this.props.teaId });
-	    this.listener = ReviewStore.addListener(this._onChange);
-	    this.userListener = SessionStore.addListener(this._onUserChange);
-	  },
-	
-	  _onChange: function _onChange() {
-	    this.setState({ reviews: ReviewStore.all() });
-	  },
-	
-	  _onUserChange: function _onUserChange() {
-	    // if a user logs in, the review information on the page will need to be updated
-	    if (SessionStore.isUserLoggedIn()) {
-	      ReviewActions.fetchReviews({ tea_id: this.props.teaId });
-	    }
-	  },
-	
-	  componentWillUnmount: function componentWillUnmount() {
-	    this.listener.remove();
-	    this.userListener.remove();
-	  },
-	
-	  render: function render() {
-	    var _this = this;
-	
-	    var reviews = Object.keys(this.state.reviews);
-	    if (reviews.length < 1) {
-	      return React.createElement(
-	        'div',
-	        null,
-	        React.createElement(ReviewRating, { onClick: this.props.onClick })
-	      );
-	    }
-	
-	    return React.createElement(
-	      'ul',
-	      null,
-	      reviews.map(function (reviewId) {
-	        var review = _this.state.reviews[reviewId];
-	        return React.createElement(ReviewIndexItem, { key: review.id, review: review });
-	      })
-	    );
-	  }
-	});
-	
-	module.exports = TeaReviewIndex;
-
-/***/ },
-/* 288 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _reactRouter = __webpack_require__(1);
-	
-	var React = __webpack_require__(4),
-	    ReviewRating = __webpack_require__(289);
-	
-	var ReviewIndexItem = React.createClass({
-	  displayName: 'ReviewIndexItem',
-	
-	  render: function render() {
-	    return React.createElement(
-	      'li',
-	      { className: 'review-index-item' },
-	      React.createElement(ReviewRating, { rating: this.props.review.rating, currentUserRating: this.props.review.current_user_rating }),
-	      this.props.review.body
-	    );
-	  }
-	});
-	
-	module.exports = ReviewIndexItem;
-
-/***/ },
-/* 289 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _reactRouter = __webpack_require__(1);
-	
-	var React = __webpack_require__(4),
-	    SessionStore = __webpack_require__(240),
-	    ReviewActions = __webpack_require__(286);
-	
-	var ReviewRating = React.createClass({
-	  displayName: 'ReviewRating',
-	
-	  render: function render() {
-	    if (this.props.rating) {
-	      var scoreClass = void 0;
-	      if (this.props.currentUserRating) {
-	        scoreClass = 'rated rating-' + this.props.currentUserRating;
-	        scoreClass += ' rated--by-current-user';
-	      } else {
-	        scoreClass = 'rated rating-' + this.props.rating;
-	      }
-	      return React.createElement(
-	        'div',
-	        { className: 'rating-container' },
-	        React.createElement('div', { className: scoreClass })
-	      );
-	    } else {
-	      return React.createElement(
-	        'div',
-	        { className: 'unrated' },
-	        React.createElement(
-	          'button',
-	          { className: 'minor-button', onClick: this.props.onClick },
-	          'Be the first to review this tea!'
-	        )
-	      );
-	    }
-	  }
-	});
-	
-	module.exports = ReviewRating;
-
-/***/ },
-/* 290 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-	
-	var React = __webpack_require__(4);
-	
-	var ReviewForm = React.createClass({
-	  displayName: 'ReviewForm',
-	
-	  getInitialState: function getInitialState() {
-	    return {
-	      tea_id: this.props.id,
-	      rating: '',
-	      body: '',
-	      steep_time: '',
-	      leaf_quantity: '',
-	      temperature: '',
-	      leaf_density: '',
-	      ratingClass: 'rating-selector-5'
-	    };
-	  },
-	
-	  _handleSubmit: function _handleSubmit() {},
-	
-	  _handleInput: function _handleInput(event, property, rating) {
-	    if (property === 'rating') {
-	      this.setState({ rating: rating });
-	      return;
-	    }
-	    this.setState(_defineProperty({}, property, event.target.value));
-	  },
-	
-	  _updateClass: function _updateClass(event, rating) {
-	    if (rating === '') {
-	      rating = 5;
-	    }
-	    this.setState({ ratingClass: 'rating-selector-' + rating });
-	  },
-	
-	  render: function render() {
-	    var _this = this;
-	
-	    var ratingSelector = React.createElement(
-	      'div',
-	      { className: 'rating-container' },
-	      React.createElement('div', { className: 'rated--by-current-user rating-selector ' + this.state.ratingClass }),
-	      React.createElement(
-	        'ul',
-	        { className: 'rating-selection-fields', onMouseOut: function onMouseOut(event) {
-	            return _this._updateClass(event, _this.state.rating);
-	          } },
-	        React.createElement('li', { className: 'li1', onMouseEnter: function onMouseEnter(event) {
-	            return _this._updateClass(event, 1);
-	          }, onClick: function onClick(event) {
-	            return _this._handleInput(event, 'rating', 1);
-	          } }),
-	        React.createElement('li', { className: 'li2', onMouseEnter: function onMouseEnter(event) {
-	            return _this._updateClass(event, 2);
-	          }, onClick: function onClick(event) {
-	            return _this._handleInput(event, 'rating', 2);
-	          } }),
-	        React.createElement('li', { className: 'li3', onMouseEnter: function onMouseEnter(event) {
-	            return _this._updateClass(event, 3);
-	          }, onClick: function onClick(event) {
-	            return _this._handleInput(event, 'rating', 3);
-	          } }),
-	        React.createElement('li', { className: 'li4', onMouseEnter: function onMouseEnter(event) {
-	            return _this._updateClass(event, 4);
-	          }, onClick: function onClick(event) {
-	            return _this._handleInput(event, 'rating', 4);
-	          } }),
-	        React.createElement('li', { className: 'li5', onMouseEnter: function onMouseEnter(event) {
-	            return _this._updateClass(event, 5);
-	          }, onClick: function onClick(event) {
-	            return _this._handleInput(event, 'rating', 5);
-	          } })
-	      ),
-	      React.createElement('div', { className: 'height-giver' })
-	    );
-	    return React.createElement(
-	      'form',
-	      { onSubmit: this._handleSubmit, className: 'review_form' },
-	      React.createElement(
-	        'label',
-	        null,
-	        'Rating',
-	        ratingSelector
-	      ),
-	      React.createElement(
-	        'label',
-	        null,
-	        'Review',
-	        React.createElement('textarea', { onChange: function onChange(event) {
-	            return _this._handleInput(event, 'body');
-	          },
-	          placeholder: 'Wow! What a yummy tea!',
-	          value: this.state.body })
-	      ),
-	      React.createElement(
-	        'label',
-	        null,
-	        'Steep Time (in minutes)',
-	        React.createElement('input', { type: 'number',
-	          step: '0.25',
-	          onChange: function onChange(event) {
-	            return _this._handleInput(event, 'steep_time');
-	          },
-	          value: this.state.steep_time,
-	          placeholder: '0' })
-	      ),
-	      React.createElement(
-	        'label',
-	        null,
-	        'Temperature (in degrees Celcius)',
-	        React.createElement('input', { type: 'number',
-	          onChange: function onChange(event) {
-	            return _this._handleInput(event, 'temperature');
-	          },
-	          value: this.state.temperature,
-	          placeholder: '80' })
-	      ),
-	      React.createElement(
-	        'label',
-	        null,
-	        'Leaf Quantity (teaspoons per 8 ounces of liquid)',
-	        React.createElement('input', { type: 'number',
-	          step: '0.25',
-	          onChange: function onChange(event) {
-	            return _this._handleInput(event, 'leaf_quantity');
-	          },
-	          value: this.state.leaf_quantity,
-	          placeholder: '1.5' })
-	      ),
-	      React.createElement(
-	        'label',
-	        null,
-	        'Leaf Density (grams per ounce)',
-	        React.createElement('input', { type: 'number',
-	          onChange: function onChange(event) {
-	            return _this._handleInput(event, 'leaf_density');
-	          },
-	          value: this.state.leaf_density,
-	          placeholder: '30' })
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = ReviewForm;
 
 /***/ }
 /******/ ]);
