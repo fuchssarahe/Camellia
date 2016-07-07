@@ -12,7 +12,8 @@ const React = require('react'),
       Dashboard = require('./components/dashboard'),
       ReviewActions = window.actions = require('./actions/review_actions'),
       ReviewStore = window.store = require('./stores/review_store'),
-      CreateTea = require('./components/create_tea');
+      CreateTea = require('./components/create_tea'),
+      ReviewForm = require('./components/review_form');
 
 const routes =
   <Route path='/' component={App} >

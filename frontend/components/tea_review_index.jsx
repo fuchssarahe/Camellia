@@ -2,7 +2,9 @@ import { Link, hashHistory } from 'react-router';
 const React = require('react'),
       ReviewActions = require('../actions/review_actions'),
       ReviewStore = require('../stores/review_store'),
-      ReviewIndexItem = require('./review_index_item');
+      SessionStore = require('../stores/session_store'),
+      ReviewIndexItem = require('./review_index_item'),
+      ReviewRating = require('./review_rating');
 
 const TeaReviewIndex = React.createClass({
   getInitialState: function () {
@@ -12,21 +14,39 @@ const TeaReviewIndex = React.createClass({
   componentWillMount: function () {
     ReviewActions.fetchReviews({tea_id: this.props.teaId})
     this.listener = ReviewStore.addListener(this._onChange);
+    this.userListener = SessionStore.addListener(this._onUserChange);
   },
 
   _onChange: function () {
     this.setState( { reviews: ReviewStore.all() } )
   },
 
+  _onUserChange: function () {
+    // if a user logs in, the review information on the page will need to be updated
+    if (SessionStore.isUserLoggedIn()) {
+      ReviewActions.fetchReviews({tea_id: this.props.teaId})
+    }
+  },
+
   componentWillUnmount: function () {
     this.listener.remove();
+    this.userListener.remove();
   },
 
   render: function () {
+    const reviews = Object.keys(this.state.reviews)
+    if (reviews.length < 1) {
+      return (
+        <div>
+          <ReviewRating onClick={this.props.onClick}/>
+        </div>
+      )
+    }
+
     return (
       <ul>
         {
-          Object.keys(this.state.reviews).map( (reviewId) => {
+          reviews.map( (reviewId) => {
             const review = this.state.reviews[reviewId]
             return <ReviewIndexItem key={review.id} review={review}/>
           })
