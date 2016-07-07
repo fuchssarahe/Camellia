@@ -1,9 +1,14 @@
-const React = require('react');
+import { hashHistory } from 'react-router';
+const React = require('react'),
+      ReviewActions = require('../actions/review_actions'),
+      Errors = require('./errors'),
+      ErrorStore = require('../stores/errors_store'),
+      ReviewStore = require('../stores/review_store');
 
 const ReviewForm = React.createClass({
   getInitialState: function () {
     return ({
-      tea_id: this.props.id,
+      tea_id: this.props.teaId,
       rating: '',
       body: '',
       steep_time: '',
@@ -11,16 +16,40 @@ const ReviewForm = React.createClass({
       temperature: '',
       leaf_density: '',
       ratingClass: 'rating-selector-5',
+      errors: ErrorStore.formErrors('createReview')
     })
 
   },
 
-  _handleSubmit: function () {
+  componentWillMount: function () {
+    this.errorListener = ErrorStore.addListener(this._onErrors);
+    this.listener = ReviewStore.addListener(this._onCreation)
+  },
 
+  _onErrors: function () {
+    console.log('got into onErrors');
+    if (ErrorStore.form() === 'createReview') {
+      this.setState({errors: ErrorStore.formErrors('createReview') });
+    }
+  },
+
+  _onCreation: function () {
+    hashHistory.push( 'teas/' + this.props.teaId );
+  },
+
+  componentWillUnmount: function () {
+    this.errorListener.remove();
+    this.listener.remove();
+  },
+
+  _handleSubmit: function (event) {
+    event.preventDefault();
+    ReviewActions.createReview(this.state);
   },
 
   _handleInput: function (event, property, rating) {
     if (property === 'rating') {
+      console.log('updating rating ', rating);
       this.setState({rating: rating});
       return;
     }
@@ -52,47 +81,52 @@ const ReviewForm = React.createClass({
       </div>
     )
     return (
-      <form onSubmit={this._handleSubmit} className='review_form'>
-        <label>Rating
-          {ratingSelector}
-        </label>
+      <div>
+        <Errors errors={this.state.errors}/>
+        <form onSubmit={this._handleSubmit} className='review_form'>
+          <label>Rating
+            {ratingSelector}
+          </label>
 
-        <label>Review
-          <textarea onChange={(event) => this._handleInput(event, 'body')}
-                    placeholder='Wow! What a yummy tea!'
-                    value={this.state.body}></textarea>
-        </label>
+          <label>Review
+            <textarea onChange={(event) => this._handleInput(event, 'body')}
+                      placeholder='Wow! What a yummy tea!'
+                      value={this.state.body}></textarea>
+          </label>
 
-        <label>Steep Time (in minutes)
-          <input type="number"
-                 step="0.25"
-                 onChange={(event) => this._handleInput(event, 'steep_time')}
-                 value={this.state.steep_time}
-                 placeholder='0'/>
-        </label>
+          <label>Steep Time (in minutes)
+            <input type="number"
+                   step="0.25"
+                   onChange={(event) => this._handleInput(event, 'steep_time')}
+                   value={this.state.steep_time}
+                   placeholder='0'/>
+          </label>
 
-        <label>Temperature (in degrees Celcius)
-          <input type="number"
-                 onChange={(event) => this._handleInput(event, 'temperature')}
-                 value={this.state.temperature}
-                 placeholder='80'/>
-        </label>
+          <label>Temperature (in degrees Celcius)
+            <input type="number"
+                   onChange={(event) => this._handleInput(event, 'temperature')}
+                   value={this.state.temperature}
+                   placeholder='80'/>
+          </label>
 
-        <label>Leaf Quantity (teaspoons per 8 ounces of liquid)
-          <input type="number"
-                 step="0.25"
-                 onChange={(event) => this._handleInput(event, 'leaf_quantity')}
-                 value={this.state.leaf_quantity}
-                 placeholder='1.5'/>
-        </label>
+          <label>Leaf Quantity (teaspoons per 8 ounces of liquid)
+            <input type="number"
+                   step="0.25"
+                   onChange={(event) => this._handleInput(event, 'leaf_quantity')}
+                   value={this.state.leaf_quantity}
+                   placeholder='1.5'/>
+          </label>
 
-        <label>Leaf Density (grams per ounce)
-          <input type="number"
-                 onChange={(event) => this._handleInput(event, 'leaf_density')}
-                 value={this.state.leaf_density}
-                 placeholder='30'/>
-        </label>
-      </form>
+          <label>Leaf Density (grams per ounce)
+            <input type="number"
+                   onChange={(event) => this._handleInput(event, 'leaf_density')}
+                   value={this.state.leaf_density}
+                   placeholder='30'/>
+          </label>
+
+          <input type="submit" value="Add Review!" className="submit-input" />
+        </form>
+      </div>
     )
   }
 });

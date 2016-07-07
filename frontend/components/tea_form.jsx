@@ -19,7 +19,7 @@ const TeaForm = React.createClass({
       leaf_density: '',
       retailer: '',
       image: '',
-      errors: ErrorStore.formErrors()
+      errors: ErrorStore.formErrors('newTea')
     }
   },
 

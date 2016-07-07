@@ -20,6 +20,7 @@ ErrorsStore.formErrors = function (form) {
 };
 
 ErrorsStore.form = function () {
+  console.log('registering form');
   return _form;
 };
 

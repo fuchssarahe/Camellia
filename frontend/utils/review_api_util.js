@@ -5,7 +5,7 @@ const ReviewApiUtil = {
       type: 'POST',
       data: {review: reviewParams},
       success: callback,
-      error: (resp) => errorCallback('createReview', resp)
+      error: (err) => errorCallback('createReview', err)
     })
   },
 

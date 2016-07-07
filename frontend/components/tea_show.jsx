@@ -63,7 +63,7 @@ const TeaShow = React.createClass({
 
     let reviewForm;
     if (this.state.shouldShowReview) {
-      reviewForm = <section className='panel_section'><ReviewForm /></section>
+      reviewForm = <section className='panel_section'><ReviewForm teaId={this.props.params.id}/></section>
     }
 
     return (
