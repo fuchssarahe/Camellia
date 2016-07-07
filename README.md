@@ -25,9 +25,9 @@ At a minimum, this app will satisfy the following criteria:
   - [x] owned teas will appear on the dashboard for the user
   - [x] owned teas aren't visible to other users
 - [ ] Reviews
-  - [ ] users can review teas
-  - [ ] reviews appear on the profile for a tea
-  - [ ] user reviews are averaged into a rating for a tea
+  - [x] users can review teas
+  - [x] reviews appear on the profile for a tea
+  - [x] user reviews are averaged into a rating for a tea
 
 ## Design Docs
 * [View Wireframes][views]
@@ -110,12 +110,11 @@ user interface.
 
 **Objective:** Reviews belong to a tea and a user. Review information for a tea appears in the tea profile. The current user's review appears in the left-hand panel of the tea profile.
 
-- [ ] create `Review` model
+- [x] create `Review` model
 - [ ] build out API, Flux loop, and components for:
-  - [ ] `ReviewsIndex`
+  - [x] `ReviewsIndex`
   - [ ] `ReviewIndexItem`
-  - [ ] `ReviewHeader`
-  - [ ] `ReviewForm`
+  - [x] `ReviewForm`
 - [ ] Use CSS to style new views
 
 ### Bonus Features (TBD)
