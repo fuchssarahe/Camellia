@@ -36,11 +36,11 @@ const Dashboard = React.createClass({
   componentWillUnmount: function () {
     this.listener.remove();
     this.teaListener.remove();
+    this.reviewListener.remove();
   },
 
   render: function () {
     let fullReviews;
-    console.log(this.state.reviews);
     const reviews = Object.keys(this.state.reviews)
     if (this.state.reviews === {}) {
       fullReviews = "You haven't reviewed any teas yet!";
@@ -49,7 +49,7 @@ const Dashboard = React.createClass({
         reviews.map( (reviewId) => {
           const review = this.state.reviews[reviewId];
           return (
-            <li style={{width: '100%'}}>
+            <li style={{width: '100%'}} key={reviewId}>
               <Link to={'teas/' + review.tea_id}>
                 <h2 className='panel_main-subheading'>{review.tea_name}</h2>
                 <FullUserReview review={review} key={reviewId} />
