@@ -60,6 +60,7 @@ const App = React.createClass({
     } else {
       buttons =
       <ul className='auth-buttons'>
+        <li><button onClick={this._navToExplore} className='minor-button'>Explore</button></li>
         <li><button onClick={this._navToSignup} className="minor-button">Sign Up</button></li>
         <li><button onClick={this._navToLogin} className="minor-button">Login</button></li>
         <li><button onClick={this._loginGuest}>Demo Acount</button></li>

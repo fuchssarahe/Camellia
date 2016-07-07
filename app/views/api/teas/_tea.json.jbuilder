@@ -10,4 +10,6 @@ json.extract! tea, :id,
                    :retailer,
                    :image_public_id,
                    :rating
-json.current_user_rating tea.user_rating(current_user.id)
+if current_user
+  json.current_user_rating tea.user_rating(current_user.id)
+end
