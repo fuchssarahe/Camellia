@@ -47,4 +47,8 @@ class Tea < ActiveRecord::Base
     nil
   end
 
+  def user_rating(user_id)
+    self.reviews.where(user_id: user_id).average(:rating)
+  end
+
 end

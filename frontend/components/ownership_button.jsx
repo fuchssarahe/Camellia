@@ -5,15 +5,22 @@ const React = require('react'),
 
 const OwnershipButton = React.createClass({
   componentWillMount: function () {
+    OwnershipActions.fetchOwnedTeas();
     this.listener = SessionStore.addListener(this._onChange);
+    this.ownedListener = OwnedTeaStore.addListener(this._onOwnedTeaChange)
   },
 
   _onChange: function () {
     this.forceUpdate();
   },
 
+  _onOwnedTeaChange: function () {
+    this.forceUpdate();
+  },
+
   componentWillUnmount: function () {
     this.listener.remove();
+    this.ownedListener.remove();
   },
 
   _toggleOwnership: function () {
@@ -22,6 +29,8 @@ const OwnershipButton = React.createClass({
     } else {
       OwnershipActions.createOwnership(this.props.teaId);
     }
+
+    OwnershipActions.fetchOwnedTeas();
   },
 
   render: function () {

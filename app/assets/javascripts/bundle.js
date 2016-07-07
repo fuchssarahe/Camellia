@@ -61,7 +61,8 @@
 	    Dashboard = __webpack_require__(280),
 	    ReviewActions = window.actions = __webpack_require__(286),
 	    ReviewStore = window.store = __webpack_require__(284),
-	    CreateTea = __webpack_require__(282);
+	    CreateTea = __webpack_require__(282),
+	    ReviewForm = __webpack_require__(290);
 	
 	var routes = React.createElement(
 	  _reactRouter.Route,
@@ -34334,7 +34335,7 @@
 	                this.props.tea.name
 	              )
 	            ),
-	            React.createElement(ReviewRating, { rating: this.props.tea.rating }),
+	            React.createElement(ReviewRating, { rating: this.props.tea.rating, currentUserRating: this.props.current_user_rating }),
 	            React.createElement(
 	              'p',
 	              null,
@@ -34390,15 +34391,22 @@
 	  displayName: 'OwnershipButton',
 	
 	  componentWillMount: function componentWillMount() {
+	    OwnershipActions.fetchOwnedTeas();
 	    this.listener = SessionStore.addListener(this._onChange);
+	    this.ownedListener = OwnedTeaStore.addListener(this._onOwnedTeaChange);
 	  },
 	
 	  _onChange: function _onChange() {
 	    this.forceUpdate();
 	  },
 	
+	  _onOwnedTeaChange: function _onOwnedTeaChange() {
+	    this.forceUpdate();
+	  },
+	
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.listener.remove();
+	    this.ownedListener.remove();
 	  },
 	
 	  _toggleOwnership: function _toggleOwnership() {
@@ -34407,6 +34415,8 @@
 	    } else {
 	      OwnershipActions.createOwnership(this.props.teaId);
 	    }
+	
+	    OwnershipActions.fetchOwnedTeas();
 	  },
 	
 	  render: function render() {
@@ -34596,13 +34606,14 @@
 	    TeaStore = __webpack_require__(272),
 	    TeaActions = __webpack_require__(265),
 	    OwnershipButton = __webpack_require__(275),
-	    TeaReviewIndex = __webpack_require__(287);
+	    TeaReviewIndex = __webpack_require__(287),
+	    ReviewForm = __webpack_require__(290);
 	
 	var TeaShow = React.createClass({
 	  displayName: 'TeaShow',
 	
 	  getInitialState: function getInitialState() {
-	    return { tea: TeaStore.find(parseInt(this.props.params.id)) };
+	    return { tea: TeaStore.find(parseInt(this.props.params.id)), shouldShowReview: false };
 	  },
 	
 	  componentWillMount: function componentWillMount() {
@@ -34620,6 +34631,10 @@
 	
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.listener.remove();
+	  },
+	
+	  _mountReviewForm: function _mountReviewForm() {
+	    this.setState({ shouldShowReview: true });
 	  },
 	
 	  render: function render() {
@@ -34646,6 +34661,15 @@
 	      figureContents = React.createElement('img', { src: this.state.tea.image_public_id, alt: 'Tea Image', className: 'index-item_image' });
 	    } else {
 	      figureContents = React.createElement('div', { className: 'index-item_image--empty profile_image--empty' });
+	    }
+	
+	    var reviewForm = void 0;
+	    if (this.state.shouldShowReview) {
+	      reviewForm = React.createElement(
+	        'section',
+	        { className: 'panel_section' },
+	        React.createElement(ReviewForm, null)
+	      );
 	    }
 	
 	    return React.createElement(
@@ -34677,7 +34701,8 @@
 	            ),
 	            React.createElement(OwnershipButton, { teaId: this.state.tea.id, className: 'panel_section-content' })
 	          )
-	        )
+	        ),
+	        reviewForm
 	      ),
 	      React.createElement(
 	        'article',
@@ -34756,7 +34781,7 @@
 	                  React.createElement('span', { className: 'icon-leaf' }),
 	                  ' Leaf Quantity: ',
 	                  this.state.tea.leaf_quantity,
-	                  ' tsp'
+	                  ' tsp/8oz'
 	                ),
 	                React.createElement(
 	                  'li',
@@ -34778,7 +34803,7 @@
 	            { className: 'panel_section-header' },
 	            'Reviews'
 	          ),
-	          React.createElement(TeaReviewIndex, { className: 'panel_section-content', teaId: this.props.params.id })
+	          React.createElement(TeaReviewIndex, { className: 'panel_section-content', teaId: this.props.params.id, onClick: this._mountReviewForm })
 	        )
 	      )
 	    );
@@ -35044,24 +35069,12 @@
 	var ReviewStore = new Store(Dispatcher);
 	
 	var _reviews = {};
-	var _currentUserReviews = [];
 	
 	function _setReviews(newReviews) {
 	  _reviews = {};
 	  newReviews.forEach(function (review) {
 	    _reviews[review.id] = review;
-	    _processReviewForCurrentUser(review);
 	  });
-	};
-	
-	function _processReviewForCurrentUser(review, shouldDelete) {
-	  if (shouldDelete === true) {
-	    var index = _currentUserReviews.indexOf(review);
-	    _currentUserReviews.splice(index, 1);
-	  }
-	  if (SessionStore.isUserLoggedIn() && view.user_id === SessionStore.currentUser().id) {
-	    _currentUserReviews.push(review);
-	  }
 	};
 	
 	ReviewStore.all = function () {
@@ -35081,12 +35094,10 @@
 	      break;
 	    case ReviewConstants.RECEIVE_REVIEW:
 	      _reviews[payload.review.id] = payload.review;
-	      _processReviewForCurrentUser(review);
 	      this.__emitChange();
 	      break;
 	    case ReviewConstants.REMOVE_REVIEW:
 	      delete _reviews[payload.review.id];
-	      _processReviewForCurrentUser(review, true);
 	      this.__emitChange();
 	    default:
 	  }
@@ -35094,12 +35105,6 @@
 	
 	ReviewStore.find = function (reviewId) {
 	  return _reviews[reviewId];
-	};
-	
-	ReviewStore.findUserReview = function (teaId) {
-	  pertinentReviews = [];
-	  Object.keys(_currentUserReviews);
-	  return _currentUserReviews;
 	};
 	
 	module.exports = ReviewStore;
@@ -35188,7 +35193,9 @@
 	var React = __webpack_require__(4),
 	    ReviewActions = __webpack_require__(286),
 	    ReviewStore = __webpack_require__(284),
-	    ReviewIndexItem = __webpack_require__(288);
+	    SessionStore = __webpack_require__(240),
+	    ReviewIndexItem = __webpack_require__(288),
+	    ReviewRating = __webpack_require__(289);
 	
 	var TeaReviewIndex = React.createClass({
 	  displayName: 'TeaReviewIndex',
@@ -35200,23 +35207,41 @@
 	  componentWillMount: function componentWillMount() {
 	    ReviewActions.fetchReviews({ tea_id: this.props.teaId });
 	    this.listener = ReviewStore.addListener(this._onChange);
+	    this.userListener = SessionStore.addListener(this._onUserChange);
 	  },
 	
 	  _onChange: function _onChange() {
 	    this.setState({ reviews: ReviewStore.all() });
 	  },
 	
+	  _onUserChange: function _onUserChange() {
+	    // if a user logs in, the review information on the page will need to be updated
+	    if (SessionStore.isUserLoggedIn()) {
+	      ReviewActions.fetchReviews({ tea_id: this.props.teaId });
+	    }
+	  },
+	
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.listener.remove();
+	    this.userListener.remove();
 	  },
 	
 	  render: function render() {
 	    var _this = this;
 	
+	    var reviews = Object.keys(this.state.reviews);
+	    if (reviews.length < 1) {
+	      return React.createElement(
+	        'div',
+	        null,
+	        React.createElement(ReviewRating, { onClick: this.props.onClick })
+	      );
+	    }
+	
 	    return React.createElement(
 	      'ul',
 	      null,
-	      Object.keys(this.state.reviews).map(function (reviewId) {
+	      reviews.map(function (reviewId) {
 	        var review = _this.state.reviews[reviewId];
 	        return React.createElement(ReviewIndexItem, { key: review.id, review: review });
 	      })
@@ -35244,7 +35269,7 @@
 	    return React.createElement(
 	      'li',
 	      { className: 'review-index-item' },
-	      React.createElement(ReviewRating, { rating: this.props.review.rating }),
+	      React.createElement(ReviewRating, { rating: this.props.review.rating, currentUserRating: this.props.review.current_user_rating }),
 	      this.props.review.body
 	    );
 	  }
@@ -35260,14 +35285,22 @@
 	
 	var _reactRouter = __webpack_require__(1);
 	
-	var React = __webpack_require__(4);
+	var React = __webpack_require__(4),
+	    SessionStore = __webpack_require__(240),
+	    ReviewActions = __webpack_require__(286);
 	
 	var ReviewRating = React.createClass({
 	  displayName: 'ReviewRating',
 	
 	  render: function render() {
 	    if (this.props.rating) {
-	      var scoreClass = 'rated rating-' + this.props.rating;
+	      var scoreClass = void 0;
+	      if (this.props.currentUserRating) {
+	        scoreClass = 'rated rating-' + this.props.currentUserRating;
+	        scoreClass += ' rated--by-current-user';
+	      } else {
+	        scoreClass = 'rated rating-' + this.props.rating;
+	      }
 	      return React.createElement(
 	        'div',
 	        { className: 'rating-container' },
@@ -35279,7 +35312,7 @@
 	        { className: 'unrated' },
 	        React.createElement(
 	          'button',
-	          { className: 'minor-button' },
+	          { className: 'minor-button', onClick: this.props.onClick },
 	          'Be the first to review this tea!'
 	        )
 	      );
@@ -35288,6 +35321,28 @@
 	});
 	
 	module.exports = ReviewRating;
+
+/***/ },
+/* 290 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(4);
+	
+	var ReviewForm = React.createClass({
+	  displayName: 'ReviewForm',
+	
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      null,
+	      'Hellow from review form.'
+	    );
+	  }
+	});
+	
+	module.exports = ReviewForm;
 
 /***/ }
 /******/ ]);

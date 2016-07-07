@@ -2,11 +2,12 @@ const React = require('react'),
       TeaStore = require('../stores/tea_store'),
       TeaActions = require('../actions/tea_actions'),
       OwnershipButton = require('./ownership_button'),
-      TeaReviewIndex = require('./tea_review_index');
+      TeaReviewIndex = require('./tea_review_index'),
+      ReviewForm = require('./review_form');
 
 const TeaShow = React.createClass({
   getInitialState: function () {
-    return {tea: TeaStore.find(parseInt(this.props.params.id))}
+    return {tea: TeaStore.find(parseInt(this.props.params.id)), shouldShowReview: false}
   },
 
   componentWillMount: function () {
@@ -24,6 +25,10 @@ const TeaShow = React.createClass({
 
   componentWillUnmount: function () {
     this.listener.remove();
+  },
+
+  _mountReviewForm: function () {
+    this.setState({shouldShowReview: true})
   },
 
   render: function () {
@@ -52,6 +57,11 @@ const TeaShow = React.createClass({
       figureContents = <div className="index-item_image--empty profile_image--empty"></div>
     }
 
+    let reviewForm;
+    if (this.state.shouldShowReview) {
+      reviewForm = <section className='panel_section'><ReviewForm /></section>
+    }
+
     return (
       <div className="cf container">
         <aside className='panel panel_left'>
@@ -65,6 +75,7 @@ const TeaShow = React.createClass({
               <OwnershipButton teaId={this.state.tea.id} className='panel_section-content'/>
             </div>
           </section>
+          {reviewForm}
         </aside>
 
         <article className='panel panel_main'>
@@ -87,7 +98,7 @@ const TeaShow = React.createClass({
                 <ul>
                   <li><span className='icon-stopwatch'/> Steep Time: {this.state.tea.steep_time + ' ' + timeUnits}</li>
                   <li><span className='icon-thermometer-half'/> Temperature: {this.state.tea.temperature} °C</li>
-                  <li><span className='icon-leaf'/> Leaf Quantity: {this.state.tea.leaf_quantity} tsp</li>
+                  <li><span className='icon-leaf'/> Leaf Quantity: {this.state.tea.leaf_quantity} tsp/8oz</li>
                   <li><span className='icon-balance-scale'/> Leaf Density: {this.state.tea.leaf_density} g/tsp</li>
                 </ul>
               </li>
@@ -95,7 +106,7 @@ const TeaShow = React.createClass({
           </section>
           <section className='panel_section'>
             <h2 className="panel_section-header">Reviews</h2>
-            <TeaReviewIndex className='panel_section-content' teaId={this.props.params.id}/>
+            <TeaReviewIndex className='panel_section-content' teaId={this.props.params.id} onClick={this._mountReviewForm}/>
           </section>
         </article>
 

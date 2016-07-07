@@ -26,7 +26,7 @@ const TeaIndexItem = React.createClass({
               <div className="panel_main-subheading">
                 <p>{this.props.tea.name}</p>
               </div>
-              <ReviewRating rating={this.props.tea.rating} />
+              <ReviewRating rating={this.props.tea.rating} currentUserRating={this.props.current_user_rating}/>
               <p><span className={"icon-leaf" + ' ' + color} />Type: {this.props.tea.tea_type}</p>
               <p><span className='icon-earth' />Region: {this.props.tea.region}</p>
               <p><span className="icon-office" />Retailer: {this.props.tea.retailer}</p>
