@@ -88,10 +88,12 @@
 
 .panel_section a:hover {
   background: darken(#f9f9f9, 10%);
+  transition: all 0.5s ease;
 }
 
 .panel_section > a:hover .panel_main-subheading {
   text-decoration: underline;
+  transition: all 0.5s ease;
 }
 
 .green {
