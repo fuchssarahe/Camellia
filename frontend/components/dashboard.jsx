@@ -21,6 +21,10 @@ const Dashboard = React.createClass({
     this.reviewListener = ReviewStore.addListener(this._onReviewChange);
   },
 
+  componentWillReceiveProps: function () {
+    ReviewActions.fetchReviews({user_id: this.state.currentUser.id});
+  },
+
   _onChange: function () {
     this.setState({currentUser: SessionStore.currentUser()});
   },
@@ -52,7 +56,7 @@ const Dashboard = React.createClass({
             <li style={{width: '100%'}} key={reviewId}>
               <Link to={'teas/' + review.tea_id}>
                 <h2 className='panel_main-subheading'>{review.tea_name}</h2>
-                <FullUserReview review={review} key={reviewId} />
+                <FullUserReview review={review} key={reviewId} className='user-review'/>
               </Link>
             </li>
           )
