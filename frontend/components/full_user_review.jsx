@@ -31,7 +31,7 @@ const FullUserReview = React.createClass({
       leafDensity = <li><span className='icon-balance-scale'/> Leaf Density: {this.props.review.leaf_density} g/tsp</li>
     }
     return (
-      <ul>
+      <ul className={this.props.className}>
           <li><ReviewRating rating= {this.props.review.rating} currentUserRating={this.props.review.rating}/></li>
           <li><span className='icon-pencil2' />{this.props.review.body}</li>
           {steepTime}

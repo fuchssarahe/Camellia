@@ -35076,6 +35076,10 @@
 	    this.reviewListener = ReviewStore.addListener(this._onReviewChange);
 	  },
 	
+	  componentWillReceiveProps: function componentWillReceiveProps() {
+	    ReviewActions.fetchReviews({ user_id: this.state.currentUser.id });
+	  },
+	
 	  _onChange: function _onChange() {
 	    this.setState({ currentUser: SessionStore.currentUser() });
 	  },
@@ -35115,7 +35119,7 @@
 	              { className: 'panel_main-subheading' },
 	              review.tea_name
 	            ),
-	            React.createElement(FullUserReview, { review: review, key: reviewId })
+	            React.createElement(FullUserReview, { review: review, key: reviewId, className: 'user-review' })
 	          )
 	        );
 	      });
@@ -35700,7 +35704,7 @@
 	    }
 	    return React.createElement(
 	      'ul',
-	      null,
+	      { className: this.props.className },
 	      React.createElement(
 	        'li',
 	        null,

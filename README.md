@@ -24,7 +24,7 @@ At a minimum, this app will satisfy the following criteria:
   - [x] users can add teas to their personal inventory
   - [x] owned teas will appear on the dashboard for the user
   - [x] owned teas aren't visible to other users
-- [ ] Reviews
+- [x] Reviews
   - [x] users can review teas
   - [x] reviews appear on the profile for a tea
   - [x] user reviews are averaged into a rating for a tea
@@ -111,11 +111,11 @@ user interface.
 **Objective:** Reviews belong to a tea and a user. Review information for a tea appears in the tea profile. The current user's review appears in the left-hand panel of the tea profile.
 
 - [x] create `Review` model
-- [ ] build out API, Flux loop, and components for:
+- [x] build out API, Flux loop, and components for:
   - [x] `ReviewsIndex`
-  - [ ] `ReviewIndexItem`
+  - [x] `ReviewIndexItem`
   - [x] `ReviewForm`
-- [ ] Use CSS to style new views
+- [x] Use CSS to style new views
 
 ### Bonus Features (TBD)
 - [ ] Follows
