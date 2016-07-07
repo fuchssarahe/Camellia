@@ -69,3 +69,8 @@
 .search-bar:focus + .search-suggestions {
   display: block;
 }
+
+.search-suggestion_subheading {
+  font-size: 12px;
+  font-style: italic;
+}

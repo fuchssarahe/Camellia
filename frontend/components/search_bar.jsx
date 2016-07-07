@@ -42,6 +42,21 @@ const SearchBar = React.createClass({
   },
 
   render: function () {
+
+    let placeholderText;
+    switch (this.state.searchType) {
+      case 'tea':
+        placeholderText = 'bright and...';
+        break;
+      case 'region':
+        placeholderText = 'China';
+        break;
+      case 'tea_type':
+        placeholderText = 'Herbal';  
+        break;
+      default:
+
+    }
     return (
       <div className="search-container">
         <form className="tea-search" onSubmit={this._searchAndNavAway}>
@@ -55,12 +70,12 @@ const SearchBar = React.createClass({
               <input type='text'
                      onChange={this._updateSuggestions}
                      className="search-bar"
-                     placeholder="Search for a tea!"/>
+                     placeholder={placeholderText}/>
 
               <ul className='search-suggestions'>
                 {
                   this.state.suggestions.map( (suggestion) => {
-                    return <SearchSuggestion key={suggestion.suggestion} suggestion={suggestion}/>;
+                    return <SearchSuggestion key={suggestion.suggestion} suggestion={suggestion} query={this.state.query}/>;
                   })
                 }
               </ul>
