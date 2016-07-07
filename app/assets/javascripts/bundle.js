@@ -59,8 +59,6 @@
 	    TeaShow = __webpack_require__(283),
 	    TeaForm = __webpack_require__(273),
 	    Dashboard = __webpack_require__(289),
-	    ReviewActions = window.actions = __webpack_require__(280),
-	    ReviewStore = window.store = __webpack_require__(285),
 	    CreateTea = __webpack_require__(291),
 	    ReviewForm = __webpack_require__(287);
 	
@@ -26678,7 +26676,7 @@
 	};
 	
 	SessionStore.isUserLoggedIn = function () {
-	  return _currentUser.username ? true : false;
+	  return _currentUser.id ? true : false;
 	};
 	
 	module.exports = SessionStore;
@@ -33982,7 +33980,7 @@
 	        React.createElement(
 	          'div',
 	          { className: 'panel_main-header panel_main-header--white' },
-	          'These are some of them search results'
+	          'Wow! Teas!'
 	        ),
 	        React.createElement(
 	          'div',
@@ -35545,10 +35543,6 @@
 	    this.listener = SessionStore.addListener(this._onChange);
 	    this.teaListener = OwnedTeaStore.addListener(this._onTeaChange);
 	    this.reviewListener = ReviewStore.addListener(this._onReviewChange);
-	  },
-	
-	  componentWillReceiveProps: function componentWillReceiveProps() {
-	    ReviewActions.fetchReviews({ user_id: this.state.currentUser.id });
 	  },
 	
 	  _onChange: function _onChange() {

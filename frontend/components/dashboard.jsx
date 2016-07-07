@@ -20,11 +20,7 @@ const Dashboard = React.createClass({
     this.teaListener = OwnedTeaStore.addListener(this._onTeaChange);
     this.reviewListener = ReviewStore.addListener(this._onReviewChange);
   },
-
-  componentWillReceiveProps: function () {
-    ReviewActions.fetchReviews({user_id: this.state.currentUser.id});
-  },
-
+  
   _onChange: function () {
     this.setState({currentUser: SessionStore.currentUser()});
   },

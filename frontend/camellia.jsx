@@ -10,8 +10,6 @@ const React = require('react'),
       TeaShow = require('./components/tea_show'),
       TeaForm = require('./components/tea_form'),
       Dashboard = require('./components/dashboard'),
-      ReviewActions = window.actions = require('./actions/review_actions'),
-      ReviewStore = window.store = require('./stores/review_store'),
       CreateTea = require('./components/create_tea'),
       ReviewForm = require('./components/review_form');
 
