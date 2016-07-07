@@ -35,7 +35,7 @@ SessionStore.currentUser = function () {
 };
 
 SessionStore.isUserLoggedIn = function () {
-  return _currentUser.username ? true : false
+  return _currentUser.id ? true : false
 };
 
 
