@@ -23,7 +23,8 @@ const OwnershipButton = React.createClass({
     this.ownedListener.remove();
   },
 
-  _toggleOwnership: function () {
+  _toggleOwnership: function (event) {
+    event.preventDefault();
     if (OwnedTeaStore.find(this.props.teaId)) {
       OwnershipActions.destroyOwnership(this.props.teaId);
     } else {
