@@ -17,12 +17,12 @@ const SearchSuggestion = React.createClass({
   },
 
   render: function () {
-    let className = '';
+    let className = 'search-suggestion';
 
     switch (this.props.suggestion.suggestion_type) {
       case 'tea':
         return (
-          <li onClick={() => this._navToShowPage(this.props.suggestion.tea_id)} >
+          <li onClick={() => this._navToShowPage(this.props.suggestion.tea_id)} className={className}>
             <p>{this.props.suggestion.suggestion}</p>
           </li>
         )
