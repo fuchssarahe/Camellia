@@ -31,7 +31,7 @@ class Tea < ActiveRecord::Base
 
     if limit
       # (limit param determines whether a suggestion is needed or not)
-      selector = 'id, name as search_name'
+      selector = 'id, description, name as search_name'
       suggestion_type = 'tea'
 
       # suggestions = teas.limit(limit).select(selector)

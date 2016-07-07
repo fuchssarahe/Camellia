@@ -33184,6 +33184,22 @@
 	  },
 	
 	  render: function render() {
+	    var _this2 = this;
+	
+	    var placeholderText = void 0;
+	    switch (this.state.searchType) {
+	      case 'tea':
+	        placeholderText = 'bright and...';
+	        break;
+	      case 'region':
+	        placeholderText = 'China';
+	        break;
+	      case 'tea_type':
+	        placeholderText = 'Herbal';
+	        break;
+	      default:
+	
+	    }
 	    return React.createElement(
 	      'div',
 	      { className: 'search-container' },
@@ -33215,12 +33231,12 @@
 	          React.createElement('input', { type: 'text',
 	            onChange: this._updateSuggestions,
 	            className: 'search-bar',
-	            placeholder: 'Search for a tea!' }),
+	            placeholder: placeholderText }),
 	          React.createElement(
 	            'ul',
 	            { className: 'search-suggestions' },
 	            this.state.suggestions.map(function (suggestion) {
-	              return React.createElement(SearchSuggestion, { key: suggestion.suggestion, suggestion: suggestion });
+	              return React.createElement(SearchSuggestion, { key: suggestion.suggestion, suggestion: suggestion, query: _this2.state.query });
 	            })
 	          )
 	        ),
@@ -33446,18 +33462,39 @@
 	    var _this = this;
 	
 	    var className = 'search-suggestion';
+	    var suggestionClass = 'search-suggestion';
 	
 	    switch (this.props.suggestion.suggestion_type) {
 	      case 'tea':
+	        var processedDescription = void 0;
+	        var matchIdx = this.props.suggestion.description.toUpperCase().indexOf(this.props.query.toUpperCase());
+	        if (matchIdx > -1) {
+	          var start = matchIdx - 10;
+	          if (start < 0) {
+	            start = 0;
+	          }
+	          processedDescription = this.props.suggestion.description.slice(start, matchIdx + 25).split(' ');
+	          if (start > 0) {
+	            processedDescription.pop();
+	            processedDescription.shift();
+	          }
+	          processedDescription = processedDescription.join(' ');
+	          processedDescription = '...' + processedDescription + '...';
+	        }
 	        return React.createElement(
 	          'li',
 	          { onClick: function onClick() {
 	              return _this._navToShowPage(_this.props.suggestion.tea_id);
-	            }, className: className },
+	            }, className: suggestionClass },
 	          React.createElement(
 	            'p',
 	            null,
 	            this.props.suggestion.suggestion
+	          ),
+	          React.createElement(
+	            'p',
+	            { className: 'search-suggestion_subheading' },
+	            processedDescription
 	          )
 	        );
 	      case 'region':
@@ -33466,7 +33503,7 @@
 	          'li',
 	          { onClick: function onClick() {
 	              return _this._searchAndNavToIndex(_this.props.suggestion.suggestion_type, _this.props.suggestion.suggestion);
-	            } },
+	            }, className: suggestionClass },
 	          React.createElement('span', { className: className }),
 	          this.props.suggestion.suggestion
 	        );
@@ -33477,7 +33514,7 @@
 	          'li',
 	          { onClick: function onClick() {
 	              return _this._searchAndNavToIndex(_this.props.suggestion.suggestion_type, _this.props.suggestion.suggestion);
-	            } },
+	            }, className: suggestionClass },
 	          React.createElement('span', { className: className }),
 	          this.props.suggestion.suggestion
 	        );
