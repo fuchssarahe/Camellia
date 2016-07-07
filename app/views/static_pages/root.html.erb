@@ -1,6 +1,6 @@
 <% if current_user %>
   <script type="text/javascript">
-      window.currentUser = <%= {"id":current_user.id,"username":current_user.username}.to_json.html_safe %>
+      window.currentUser = <%= {"id":current_user.id,"username":current_user.username, 'date_joined':current_user.date_joined}.to_json.html_safe %>
   </script>
 <% end %>
 

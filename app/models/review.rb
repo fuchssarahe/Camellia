@@ -12,4 +12,8 @@ validates :rating, inclusion: { in: (1..5) }
     self.user.username
   end
 
+  def tea_name
+    self.tea.name
+  end
+
 end

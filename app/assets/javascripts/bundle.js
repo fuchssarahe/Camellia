@@ -58,11 +58,11 @@
 	    TeaIndex = __webpack_require__(271),
 	    TeaShow = __webpack_require__(283),
 	    TeaForm = __webpack_require__(273),
-	    Dashboard = __webpack_require__(288),
+	    Dashboard = __webpack_require__(284),
 	    ReviewActions = window.actions = __webpack_require__(280),
-	    ReviewStore = window.store = __webpack_require__(285),
-	    CreateTea = __webpack_require__(290),
-	    ReviewForm = __webpack_require__(287);
+	    ReviewStore = window.store = __webpack_require__(286),
+	    CreateTea = __webpack_require__(287),
+	    ReviewForm = __webpack_require__(288);
 	
 	var routes = React.createElement(
 	  _reactRouter.Route,
@@ -34791,9 +34791,11 @@
 	    TeaStore = __webpack_require__(272),
 	    TeaActions = __webpack_require__(265),
 	    OwnershipButton = __webpack_require__(275),
-	    TeaReviewIndex = __webpack_require__(284),
-	    ReviewForm = __webpack_require__(287),
-	    ReviewRating = __webpack_require__(279);
+	    TeaReviewIndex = __webpack_require__(289),
+	    ReviewForm = __webpack_require__(288),
+	    ReviewRating = __webpack_require__(279),
+	    ReviewStore = __webpack_require__(286),
+	    FullUserReview = __webpack_require__(291);
 	
 	var TeaShow = React.createClass({
 	  displayName: 'TeaShow',
@@ -34803,12 +34805,13 @@
 	    if (window.location.hash.includes('review')) {
 	      showReview = true;
 	    }
-	    return { tea: TeaStore.find(parseInt(this.props.params.id)), shouldShowReview: showReview };
+	    return { tea: TeaStore.find(parseInt(this.props.params.id)), shouldShowReview: showReview, currentUserReview: ReviewStore.currentUserReview(parseInt(this.props.params.id)) };
 	  },
 	
 	  componentWillMount: function componentWillMount() {
 	    TeaActions.fetchSingleTea(parseInt(this.props.params.id));
 	    this.listener = TeaStore.addListener(this._onChange);
+	    this.reviewListener = ReviewStore.addListener(this._onReviewChange);
 	  },
 	
 	  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
@@ -34819,8 +34822,14 @@
 	    this.setState({ tea: TeaStore.find(parseInt(this.props.params.id)) });
 	  },
 	
+	  _onReviewChange: function _onReviewChange() {
+	    console.log('review change');
+	    this.setState({ currentUserReview: ReviewStore.currentUserReview(parseInt(this.props.params.id)) });
+	  },
+	
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.listener.remove();
+	    this.reviewListener.remove();
 	  },
 	
 	  _mountReviewForm: function _mountReviewForm() {
@@ -34876,6 +34885,17 @@
 	      );
 	    }
 	
+	    var reviewButton = void 0;
+	    if (this.state.currentUserReview) {
+	      reviewButton = React.createElement(FullUserReview, { review: this.state.currentUserReview });
+	    } else {
+	      reviewButton = React.createElement(
+	        'button',
+	        { className: 'minor-button', onClick: this._mountReviewForm },
+	        'Add Review'
+	      );
+	    }
+	
 	    return React.createElement(
 	      'div',
 	      { className: 'cf container' },
@@ -34893,17 +34913,26 @@
 	          React.createElement(
 	            'h2',
 	            { className: 'panel_section-header' },
+	            'Your Shelf'
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'panel_section-content panel_section-content--flex-col' },
+	            React.createElement(OwnershipButton, { teaId: this.state.tea.id })
+	          )
+	        ),
+	        React.createElement(
+	          'section',
+	          { className: 'panel_section' },
+	          React.createElement(
+	            'h2',
+	            { className: 'panel_section-header' },
 	            'Your Review'
 	          ),
 	          React.createElement(
 	            'div',
-	            { className: 'panel_section-content' },
-	            React.createElement(
-	              'button',
-	              { className: 'minor-button profile-button', onClick: this._mountReviewForm },
-	              'Add Review'
-	            ),
-	            React.createElement(OwnershipButton, { teaId: this.state.tea.id, className: 'panel_section-content' })
+	            { className: 'panel_section-content panel_section-content--flex-col' },
+	            reviewButton
 	          )
 	        ),
 	        reviewForm
@@ -35026,68 +35055,187 @@
 	var _reactRouter = __webpack_require__(1);
 	
 	var React = __webpack_require__(4),
-	    ReviewActions = __webpack_require__(280),
-	    ReviewStore = __webpack_require__(285),
 	    SessionStore = __webpack_require__(240),
-	    ReviewIndexItem = __webpack_require__(286),
-	    ReviewRating = __webpack_require__(279);
+	    OwnedTeaStore = __webpack_require__(276),
+	    OwnershipActions = __webpack_require__(277),
+	    OwnedTeaItem = __webpack_require__(285),
+	    ReviewStore = __webpack_require__(286),
+	    ReviewActions = __webpack_require__(280),
+	    FullUserReview = __webpack_require__(291);
 	
-	var TeaReviewIndex = React.createClass({
-	  displayName: 'TeaReviewIndex',
+	var Dashboard = React.createClass({
+	  displayName: 'Dashboard',
 	
 	  getInitialState: function getInitialState() {
-	    return { reviews: ReviewStore.all() };
+	    return { currentUser: SessionStore.currentUser(), ownedTeas: OwnedTeaStore.all(), reviews: ReviewStore.all() };
 	  },
 	
 	  componentWillMount: function componentWillMount() {
-	    ReviewActions.fetchReviews({ tea_id: this.props.teaId });
-	    this.listener = ReviewStore.addListener(this._onChange);
-	    this.userListener = SessionStore.addListener(this._onUserChange);
+	    OwnershipActions.fetchOwnedTeas();
+	    ReviewActions.fetchReviews({ user_id: this.state.currentUser.id });
+	    this.listener = SessionStore.addListener(this._onChange);
+	    this.teaListener = OwnedTeaStore.addListener(this._onTeaChange);
+	    this.reviewListener = ReviewStore.addListener(this._onReviewChange);
 	  },
 	
 	  _onChange: function _onChange() {
-	    this.setState({ reviews: ReviewStore.all() });
+	    this.setState({ currentUser: SessionStore.currentUser() });
 	  },
 	
-	  _onUserChange: function _onUserChange() {
-	    // if a user logs in, the review information on the page will need to be updated
-	    if (SessionStore.isUserLoggedIn()) {
-	      ReviewActions.fetchReviews({ tea_id: this.props.teaId });
-	    }
+	  _onTeaChange: function _onTeaChange() {
+	    this.setState({ ownedTeas: OwnedTeaStore.all() });
+	  },
+	
+	  _onReviewChange: function _onReviewChange() {
+	    this.setState({ reviews: ReviewStore.all() });
 	  },
 	
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.listener.remove();
-	    this.userListener.remove();
+	    this.teaListener.remove();
 	  },
 	
 	  render: function render() {
 	    var _this = this;
 	
+	    var fullReviews = void 0;
+	    console.log(this.state.reviews);
 	    var reviews = Object.keys(this.state.reviews);
-	    if (reviews.length < 1) {
-	      return React.createElement(
-	        'div',
-	        null,
-	        React.createElement(ReviewRating, { onClick: this.props.onClick })
-	      );
+	    if (this.state.reviews === {}) {
+	      fullReviews = "You haven't reviewed any teas yet!";
+	    } else {
+	      fullReviews = reviews.map(function (reviewId) {
+	        var review = _this.state.reviews[reviewId];
+	        return React.createElement(
+	          'li',
+	          { style: { width: '100%' } },
+	          React.createElement(
+	            _reactRouter.Link,
+	            { to: 'teas/' + review.tea_id },
+	            React.createElement(
+	              'h2',
+	              { className: 'panel_main-subheading' },
+	              review.tea_name
+	            ),
+	            React.createElement(FullUserReview, { review: review, key: reviewId })
+	          )
+	        );
+	      });
 	    }
 	
 	    return React.createElement(
-	      'ul',
-	      null,
-	      reviews.map(function (reviewId) {
-	        var review = _this.state.reviews[reviewId];
-	        return React.createElement(ReviewIndexItem, { key: review.id, review: review });
-	      })
+	      'div',
+	      { className: 'cf container' },
+	      React.createElement(
+	        'aside',
+	        { className: 'panel panel_left' },
+	        React.createElement(
+	          'section',
+	          { className: 'panel_section' },
+	          React.createElement(
+	            'h2',
+	            { className: 'panel_section-header' },
+	            'Your Reviews'
+	          ),
+	          React.createElement(
+	            'ul',
+	            { className: 'panel_section-content panel_section-content--flex-col' },
+	            fullReviews
+	          )
+	        )
+	      ),
+	      React.createElement(
+	        'article',
+	        { className: 'panel panel_main' },
+	        React.createElement(
+	          'section',
+	          { className: 'panel_main-header' },
+	          React.createElement(
+	            'h1',
+	            null,
+	            'Hello, ',
+	            this.state.currentUser.username,
+	            '!'
+	          ),
+	          React.createElement(
+	            'p',
+	            { className: 'panel_main-subheading' },
+	            'User since: ',
+	            this.state.currentUser.date_joined
+	          )
+	        ),
+	        React.createElement(
+	          'section',
+	          { className: 'panel_section' },
+	          React.createElement(
+	            'h2',
+	            { className: 'panel_section-header' },
+	            'Tea Shelf: ',
+	            Object.keys(this.state.ownedTeas).length,
+	            ' owned teas'
+	          ),
+	          React.createElement(
+	            'ul',
+	            { className: 'cf panel_section-content sub-index' },
+	            Object.keys(this.state.ownedTeas).map(function (teaId) {
+	              return React.createElement(OwnedTeaItem, { key: teaId, tea: _this.state.ownedTeas[teaId] });
+	            })
+	          )
+	        )
+	      )
 	    );
 	  }
 	});
 	
-	module.exports = TeaReviewIndex;
+	module.exports = Dashboard;
 
 /***/ },
 /* 285 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _reactRouter = __webpack_require__(1);
+	
+	var React = __webpack_require__(4),
+	    OwnershipActions = __webpack_require__(277),
+	    OwnershipButton = __webpack_require__(275);
+	
+	var OwnedTeaItem = React.createClass({
+	  displayName: 'OwnedTeaItem',
+	
+	  render: function render() {
+	    var figureContents = void 0;
+	    if (this.props.tea.image_public_id) {
+	      figureContents = React.createElement('img', { src: this.props.tea.image_public_id, alt: 'Tea Image', className: 'index-item_image' });
+	    } else {
+	      figureContents = React.createElement('div', { className: 'index-item_image--empty' });
+	    }
+	
+	    return React.createElement(
+	      'li',
+	      { className: 'owned-tea-item' },
+	      React.createElement(
+	        _reactRouter.Link,
+	        { to: 'teas/' + this.props.tea.id },
+	        React.createElement(
+	          'figure',
+	          null,
+	          figureContents
+	        ),
+	        this.props.tea.name,
+	        ', ',
+	        this.props.tea.tea_type,
+	        React.createElement(OwnershipButton, { teaId: this.props.tea.id })
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = OwnedTeaItem;
+
+/***/ },
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35138,39 +35286,60 @@
 	  return _reviews[reviewId];
 	};
 	
+	ReviewStore.currentUserReview = function (teaId) {
+	  var result = null;
+	  if (SessionStore.isUserLoggedIn()) {
+	    Object.keys(_reviews).forEach(function (reviewId) {
+	      var review = _reviews[reviewId];
+	      if (review.user_id === SessionStore.currentUser().id) {
+	        result = review;
+	      }
+	    });
+	  }
+	  return result;
+	};
+	
 	module.exports = ReviewStore;
 
 /***/ },
-/* 286 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _reactRouter = __webpack_require__(1);
-	
 	var React = __webpack_require__(4),
-	    ReviewRating = __webpack_require__(279);
+	    TeaForm = __webpack_require__(273);
 	
-	var ReviewIndexItem = React.createClass({
-	  displayName: 'ReviewIndexItem',
+	var CreateTea = React.createClass({
+	  displayName: 'CreateTea',
 	
 	  render: function render() {
 	    return React.createElement(
-	      'li',
-	      { className: 'review-index-item' },
-	      React.createElement(ReviewRating, { rating: this.props.review.rating, currentUserRating: this.props.review.current_user_rating }),
-	      this.props.review.body,
-	      this.props.review.username,
-	      '  -  ',
-	      this.props.review.date_posted
+	      'div',
+	      { className: 'container' },
+	      React.createElement(
+	        'div',
+	        { className: 'standalone-tea-form' },
+	        React.createElement(
+	          'h1',
+	          null,
+	          'Add a new tea to Camellia!'
+	        ),
+	        React.createElement(
+	          'h2',
+	          null,
+	          'As soon as you add a new tea, the tea will belong to the Camellia Tea Shelf. You\'ll have the ability to review the tea or add it to your personal Tea Shelf once it has been added here!'
+	        ),
+	        React.createElement(TeaForm, null)
+	      )
 	    );
 	  }
 	});
 	
-	module.exports = ReviewIndexItem;
+	module.exports = CreateTea;
 
 /***/ },
-/* 287 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35183,7 +35352,7 @@
 	    ReviewActions = __webpack_require__(280),
 	    Errors = __webpack_require__(270),
 	    ErrorStore = __webpack_require__(269),
-	    ReviewStore = __webpack_require__(285);
+	    ReviewStore = __webpack_require__(286);
 	
 	var ReviewForm = React.createClass({
 	  displayName: 'ReviewForm',
@@ -35284,11 +35453,11 @@
 	    );
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'review-form-wrapper' },
 	      React.createElement(Errors, { errors: this.state.errors }),
 	      React.createElement(
 	        'form',
-	        { onSubmit: this._handleSubmit, className: 'review_form' },
+	        { onSubmit: this._handleSubmit, className: 'review-form' },
 	        React.createElement(
 	          'label',
 	          null,
@@ -35298,7 +35467,7 @@
 	        React.createElement(
 	          'label',
 	          null,
-	          'Review Body:*',
+	          'What did you think?*',
 	          React.createElement('textarea', { onChange: function onChange(event) {
 	              return _this._handleInput(event, 'body');
 	            },
@@ -35360,112 +35529,6 @@
 	module.exports = ReviewForm;
 
 /***/ },
-/* 288 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(4),
-	    SessionStore = __webpack_require__(240),
-	    OwnedTeaStore = __webpack_require__(276),
-	    OwnershipActions = __webpack_require__(277),
-	    OwnedTeaItem = __webpack_require__(289);
-	
-	var Dashboard = React.createClass({
-	  displayName: 'Dashboard',
-	
-	  getInitialState: function getInitialState() {
-	    return { currentUser: SessionStore.currentUser(), ownedTeas: OwnedTeaStore.all() };
-	  },
-	
-	  componentWillMount: function componentWillMount() {
-	    OwnershipActions.fetchOwnedTeas();
-	    this.listener = SessionStore.addListener(this._onChange);
-	    this.teaListener = OwnedTeaStore.addListener(this._onTeaChange);
-	  },
-	
-	  _onChange: function _onChange() {
-	    this.setState({ currentUser: SessionStore.currentUser() });
-	  },
-	
-	  _onTeaChange: function _onTeaChange() {
-	    this.setState({ ownedTeas: OwnedTeaStore.all() });
-	  },
-	
-	  componentWillUnmount: function componentWillUnmount() {
-	    this.listener.remove();
-	    this.teaListener.remove();
-	  },
-	
-	  render: function render() {
-	    var _this = this;
-	
-	    return React.createElement(
-	      'div',
-	      { className: 'cf container' },
-	      React.createElement(
-	        'aside',
-	        { className: 'panel panel_left' },
-	        React.createElement(
-	          'section',
-	          { className: 'panel_section' },
-	          React.createElement(
-	            'h2',
-	            { className: 'panel_section-header' },
-	            'Your Info'
-	          ),
-	          React.createElement(
-	            'p',
-	            { className: 'panel_section-content' },
-	            'You don\'t have any info yet!'
-	          )
-	        )
-	      ),
-	      React.createElement(
-	        'article',
-	        { className: 'panel panel_main' },
-	        React.createElement(
-	          'section',
-	          { className: 'panel_main-header' },
-	          React.createElement(
-	            'h1',
-	            null,
-	            'Hello, ',
-	            this.state.currentUser.username,
-	            '!'
-	          ),
-	          React.createElement(
-	            'p',
-	            { className: 'panel_main-subheading' },
-	            'User since: '
-	          )
-	        ),
-	        React.createElement(
-	          'section',
-	          { className: 'panel_section' },
-	          React.createElement(
-	            'h2',
-	            { className: 'panel_section-header' },
-	            'Tea Shelf: ',
-	            Object.keys(this.state.ownedTeas).length,
-	            ' owned teas'
-	          ),
-	          React.createElement(
-	            'ul',
-	            { className: 'cf panel_section-content sub-index' },
-	            Object.keys(this.state.ownedTeas).map(function (teaId) {
-	              return React.createElement(OwnedTeaItem, { key: teaId, tea: _this.state.ownedTeas[teaId] });
-	            })
-	          )
-	        )
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = Dashboard;
-
-/***/ },
 /* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -35474,41 +35537,65 @@
 	var _reactRouter = __webpack_require__(1);
 	
 	var React = __webpack_require__(4),
-	    OwnershipActions = __webpack_require__(277),
-	    OwnershipButton = __webpack_require__(275);
+	    ReviewActions = __webpack_require__(280),
+	    ReviewStore = __webpack_require__(286),
+	    SessionStore = __webpack_require__(240),
+	    ReviewIndexItem = __webpack_require__(290),
+	    ReviewRating = __webpack_require__(279);
 	
-	var OwnedTeaItem = React.createClass({
-	  displayName: 'OwnedTeaItem',
+	var TeaReviewIndex = React.createClass({
+	  displayName: 'TeaReviewIndex',
+	
+	  getInitialState: function getInitialState() {
+	    return { reviews: ReviewStore.all() };
+	  },
+	
+	  componentWillMount: function componentWillMount() {
+	    ReviewActions.fetchReviews({ tea_id: this.props.teaId });
+	    this.listener = ReviewStore.addListener(this._onChange);
+	    this.userListener = SessionStore.addListener(this._onUserChange);
+	  },
+	
+	  _onChange: function _onChange() {
+	    this.setState({ reviews: ReviewStore.all() });
+	  },
+	
+	  _onUserChange: function _onUserChange() {
+	    // if a user logs in, the review information on the page will need to be updated
+	    if (SessionStore.isUserLoggedIn()) {
+	      ReviewActions.fetchReviews({ tea_id: this.props.teaId });
+	    }
+	  },
+	
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.listener.remove();
+	    this.userListener.remove();
+	  },
 	
 	  render: function render() {
-	    var figureContents = void 0;
-	    if (this.props.tea.image_public_id) {
-	      figureContents = React.createElement('img', { src: this.props.tea.image_public_id, alt: 'Tea Image', className: 'index-item_image' });
-	    } else {
-	      figureContents = React.createElement('div', { className: 'index-item_image--empty' });
+	    var _this = this;
+	
+	    var reviews = Object.keys(this.state.reviews);
+	    if (reviews.length < 1) {
+	      return React.createElement(
+	        'div',
+	        null,
+	        React.createElement(ReviewRating, { onClick: this.props.onClick })
+	      );
 	    }
 	
 	    return React.createElement(
-	      'li',
-	      { className: 'owned-tea-item' },
-	      React.createElement(
-	        _reactRouter.Link,
-	        { to: 'teas/' + this.props.tea.id },
-	        React.createElement(
-	          'figure',
-	          null,
-	          figureContents
-	        ),
-	        this.props.tea.name,
-	        ', ',
-	        this.props.tea.tea_type
-	      ),
-	      React.createElement(OwnershipButton, { teaId: this.props.tea.id })
+	      'ul',
+	      null,
+	      reviews.map(function (reviewId) {
+	        var review = _this.state.reviews[reviewId];
+	        return React.createElement(ReviewIndexItem, { key: review.id, review: review });
+	      })
 	    );
 	  }
 	});
 	
-	module.exports = OwnedTeaItem;
+	module.exports = TeaReviewIndex;
 
 /***/ },
 /* 290 */
@@ -35516,36 +35603,135 @@
 
 	'use strict';
 	
-	var React = __webpack_require__(4),
-	    TeaForm = __webpack_require__(273);
+	var _reactRouter = __webpack_require__(1);
 	
-	var CreateTea = React.createClass({
-	  displayName: 'CreateTea',
+	var React = __webpack_require__(4),
+	    ReviewRating = __webpack_require__(279);
+	
+	var ReviewIndexItem = React.createClass({
+	  displayName: 'ReviewIndexItem',
 	
 	  render: function render() {
 	    return React.createElement(
-	      'div',
-	      { className: 'container' },
+	      'li',
+	      { className: 'review-index-item' },
+	      React.createElement(ReviewRating, { rating: this.props.review.rating, currentUserRating: this.props.review.current_user_rating }),
 	      React.createElement(
-	        'div',
-	        { className: 'standalone-tea-form' },
-	        React.createElement(
-	          'h1',
-	          null,
-	          'Add a new tea to Camellia!'
-	        ),
-	        React.createElement(
-	          'h2',
-	          null,
-	          'As soon as you add a new tea, the tea will belong to the Camellia Tea Shelf. You\'ll have the ability to review the tea or add it to your personal Tea Shelf once it has been added here!'
-	        ),
-	        React.createElement(TeaForm, null)
+	        'p',
+	        null,
+	        this.props.review.body
+	      ),
+	      React.createElement(
+	        'small',
+	        { className: 'timestamp' },
+	        this.props.review.username,
+	        '  -  ',
+	        this.props.review.date_posted
 	      )
 	    );
 	  }
 	});
 	
-	module.exports = CreateTea;
+	module.exports = ReviewIndexItem;
+
+/***/ },
+/* 291 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(4),
+	    ReviewRating = __webpack_require__(279);
+	
+	var FullUserReview = React.createClass({
+	  displayName: 'FullUserReview',
+	
+	  render: function render() {
+	    var timeUnits = void 0;
+	    if (this.props.review.steep_time === 1) {
+	      timeUnits = 'minute';
+	    } else {
+	      timeUnits = 'minutes';
+	    }
+	
+	    var steepTime = void 0;
+	    if (this.props.review.steep_time) {
+	      steepTime = React.createElement(
+	        'li',
+	        null,
+	        React.createElement('span', { className: 'icon-stopwatch' }),
+	        ' Steep Time: ',
+	        this.props.review.steep_time + ' ' + timeUnits
+	      );
+	    }
+	
+	    var temperature = void 0;
+	    if (this.props.review.temperature) {
+	      temperature = React.createElement(
+	        'li',
+	        null,
+	        React.createElement('span', { className: 'icon-thermometer-half' }),
+	        ' Temperature: ',
+	        this.props.review.temperature,
+	        ' °C'
+	      );
+	    }
+	
+	    var leafQuantity = void 0;
+	    if (this.props.review.leaf_quantity) {
+	      leafQuantity = React.createElement(
+	        'li',
+	        null,
+	        React.createElement('span', { className: 'icon-leaf' }),
+	        ' Leaf Quantity: ',
+	        this.props.review.leaf_quantity,
+	        ' tsp/8oz'
+	      );
+	    }
+	
+	    var leafDensity = void 0;
+	    if (this.props.review.leaf_density) {
+	      leafDensity = React.createElement(
+	        'li',
+	        null,
+	        React.createElement('span', { className: 'icon-balance-scale' }),
+	        ' Leaf Density: ',
+	        this.props.review.leaf_density,
+	        ' g/tsp'
+	      );
+	    }
+	    return React.createElement(
+	      'ul',
+	      null,
+	      React.createElement(
+	        'li',
+	        null,
+	        React.createElement(ReviewRating, { rating: this.props.review.rating, currentUserRating: this.props.review.rating })
+	      ),
+	      React.createElement(
+	        'li',
+	        null,
+	        React.createElement('span', { className: 'icon-pencil2' }),
+	        this.props.review.body
+	      ),
+	      steepTime,
+	      temperature,
+	      leafQuantity,
+	      leafDensity,
+	      React.createElement(
+	        'li',
+	        null,
+	        React.createElement(
+	          'small',
+	          { className: 'timestamp' },
+	          this.props.review.date_posted
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = FullUserReview;
 
 /***/ }
 /******/ ]);

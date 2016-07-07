@@ -4,7 +4,9 @@ const React = require('react'),
       OwnershipButton = require('./ownership_button'),
       TeaReviewIndex = require('./tea_review_index'),
       ReviewForm = require('./review_form'),
-      ReviewRating = require('./review_rating');
+      ReviewRating = require('./review_rating'),
+      ReviewStore = require('../stores/review_store'),
+      FullUserReview = require('./full_user_review');
 
 const TeaShow = React.createClass({
   getInitialState: function () {
@@ -12,12 +14,13 @@ const TeaShow = React.createClass({
     if (window.location.hash.includes('review')) {
       showReview = true;
     }
-    return {tea: TeaStore.find(parseInt(this.props.params.id)), shouldShowReview: showReview}
+    return {tea: TeaStore.find(parseInt(this.props.params.id)), shouldShowReview: showReview, currentUserReview: ReviewStore.currentUserReview(parseInt(this.props.params.id))}
   },
 
   componentWillMount: function () {
     TeaActions.fetchSingleTea(parseInt(this.props.params.id));
     this.listener = TeaStore.addListener(this._onChange);
+    this.reviewListener = ReviewStore.addListener(this._onReviewChange)
   },
 
   componentWillReceiveProps: function (newProps) {
@@ -28,8 +31,14 @@ const TeaShow = React.createClass({
     this.setState( {tea: TeaStore.find(parseInt(this.props.params.id))} )
   },
 
+  _onReviewChange: function () {
+    console.log('review change');
+    this.setState( {currentUserReview: ReviewStore.currentUserReview(parseInt(this.props.params.id))} )
+  },
+
   componentWillUnmount: function () {
     this.listener.remove();
+    this.reviewListener.remove();
   },
 
   _mountReviewForm: function () {
@@ -72,6 +81,13 @@ const TeaShow = React.createClass({
       reviewRating = <li><ReviewRating rating={this.state.tea.rating} /></li>
     }
 
+    let reviewButton;
+    if (this.state.currentUserReview) {
+      reviewButton = <FullUserReview review={this.state.currentUserReview} />
+    } else {
+      reviewButton = <button className='minor-button' onClick={this._mountReviewForm}>Add Review</button>
+    }
+
     return (
       <div className="cf container">
         <aside className='panel panel_left'>
@@ -79,10 +95,15 @@ const TeaShow = React.createClass({
             {figureContents}
           </figure>
           <section className='panel_section'>
+            <h2 className='panel_section-header'>Your Shelf</h2>
+            <div className='panel_section-content panel_section-content--flex-col'>
+              <OwnershipButton teaId={this.state.tea.id} />
+            </div>
+          </section>
+          <section className='panel_section'>
             <h2 className='panel_section-header'>Your Review</h2>
-            <div className='panel_section-content'>
-              <button className='minor-button profile-button' onClick={this._mountReviewForm}>Add Review</button>
-              <OwnershipButton teaId={this.state.tea.id} className='panel_section-content'/>
+            <div className='panel_section-content panel_section-content--flex-col'>
+              {reviewButton}
             </div>
           </section>
           {reviewForm}

@@ -46,6 +46,10 @@
   align-items: center;
 }
 
+.panel_section-content--flex-col {
+  flex-direction: column;
+}
+
 .panel_section-content li {
   list-style: none;
   padding-bottom: 8px;
@@ -82,7 +86,7 @@
   margin-bottom: 10px;
 }
 
-.panel_section > a:hover {
+.panel_section a:hover {
   background: darken(#f9f9f9, 10%);
 }
 

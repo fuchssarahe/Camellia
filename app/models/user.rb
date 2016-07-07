@@ -36,4 +36,8 @@ class User < ActiveRecord::Base
     @password = password
     self.password_digest = BCrypt::Password.create(password)
   end
+
+  def date_joined
+    self.created_at.to_s[0..10]
+  end
 end
