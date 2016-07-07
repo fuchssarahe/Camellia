@@ -7,18 +7,19 @@
 }
 
 .rating-container {
-  width: 100px;
+  margin: 10px;
+  width: 105px;
   height: auto;
-  background: url('https://raw.githubusercontent.com/fuchssarahe/Camellia/master/app/assets/images/rating_images/camellia_rating-1.png');
+  background: url('https://raw.githubusercontent.com/fuchssarahe/Camellia/master/app/assets/images/rating_images/camellia_rating-empty.png');
   background-repeat: no-repeat;
   background-size: contain;
   position: relative;
 }
 
 .rated {
-  padding: 10px 0;
+  padding: 10px;
   width: 100%;
-  height: 18px;
+  height: 19px;
   background: url('https://raw.githubusercontent.com/fuchssarahe/Camellia/master/app/assets/images/rating_images/camellia_rating-5.png');
   background-repeat: no-repeat;
   background-size: cover;
@@ -36,12 +37,12 @@
 
 .height-giver {
   padding: 10px;
-  height: 18px;
+  height: 19px;
 }
 
 .rating-selection-fields {
   width: 100px;
-  height: 20px;
+  height: auto;
   display: flex;
   flex-direction: row;
   list-style: none;
@@ -49,8 +50,8 @@
 }
 
 .rating-selection-fields > li {
-  width: 16px;
-  height: 20px;
+  width: 23px;
+  height: 21px;
 }
 
 .rating-selector {
@@ -64,39 +65,19 @@
 }
 
 .rating-2 {
-  width: 38%;
+  width: 39%;
 }
 
 .rating-3 {
-  width: 56%;
+  width: 59%;
 }
 
 .rating-4 {
-  width: 73%;
+  width: 79%;
 }
 
 .rating-5 {
-  width: 100%;
-}
-
-.rating-selector-1 {
-  width: 20%;
-}
-
-.rating-selector-2 {
-  width: 38%;
-}
-
-.rating-selector-3 {
-  width: 56%;
-}
-
-.rating-selector-4 {
-  width: 73%;
-}
-
-.rating-selector-5 {
-  width: 90%;
+  width: 99%;
 }
 
 .profile-button {

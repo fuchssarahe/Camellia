@@ -33898,7 +33898,7 @@
 	function parseErrors(errors) {
 	  return Object.keys(errors).map(function (field) {
 	    var parsedErrorsForField = errors[field].join(", ");
-	    if (field === 'base') {
+	    if (field === 'base' || field === 'user_id') {
 	      return React.createElement(
 	        'li',
 	        { key: field },
@@ -34153,7 +34153,7 @@
 	        React.createElement(
 	          'label',
 	          null,
-	          'Name',
+	          'Name:*',
 	          React.createElement('input', { type: 'text',
 	            onChange: function onChange(event) {
 	              return _this._handleInput(event, 'name');
@@ -34164,7 +34164,7 @@
 	        React.createElement(
 	          'label',
 	          null,
-	          'Description',
+	          'Description:*',
 	          React.createElement('textarea', { onChange: function onChange(event) {
 	              return _this._handleInput(event, 'description');
 	            },
@@ -34174,7 +34174,7 @@
 	        React.createElement(
 	          'label',
 	          null,
-	          'Type',
+	          'Type:*',
 	          React.createElement(
 	            'select',
 	            { onChange: function onChange(event) {
@@ -34197,7 +34197,7 @@
 	        React.createElement(
 	          'label',
 	          null,
-	          'Region',
+	          'Region:*',
 	          React.createElement(
 	            'select',
 	            { onChange: function onChange(event) {
@@ -34220,7 +34220,7 @@
 	        React.createElement(
 	          'label',
 	          null,
-	          'Steep Time (in minutes)',
+	          'Steep Time (in minutes):*',
 	          React.createElement('input', { type: 'number',
 	            step: '0.25',
 	            onChange: function onChange(event) {
@@ -34232,7 +34232,7 @@
 	        React.createElement(
 	          'label',
 	          null,
-	          'Temperature (in degrees Celcius)',
+	          'Temperature (in degrees Celcius):*',
 	          React.createElement('input', { type: 'number',
 	            onChange: function onChange(event) {
 	              return _this._handleInput(event, 'temperature');
@@ -34243,7 +34243,7 @@
 	        React.createElement(
 	          'label',
 	          null,
-	          'Leaf Quantity (teaspoons per 8 ounces of liquid)',
+	          'Leaf Quantity (teaspoons per 8 ounces of liquid):*',
 	          React.createElement('input', { type: 'number',
 	            step: '0.25',
 	            onChange: function onChange(event) {
@@ -34255,7 +34255,7 @@
 	        React.createElement(
 	          'label',
 	          null,
-	          'Leaf Density (grams per ounce)',
+	          'Leaf Density (grams per ounce):*',
 	          React.createElement('input', { type: 'number',
 	            onChange: function onChange(event) {
 	              return _this._handleInput(event, 'leaf_density');
@@ -34266,7 +34266,7 @@
 	        React.createElement(
 	          'label',
 	          null,
-	          'Retailer',
+	          'Retailer:*',
 	          React.createElement('input', { type: 'text',
 	            onChange: function onChange(event) {
 	              return _this._handleInput(event, 'retailer');
@@ -34277,7 +34277,7 @@
 	        React.createElement(
 	          'label',
 	          null,
-	          'Image',
+	          'Image:',
 	          React.createElement('input', { type: 'file',
 	            accept: 'image/*',
 	            ref: 'image',
@@ -34792,7 +34792,8 @@
 	    TeaActions = __webpack_require__(265),
 	    OwnershipButton = __webpack_require__(275),
 	    TeaReviewIndex = __webpack_require__(284),
-	    ReviewForm = __webpack_require__(287);
+	    ReviewForm = __webpack_require__(287),
+	    ReviewRating = __webpack_require__(279);
 	
 	var TeaShow = React.createClass({
 	  displayName: 'TeaShow',
@@ -34857,7 +34858,21 @@
 	      reviewForm = React.createElement(
 	        'section',
 	        { className: 'panel_section' },
+	        React.createElement(
+	          'h2',
+	          { className: 'panel_section-header' },
+	          'Add Review'
+	        ),
 	        React.createElement(ReviewForm, { teaId: this.props.params.id })
+	      );
+	    }
+	
+	    var reviewRating = void 0;
+	    if (this.state.tea.rating) {
+	      reviewRating = React.createElement(
+	        'li',
+	        null,
+	        React.createElement(ReviewRating, { rating: this.state.tea.rating })
 	      );
 	    }
 	
@@ -34927,6 +34942,7 @@
 	              React.createElement(
 	                'ul',
 	                null,
+	                reviewRating,
 	                React.createElement(
 	                  'li',
 	                  null,
@@ -35143,7 +35159,10 @@
 	      'li',
 	      { className: 'review-index-item' },
 	      React.createElement(ReviewRating, { rating: this.props.review.rating, currentUserRating: this.props.review.current_user_rating }),
-	      this.props.review.body
+	      this.props.review.body,
+	      this.props.review.username,
+	      '  -  ',
+	      this.props.review.date_posted
 	    );
 	  }
 	});
@@ -35178,7 +35197,7 @@
 	      leaf_quantity: '',
 	      temperature: '',
 	      leaf_density: '',
-	      ratingClass: 'rating-selector-5',
+	      ratingClass: 'rating-5',
 	      errors: ErrorStore.formErrors('createReview')
 	    };
 	  },
@@ -35189,7 +35208,6 @@
 	  },
 	
 	  _onErrors: function _onErrors() {
-	    console.log('got into onErrors');
 	    if (ErrorStore.form() === 'createReview') {
 	      this.setState({ errors: ErrorStore.formErrors('createReview') });
 	    }
@@ -35211,7 +35229,6 @@
 	
 	  _handleInput: function _handleInput(event, property, rating) {
 	    if (property === 'rating') {
-	      console.log('updating rating ', rating);
 	      this.setState({ rating: rating });
 	      return;
 	    }
@@ -35222,7 +35239,7 @@
 	    if (rating === '') {
 	      rating = 5;
 	    }
-	    this.setState({ ratingClass: 'rating-selector-' + rating });
+	    this.setState({ ratingClass: 'rating-' + rating });
 	  },
 	
 	  render: function render() {
@@ -35275,13 +35292,13 @@
 	        React.createElement(
 	          'label',
 	          null,
-	          'Rating',
+	          'Select a Rating:*',
 	          ratingSelector
 	        ),
 	        React.createElement(
 	          'label',
 	          null,
-	          'Review',
+	          'Review Body:*',
 	          React.createElement('textarea', { onChange: function onChange(event) {
 	              return _this._handleInput(event, 'body');
 	            },
@@ -35291,7 +35308,7 @@
 	        React.createElement(
 	          'label',
 	          null,
-	          'Steep Time (in minutes)',
+	          'Steep Time (in minutes):',
 	          React.createElement('input', { type: 'number',
 	            step: '0.25',
 	            onChange: function onChange(event) {
@@ -35303,7 +35320,7 @@
 	        React.createElement(
 	          'label',
 	          null,
-	          'Temperature (in degrees Celcius)',
+	          'Temperature (in degrees Celcius):',
 	          React.createElement('input', { type: 'number',
 	            onChange: function onChange(event) {
 	              return _this._handleInput(event, 'temperature');
@@ -35314,7 +35331,7 @@
 	        React.createElement(
 	          'label',
 	          null,
-	          'Leaf Quantity (teaspoons per 8 ounces of liquid)',
+	          'Leaf Quantity (teaspoons per 8 ounces of liquid):',
 	          React.createElement('input', { type: 'number',
 	            step: '0.25',
 	            onChange: function onChange(event) {
@@ -35326,7 +35343,7 @@
 	        React.createElement(
 	          'label',
 	          null,
-	          'Leaf Density (grams per ounce)',
+	          'Leaf Density (grams per ounce):',
 	          React.createElement('input', { type: 'number',
 	            onChange: function onChange(event) {
 	              return _this._handleInput(event, 'leaf_density');

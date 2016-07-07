@@ -15,7 +15,7 @@ const ReviewForm = React.createClass({
       leaf_quantity: '',
       temperature: '',
       leaf_density: '',
-      ratingClass: 'rating-selector-5',
+      ratingClass: 'rating-5',
       errors: ErrorStore.formErrors('createReview')
     })
 
@@ -27,7 +27,6 @@ const ReviewForm = React.createClass({
   },
 
   _onErrors: function () {
-    console.log('got into onErrors');
     if (ErrorStore.form() === 'createReview') {
       this.setState({errors: ErrorStore.formErrors('createReview') });
     }
@@ -49,7 +48,6 @@ const ReviewForm = React.createClass({
 
   _handleInput: function (event, property, rating) {
     if (property === 'rating') {
-      console.log('updating rating ', rating);
       this.setState({rating: rating});
       return;
     }
@@ -60,7 +58,7 @@ const ReviewForm = React.createClass({
     if (rating === '') {
       rating = 5
     }
-    this.setState({ratingClass: 'rating-selector-' + rating})
+    this.setState({ratingClass: 'rating-' + rating})
   },
 
 
@@ -84,17 +82,17 @@ const ReviewForm = React.createClass({
       <div>
         <Errors errors={this.state.errors}/>
         <form onSubmit={this._handleSubmit} className='review_form'>
-          <label>Rating
+          <label>Select a Rating:*
             {ratingSelector}
           </label>
 
-          <label>Review
+          <label>Review Body:*
             <textarea onChange={(event) => this._handleInput(event, 'body')}
                       placeholder='Wow! What a yummy tea!'
                       value={this.state.body}></textarea>
           </label>
 
-          <label>Steep Time (in minutes)
+          <label>Steep Time (in minutes):
             <input type="number"
                    step="0.25"
                    onChange={(event) => this._handleInput(event, 'steep_time')}
@@ -102,14 +100,14 @@ const ReviewForm = React.createClass({
                    placeholder='0'/>
           </label>
 
-          <label>Temperature (in degrees Celcius)
+          <label>Temperature (in degrees Celcius):
             <input type="number"
                    onChange={(event) => this._handleInput(event, 'temperature')}
                    value={this.state.temperature}
                    placeholder='80'/>
           </label>
 
-          <label>Leaf Quantity (teaspoons per 8 ounces of liquid)
+          <label>Leaf Quantity (teaspoons per 8 ounces of liquid):
             <input type="number"
                    step="0.25"
                    onChange={(event) => this._handleInput(event, 'leaf_quantity')}
@@ -117,7 +115,7 @@ const ReviewForm = React.createClass({
                    placeholder='1.5'/>
           </label>
 
-          <label>Leaf Density (grams per ounce)
+          <label>Leaf Density (grams per ounce):
             <input type="number"
                    onChange={(event) => this._handleInput(event, 'leaf_density')}
                    value={this.state.leaf_density}
