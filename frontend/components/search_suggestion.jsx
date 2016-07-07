@@ -21,7 +21,12 @@ const SearchSuggestion = React.createClass({
 
     switch (this.props.suggestion.suggestion_type) {
       case 'tea':
-        return (<li onClick={() => this._navToShowPage(this.props.suggestion.tea_id)} >{this.props.suggestion.suggestion}</li>)
+        return (
+          <li onClick={() => this._navToShowPage(this.props.suggestion.tea_id)} >
+            <p>{this.props.suggestion.suggestion}</p>
+            <p>{this.props.suggestion.description}</p>
+          </li>
+        )
       case 'region':
         className = 'icon-earth';
         return (<li onClick={() => this._searchAndNavToIndex(this.props.suggestion.suggestion_type, this.props.suggestion.suggestion)}><span className={className} />{this.props.suggestion.suggestion}</li>)

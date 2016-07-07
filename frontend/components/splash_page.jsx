@@ -36,7 +36,8 @@ const Splash = React.createClass({
           </article>
         </figure>
         <article className='site-info'>
-          <h2>More about Camellia</h2>
+          <h2 className='site-info_header'>More about Camellia</h2>
+          <p className='site-info_content'>Camellia is designed to be a place where tea-lovers all over can come together to bond over teas, share their preferences, and keep tabs on the teas they currently know and love.</p>
         </article>
       </div>
     )
