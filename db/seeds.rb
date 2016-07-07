@@ -61,6 +61,12 @@ Ownership.create!(user_id: guest.id, tea_id: tea2.id)
 Ownership.create!(user_id: guest.id, tea_id: tea3.id)
 Ownership.create!(user_id: guest.id, tea_id: tea4.id)
 
+Review.create!(user_id: 1, tea_id: tea1.id, rating: 5, body: "I just can't stop talking about this tea! I keep serving it to everyone who comes round my place. Definitely a keeper!", steep_time: rand(10)*0.5, leaf_quantity: rand(6)*0.5, temperature: (rand(120 - 65) + 65), leaf_density: (rand(30 - 5) + 5) )
+Review.create!(user_id: 1, tea_id: tea2.id, rating: 3, body: 'While the flavor of this tea is nice, I was a bit bummed about how musty the leaves were. I fear that they may have been stored in a less-than-ideal location before being sold.', steep_time: rand(10)*0.5, leaf_quantity: rand(6)*0.5, temperature: (rand(120 - 65) + 65), leaf_density: (rand(30 - 5) + 5) )
+Review.create!(user_id: 1, tea_id: tea3.id, rating: 5, body: 'What a wonderful addition to my collection! The oaky quality of this tea makes it ideal for the autumn months.', steep_time: rand(10)*0.5, leaf_quantity: rand(6)*0.5, temperature: (rand(120 - 65) + 65), leaf_density: (rand(30 - 5) + 5) )
+Review.create!(user_id: 1, tea_id: tea4.id, rating: 1, body: 'Might as well be lipton.', steep_time: rand(10)*0.5, leaf_quantity: rand(6)*0.5, temperature: (rand(120 - 65) + 65), leaf_density: (rand(30 - 5) + 5) )
+
+
 users = {}
 15.times do |i|
   users[i] = User.create!(username: Faker::Internet.user_name, password: Faker::Internet.password)

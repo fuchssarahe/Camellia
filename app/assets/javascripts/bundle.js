@@ -33456,11 +33456,6 @@
 	            'p',
 	            null,
 	            this.props.suggestion.suggestion
-	          ),
-	          React.createElement(
-	            'p',
-	            null,
-	            this.props.suggestion.description
 	          )
 	        );
 	      case 'region':

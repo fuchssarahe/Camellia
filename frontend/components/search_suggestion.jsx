@@ -24,7 +24,6 @@ const SearchSuggestion = React.createClass({
         return (
           <li onClick={() => this._navToShowPage(this.props.suggestion.tea_id)} >
             <p>{this.props.suggestion.suggestion}</p>
-            <p>{this.props.suggestion.description}</p>
           </li>
         )
       case 'region':
