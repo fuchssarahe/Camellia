@@ -13,7 +13,9 @@ const OwnershipButton = React.createClass({
   },
 
   _onChange: function () {
-    this.forceUpdate();
+    if (SessionStore.isUserLoggedIn()) {
+      OwnershipActions.fetchOwnedTeas();
+    }
   },
 
   _onOwnedTeaChange: function () {
