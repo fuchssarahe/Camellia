@@ -119,13 +119,13 @@ user interface.
 
 ### Bonus Features (TBD)
 - [x] aggregate user steep info
-- [ ] Follows
 - [ ] Recording tea consumption + stats
-- [ ] Where to buy
 - [ ] Steep preferences (gaiwan vs british)
+- [ ] Follows
+- [ ] Where to buy
 - [ ] Company profiles
 - [ ] User profiles
-- [ ] Pagination for search results
+- [ ] Infinite scroll
 - [ ] Multiple sessions
 
 <!-- [phase-one]: docs/phases/phase1.md

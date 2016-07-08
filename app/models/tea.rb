@@ -64,19 +64,19 @@ class Tea < ActiveRecord::Base
   end
 
   def avg_steep_time
-    self.reviews.average(:steep_time)
+    self.reviews.average(:steep_time).round(1)
   end
 
   def avg_temperature
-    self.reviews.average(:temperature)
+    self.reviews.average(:temperature).round
   end
 
   def avg_leaf_quantity
-    self.reviews.average(:leaf_quantity)
+    self.reviews.average(:leaf_quantity).round(1)
   end
 
   def avg_leaf_density
-    self.reviews.average(:leaf_density)
+    self.reviews.average(:leaf_density).round(1)
   end
 
 

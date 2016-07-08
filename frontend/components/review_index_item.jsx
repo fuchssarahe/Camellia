@@ -8,7 +8,7 @@ const ReviewIndexItem = React.createClass({
       <li className='review-index-item'>
         <ReviewRating rating={this.props.review.rating} currentUserRating={this.props.review.current_user_rating} />
         <p>{this.props.review.body}</p>
-        <small className='timestamp'>{this.props.review.username}  -  {this.props.review.date_posted}</small>
+        <small className='timestamp'>{this.props.review.username}  -  {this.props.review.date_posted} ago</small>
       </li>
     )
   }

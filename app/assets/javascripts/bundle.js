@@ -35343,7 +35343,8 @@
 	        { className: 'timestamp' },
 	        this.props.review.username,
 	        '  -  ',
-	        this.props.review.date_posted
+	        this.props.review.date_posted,
+	        ' ago'
 	      )
 	    );
 	  }
@@ -35631,7 +35632,8 @@
 	        React.createElement(
 	          'small',
 	          { className: 'timestamp' },
-	          this.props.review.date_posted
+	          this.props.review.date_posted,
+	          ' ago'
 	        )
 	      )
 	    );

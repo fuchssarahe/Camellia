@@ -38,7 +38,7 @@ const FullUserReview = React.createClass({
           {temperature}
           {leafQuantity}
           {leafDensity}
-          <li><small className='timestamp'>{this.props.review.date_posted}</small></li>
+          <li><small className='timestamp'>{this.props.review.date_posted} ago</small></li>
       </ul>
 
     )
