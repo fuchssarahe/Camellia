@@ -135,7 +135,7 @@ let ratingSelector = (
 ```
 
 ### Image upload through standard input tag
-Sounds mundane. But getting documents to upload from HTML forms to the Rails backend is a little tricky, as the same data types cannot be used as for standard text/number content.
+Uploading images - sounds mundane. But getting documents to upload from HTML forms to the Rails backend is a little tricky, as the same data types cannot be used for documents as for standard text/number content.
 
 Cloudinary, the service I used to host Camellia's images, offers a widget to abstract away the the details of this process. However, it's ugly and would have taken a Camellia user out of the experience of the site.
 
