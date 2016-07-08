@@ -34005,6 +34005,10 @@
 	    this.ownedListener = OwnedTeaStore.addListener(this._onOwnedTeaChange);
 	  },
 	
+	  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
+	    TeaActions.fetchTeas(newProps.location.query);
+	  },
+	
 	  _onChange: function _onChange() {
 	    this.setState({ teas: TeaStore.all() });
 	  },
@@ -34021,6 +34025,11 @@
 	  render: function render() {
 	    var _this = this;
 	
+	    var numOfTeas = Object.keys(this.state.teas).length;
+	    var teaHeader = 'Wow! Teas!';
+	    if (numOfTeas < 1) {
+	      teaHeader = 'Oh no! No Teas! Click Explore?';
+	    }
 	    return React.createElement(
 	      'div',
 	      { className: 'cf container' },
@@ -34030,12 +34039,12 @@
 	        React.createElement(
 	          'div',
 	          { className: 'panel_main-header panel_main-header--white' },
-	          'Wow! Teas!'
+	          teaHeader
 	        ),
 	        React.createElement(
 	          'div',
 	          { className: 'panel_main-divider' },
-	          Object.keys(this.state.teas).length,
+	          numOfTeas,
 	          ' teas found'
 	        ),
 	        Object.keys(this.state.teas).map(function (teaId) {
