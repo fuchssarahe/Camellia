@@ -23,6 +23,10 @@ const TeaIndex = React.createClass({
     this.ownedListener = OwnedTeaStore.addListener(this._onOwnedTeaChange);
   },
 
+  componentWillReceiveProps: function (newProps) {
+    TeaActions.fetchTeas(newProps.location.query);
+  },
+
   _onChange: function () {
     this.setState({ teas: TeaStore.all() })
   },
@@ -37,11 +41,17 @@ const TeaIndex = React.createClass({
   },
 
   render: function () {
+
+    const numOfTeas = Object.keys(this.state.teas).length;
+    let teaHeader = 'Wow! Teas!';
+    if (numOfTeas < 1) {
+      teaHeader = 'Oh no! No Teas! Click Explore?'
+    }
     return (
       <div className="cf container">
         <ul className='panel panel_main'>
-          <div className="panel_main-header panel_main-header--white">Wow! Teas!</div>
-          <div className="panel_main-divider">{Object.keys(this.state.teas).length} teas found</div>
+          <div className="panel_main-header panel_main-header--white">{teaHeader}</div>
+          <div className="panel_main-divider">{numOfTeas} teas found</div>
           {
             Object.keys(this.state.teas).map( (teaId) => {
               return <TeaIndexItem key={teaId} tea={this.state.teas[teaId]}/>;
