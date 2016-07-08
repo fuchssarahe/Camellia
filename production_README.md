@@ -41,7 +41,7 @@ The search bar is type-ahead, so search suggestions are populated as the user ty
 #### Name/Description
 The model-level method below is responsible for the logic around both search suggestions and search results. The method is called from the TeasController and SearchSuggestionController, which different parameters which determine what type of result to spit back. The search is fairly simple, checking for one-to-one matches without ranking the results.
 
-`  def self.search(parameters, limit = nil)
+```  def self.search(parameters, limit = nil)
     if parameters[:tea]
       # 'tea' will only be a key of parameters if users are searching under the tea field
       teas = Tea.where("UPPER(name) LIKE :search_parameters OR UPPER(description) LIKE :search_parameters", {search_parameters: '%' + parameters[:tea].upcase + '%'}).includes(:reviews)
@@ -65,14 +65,14 @@ The model-level method below is responsible for the logic around both search sug
       return teas
     end
   end
-`
+```
 
 You'll note that either description or name can be matched to the user's query. Using JS, a portion of the description is displayed based on whether this was the field that matched the search result.
 
 #### Region / Tea Type
 Because Region and Tea Type are fixed, the potential search suggestions for these options will always be the same. When the search bar component requests search suggestions (using SearchSuggestionActions), any region or tea type requests are processed within a private method in SearchSuggestionActions rather than getting pulled from the server.  
 
-`function _getMatchingCategories(searchType, query) {
+```function _getMatchingCategories(searchType, query) {
   const matchers = [];
 
   // find correct constant to search
@@ -103,19 +103,19 @@ Because Region and Tea Type are fixed, the potential search suggestions for thes
 
   return matchers;
 }
-`
+```
 
 
 ### Custom tea-rating selector  
 The rating selector for Camellia is stinking adorable.
 
-[selector-gif](https://gyazo.com/dec4fed9af9a8d72591946bd918dca69)
+![rating selector gif](https://gyazo.com/dec4fed9af9a8d72591946bd918dca69)
 
 It's pretty much all css and dynamic class assignment in JS. There are three layers of content for the selector - two backgrounds (one showing a 0-star rating, one showing a 5-star rating) and an unordered list of elements.
 
 Each list element corresponds to a rating. On mouse-over, the class applied to the unordered list is updated, resetting the state of the form component, and re-rendering that chunk of the screen. The class applied to the unordered list determines the width of the background showing a 5-star rating, making it appear to be anywhere between one and five stars.
 
-`let ratingSelector = (
+```let ratingSelector = (
   <div className='rating-container' >
     <div className={'rated--by-current-user rating-selector ' + this.state.ratingClass}>
     </div>
@@ -129,30 +129,20 @@ Each list element corresponds to a rating. On mouse-over, the class applied to t
     <div className='height-giver' />
   </div>
 )
-`
+```
 
 ### Image upload through standard input tag
 Sounds mundane. But getting documents to upload from HTML forms to the Rails backend is a little tricky, as the same data types cannot be used as for standard text/number content.
 
 Cloudinary, the service I used to host Camellia's images, offers a widget to abstract away the the details of this process. However, it's ugly and would have taken a Camellia user out of the experience of the site.
 
-Eww. So gross.
-|
-|
-|
-V
-[Cloudinary Widget](http://res-1.cloudinary.com/cloudinary/image/asset/upload_widget_main-0d7f36bcac005868a51815763886aa65.jpg)
+Eww. So gross. ---> ![Cloudinary Widget](http://res-1.cloudinary.com/cloudinary/image/asset/upload_widget_main-0d7f36bcac005868a51815763886aa65.jpg)
 
-Cute. So sleek.
-|
-|
-|
-V
-[Camellia Upload UI]('app/assets/images/image_upload_example.png')
+Cute. So sleek. ---> ![Camellia Upload UI]('app/assets/images/image_upload_example.png')
 
 The trick to this was using the [FormData](https://developer.mozilla.org/en-US/docs/Web/API/FormData) web-api. Upon upload, the image is a [File](https://developer.mozilla.org/en-US/docs/Web/API/File) object, and has to be treated as such.
 
-`createTea: function (tea, callback, errorCallback) {
+```createTea: function (tea, callback, errorCallback) {
   const data = new FormData();
   Object.keys(tea).forEach( (property) => {
     if (property === 'image') {
@@ -172,7 +162,7 @@ The trick to this was using the [FormData](https://developer.mozilla.org/en-US/d
     success: callback,
     error: (err) => errorCallback('newTea', err)
   })
-`
+```
 The FormData object created in the ajax call gets passed directly as the data of the request (it cannot be a value in a key-value pair). The `contentType` parameter must be changed to either `false` or `multipart/form-data` in order to ensure that jQuery does undo all your hard work to transfer the file. `processData` also needs to be set to false so that jQuery does not transform the data into a query string. `cache` is set to false for browser compatibility, but should not impact functionality in modern browsers.
 
 ## The Future
