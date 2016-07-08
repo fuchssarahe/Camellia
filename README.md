@@ -42,6 +42,8 @@ The search bar is type-ahead, so search suggestions are populated as the user ty
 The model-level method below is responsible for the logic around both search suggestions and search results. The method is called from the `TeasController` and `SearchSuggestionController`, which different parameters which determine what type of result to spit back. The search is fairly simple, checking for one-to-one matches without ranking the results.
 
 ```Ruby
+# app/models/tea.rb
+
 def self.search(parameters, limit = nil)
   if parameters[:tea]
     # 'tea' will only be a key of parameters if users are searching under the tea field
