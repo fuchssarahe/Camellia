@@ -22,6 +22,7 @@ class Tea < ActiveRecord::Base
       # 'tea' will only be a key of parameters if users are searching under the tea field
       teas = Tea.where("UPPER(name) LIKE :search_parameters OR UPPER(description) LIKE :search_parameters", {search_parameters: '%' + parameters[:tea].upcase + '%'}).includes(:reviews)
     else
+      # these will be direct searches for region or tea_type - this was made to accommodate other search fields in future
       query_string = ''
       parameters.each do |key, value|
         query_string = query_string + 'UPPER(' + key + ')' + ' LIKE ' + "'%#{value.upcase}%'"
@@ -30,19 +31,9 @@ class Tea < ActiveRecord::Base
     end
 
     if limit
-      # (limit param determines whether a suggestion is needed or not)
+      # limit param determines whether a suggestion is needed or not
       selector = 'id, description, name as search_name'
       suggestion_type = 'tea'
-
-      # suggestions = teas.limit(limit).select(selector)
-      # p suggestions
-      # suggestions.each do |tea|
-      #   # p tea.description
-      #   p tea.description_part
-      #   # unless tea.description.upcase.include?(parameters[:tea].upcase)
-      #   # end
-      #   p tea
-      # end
       return [teas.limit(limit).select(selector), suggestion_type]
 
     else

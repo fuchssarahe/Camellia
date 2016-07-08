@@ -35374,7 +35374,7 @@
 	  getInitialState: function getInitialState() {
 	    return {
 	      tea_id: this.props.teaId,
-	      rating: '',
+	      rating: 5,
 	      body: '',
 	      steep_time: '',
 	      leaf_quantity: '',

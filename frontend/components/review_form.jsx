@@ -9,7 +9,7 @@ const ReviewForm = React.createClass({
   getInitialState: function () {
     return ({
       tea_id: this.props.teaId,
-      rating: '',
+      rating: 5,
       body: '',
       steep_time: '',
       leaf_quantity: '',
