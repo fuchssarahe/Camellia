@@ -33148,7 +33148,7 @@
 	  displayName: 'SearchBar',
 	
 	  getInitialState: function getInitialState() {
-	    return { suggestions: SearchSuggestionStore.all(), searchType: 'tea', query: '' };
+	    return { suggestions: SearchSuggestionStore.all(), searchType: 'tea', query: '', inFocus: false };
 	  },
 	
 	  componentWillMount: function componentWillMount() {
@@ -33183,6 +33183,10 @@
 	    _reactRouter.hashHistory.push('teas/?' + this.state.searchType + '=' + this.state.query);
 	  },
 	
+	  _updateFocus: function _updateFocus() {
+	    this.setState({ inFocus: !this.state.inFocus });
+	  },
+	
 	  render: function render() {
 	    var _this2 = this;
 	
@@ -33200,12 +33204,17 @@
 	      default:
 	
 	    }
+	
+	    var searchClass = "tea-search";
+	    if (this.state.inFocus) {
+	      searchClass += ' tea-search--in-focus';
+	    }
 	    return React.createElement(
 	      'div',
-	      { className: 'search-container' },
+	      { className: 'search-container', onFocus: this._updateFocus, onBlur: this._updateFocus },
 	      React.createElement(
 	        'form',
-	        { className: 'tea-search', onSubmit: this._searchAndNavAway },
+	        { className: searchClass, onSubmit: this._searchAndNavAway },
 	        React.createElement(
 	          'select',
 	          { onChange: this._updateSearchType, className: 'tea-search_field-selector' },
@@ -35086,6 +35095,66 @@
 	                  React.createElement('span', { className: 'icon-balance-scale' }),
 	                  ' Leaf Density: ',
 	                  this.state.tea.leaf_density,
+	                  ' g/tsp'
+	                )
+	              )
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          'section',
+	          { className: 'panel_section' },
+	          React.createElement(
+	            'h2',
+	            { className: 'panel_section-header' },
+	            'User Steep Averages'
+	          ),
+	          React.createElement(
+	            'ul',
+	            { className: 'cf panel_section-content' },
+	            React.createElement(
+	              'li',
+	              { className: 'col col-1-2' },
+	              React.createElement(
+	                'ul',
+	                null,
+	                React.createElement(
+	                  'li',
+	                  null,
+	                  React.createElement('span', { className: 'icon-stopwatch' }),
+	                  ' Steep Time: ',
+	                  this.state.tea.avg_steep_time + ' ' + timeUnits
+	                ),
+	                React.createElement(
+	                  'li',
+	                  null,
+	                  React.createElement('span', { className: 'icon-thermometer-half' }),
+	                  ' Temperature: ',
+	                  this.state.tea.avg_temperature,
+	                  ' °C'
+	                )
+	              )
+	            ),
+	            React.createElement(
+	              'li',
+	              { className: 'col col-1-2' },
+	              React.createElement(
+	                'ul',
+	                null,
+	                React.createElement(
+	                  'li',
+	                  null,
+	                  React.createElement('span', { className: 'icon-leaf' }),
+	                  ' Leaf Quantity: ',
+	                  this.state.tea.avg_leaf_quantity,
+	                  ' tsp/8oz'
+	                ),
+	                React.createElement(
+	                  'li',
+	                  null,
+	                  React.createElement('span', { className: 'icon-balance-scale' }),
+	                  ' Leaf Density: ',
+	                  this.state.tea.avg_leaf_density,
 	                  ' g/tsp'
 	                )
 	              )

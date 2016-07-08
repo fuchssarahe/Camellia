@@ -118,6 +118,7 @@ user interface.
 - [x] Use CSS to style new views
 
 ### Bonus Features (TBD)
+- [x] aggregate user steep info
 - [ ] Follows
 - [ ] Recording tea consumption + stats
 - [ ] Where to buy

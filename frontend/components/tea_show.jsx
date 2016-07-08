@@ -143,6 +143,26 @@ const TeaShow = React.createClass({
               </li>
             </ul>
           </section>
+
+          <section className='panel_section'>
+          <h2 className="panel_section-header">User Steep Averages</h2>
+            <ul className="cf panel_section-content">
+              <li className="col col-1-2">
+                <ul>
+                  <li><span className='icon-stopwatch'/> Steep Time: {this.state.tea.avg_steep_time + ' ' + timeUnits}</li>
+                  <li><span className='icon-thermometer-half'/> Temperature: {this.state.tea.avg_temperature} °C</li>
+                </ul>
+              </li>
+
+              <li className="col col-1-2">
+                <ul>
+                  <li><span className='icon-leaf'/> Leaf Quantity: {this.state.tea.avg_leaf_quantity} tsp/8oz</li>
+                  <li><span className='icon-balance-scale'/> Leaf Density: {this.state.tea.avg_leaf_density} g/tsp</li>
+                </ul>
+              </li>
+            </ul>
+          </section>
+
           <section className='panel_section'>
             <h2 className="panel_section-header">Reviews</h2>
             <TeaReviewIndex className='panel_section-content' teaId={this.props.params.id} onClick={this._mountReviewForm}/>
