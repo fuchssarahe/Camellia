@@ -63,4 +63,21 @@ class Tea < ActiveRecord::Base
     self.reviews.where(user_id: user_id).average(:rating)
   end
 
+  def avg_steep_time
+    self.reviews.average(:steep_time)
+  end
+
+  def avg_temperature
+    self.reviews.average(:temperature)
+  end
+
+  def avg_leaf_quantity
+    self.reviews.average(:leaf_quantity)
+  end
+
+  def avg_leaf_density
+    self.reviews.average(:leaf_density)
+  end
+
+
 end

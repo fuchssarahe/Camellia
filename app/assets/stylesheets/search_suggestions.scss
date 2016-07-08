@@ -25,6 +25,14 @@
   background-color: transparent;
 }
 
+.search-bar:focus {
+  box-shadow: none;
+}
+
+.tea-search--in-focus {
+  box-shadow: 0 0 5px #41b866;
+}
+
 .tea-search_submit {
   color: #bfcad2;
 }

@@ -7,7 +7,7 @@ const React = require('react'),
 
 const SearchBar = React.createClass({
   getInitialState: function () {
-    return { suggestions: SearchSuggestionStore.all(), searchType: 'tea', query: '' }
+    return { suggestions: SearchSuggestionStore.all(), searchType: 'tea', query: '', inFocus: false }
   },
 
   componentWillMount: function () {
@@ -41,6 +41,10 @@ const SearchBar = React.createClass({
     hashHistory.push(`teas/?${this.state.searchType}=${this.state.query}`);
   },
 
+  _updateFocus: function () {
+    this.setState({ inFocus: !this.state.inFocus });
+  },
+
   render: function () {
 
     let placeholderText;
@@ -57,9 +61,14 @@ const SearchBar = React.createClass({
       default:
 
     }
+
+    let searchClass = "tea-search";
+    if (this.state.inFocus) {
+      searchClass += ' tea-search--in-focus'
+    }
     return (
-      <div className="search-container">
-        <form className="tea-search" onSubmit={this._searchAndNavAway}>
+      <div className="search-container" onFocus={this._updateFocus} onBlur={this._updateFocus}>
+        <form className={searchClass} onSubmit={this._searchAndNavAway}>
             <select onChange={this._updateSearchType} className="tea-search_field-selector">
               <option value="tea">Tea</option>
               <option value="region">Region</option>
