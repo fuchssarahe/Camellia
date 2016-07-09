@@ -28,7 +28,6 @@ How? Store those teas in a relational DB. Implement a clean on concise back-end 
   - Tea Inventory _(which is a list of teas you own! Wow-oh-wow-oh-wow!)_
   - Flux data flow used for all major features
   - Aggregate user steep preferences for teas
-  - Mobile-friendly
 
 ## These are the things I care about:
 
