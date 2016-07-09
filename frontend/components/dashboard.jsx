@@ -20,7 +20,7 @@ const Dashboard = React.createClass({
     this.teaListener = OwnedTeaStore.addListener(this._onTeaChange);
     this.reviewListener = ReviewStore.addListener(this._onReviewChange);
   },
-  
+
   _onChange: function () {
     this.setState({currentUser: SessionStore.currentUser()});
   },
@@ -60,10 +60,9 @@ const Dashboard = React.createClass({
       )
     }
 
-
     return (
       <div className="cf container">
-        <aside className='panel panel_left'>
+        <aside className='panel panel_left hidden-on-mobile'>
           <section className='panel_section'>
             <h2 className='panel_section-header'>Your Reviews</h2>
             <ul className='panel_section-content panel_section-content--flex-col'>
@@ -90,6 +89,14 @@ const Dashboard = React.createClass({
           </section>
         </article>
 
+        <aside className='panel panel_left hidden-on-desktop'>
+          <section className='panel_section'>
+            <h2 className='panel_section-header'>Your Reviews</h2>
+            <ul className='panel_section-content panel_section-content--flex-col'>
+              {fullReviews}
+            </ul>
+          </section>
+        </aside>
       </div>
     )
   }

@@ -75,6 +75,7 @@ button:hover {
 
 .major-button {
   width: 25%;
+  min-width: 150px;
   padding: 20px;
   font-size: 32px;
   font-weight: bold;
@@ -112,4 +113,8 @@ button:hover {
   content: '';
   display: block;
   clear: both;
+}
+
+.no-left-margin {
+  margin-left: 0px;
 }

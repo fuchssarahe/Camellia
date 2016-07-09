@@ -67,7 +67,7 @@ const SearchBar = React.createClass({
       searchClass += ' tea-search--in-focus'
     }
     return (
-      <div className="search-container" onFocus={this._updateFocus} onBlur={this._updateFocus}>
+      <div className="search-container hidden-on-mobile" onFocus={this._updateFocus} onBlur={this._updateFocus}>
         <form className={searchClass} onSubmit={this._searchAndNavAway}>
             <select onChange={this._updateSearchType} className="tea-search_field-selector">
               <option value="tea">Tea</option>

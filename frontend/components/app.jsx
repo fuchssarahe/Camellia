@@ -54,7 +54,7 @@ const App = React.createClass({
         <ul className='auth-buttons'>
           <li><button onClick={this._navToExplore} className='minor-button'>Explore</button></li>
           <li><button onClick={this._navToDashBoard} className='minor-button'>Dashboard</button></li>
-          <li><button onClick={this._navToCreateTea} className='minor-button'>Add New Tea</button></li>
+          <li><button onClick={this._navToCreateTea} className='minor-button hidden-on-mobile'>Add New Tea</button></li>
           <li><button onClick={this._logout}>Logout!</button></li>
         </ul>
     } else {
@@ -63,7 +63,7 @@ const App = React.createClass({
         <li><button onClick={this._navToExplore} className='minor-button'>Explore</button></li>
         <li><button onClick={this._navToSignup} className="minor-button">Sign Up</button></li>
         <li><button onClick={this._navToLogin} className="minor-button">Login</button></li>
-        <li><button onClick={this._loginGuest}>Demo Acount</button></li>
+        <li><button onClick={this._loginGuest} className='hidden-on-mobile'>Demo Acount</button></li>
       </ul>
     }
 

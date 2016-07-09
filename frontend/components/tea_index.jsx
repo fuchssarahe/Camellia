@@ -1,3 +1,4 @@
+import { Link } from 'react-router';
 const React = require('react'),
       TeaStore = require('../stores/tea_store'),
       TeaActions = require('../actions/tea_actions'),
@@ -47,23 +48,39 @@ const TeaIndex = React.createClass({
     if (numOfTeas < 1) {
       teaHeader = 'Oh no! No Teas! Click Explore?'
     }
+
+    const mobileTeaForm = (
+      <div className='hidden-on-desktop'>
+          <section className="panel_section">
+            <Link to='teas/new'>
+              <h2 className='panel_section-header'>Can't find what you're looking for? Click to add a new tea!</h2>
+            </Link>
+          </section>
+      </div>
+    );
+
+    const desktopTeaForm = (
+      <div className="panel panel_right hidden-on-mobile">
+        <section className="panel_section">
+          <h2 className='panel_section-header'>Can't find what you're looking for? Add a new tea to Camellia!</h2>
+          <TeaForm className="panel_section-content"/>
+        </section>
+      </div>
+    );
+
     return (
       <div className="cf container">
         <ul className='panel panel_main'>
           <div className="panel_main-header panel_main-header--white">{teaHeader}</div>
           <div className="panel_main-divider">{numOfTeas} teas found</div>
+          {mobileTeaForm}
           {
             Object.keys(this.state.teas).map( (teaId) => {
               return <TeaIndexItem key={teaId} tea={this.state.teas[teaId]}/>;
             })
           }
         </ul>
-        <div className="panel panel_right">
-          <section className="panel_section">
-            <h2 className='panel_section-header'>Can't find what you're looking for? Add a new tea to Camellia!</h2>
-            <TeaForm className="panel_section-content"/>
-          </section>
-        </div>
+        {desktopTeaForm}
       </div>
     )
   }
