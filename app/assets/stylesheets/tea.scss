@@ -176,3 +176,22 @@
     display: none;
   }
 }
+
+@media screen and (max--device-width: 41em) {
+  .panel_left, .panel_right, .panel_main {
+    width: 100%;
+    padding: 0 10px;
+  }
+
+  .panel_main-divider {
+    margin-bottom: 0px;
+  }
+
+  .hidden-on-desktop {
+    display: block;
+  }
+
+  .hidden-on-mobile {
+    display: none;
+  }
+}
