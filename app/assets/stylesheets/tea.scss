@@ -21,7 +21,7 @@
 
 .panel_main {
   width: 66%;
-  min-width: 430px;
+  min-width: 400px;
   padding: 0 10px;
 }
 
@@ -129,10 +129,9 @@
 
 .index-item_image {
   margin: auto;
-  height: auto;
+  width: auto;
+  height: 150px;
   max-height: 150px;
-  width: 100%;
-  max-width: 250px;
 }
 
 .index-item_image--empty {
@@ -154,4 +153,27 @@
   width: 100%;
   max-width: 400px;
   max-height: 300px;
+}
+
+.hidden-on-desktop {
+  display: none;
+}
+
+@media (max-width: 652px) {
+  .panel_left, .panel_right, .panel_main {
+    width: 100%;
+    padding: 0 10px;
+  }
+
+  .panel_main-divider {
+    margin-bottom: 0px;
+  }
+
+  .hidden-on-desktop {
+    display: block;
+  }
+
+  .hidden-on-mobile {
+    display: none;
+  }
 }

@@ -98,6 +98,11 @@ const TeaShow = React.createClass({
     return (
       <div className="cf container">
         <aside className='panel panel_left'>
+          <section className='panel_main-header hidden-on-desktop'>
+            <h1>{this.state.tea.name}</h1>
+            <p className="panel_main-subheading">{subHeading}</p>
+          </section>
+
           <figure className="panel_section">
             {figureContents}
           </figure>
@@ -117,7 +122,7 @@ const TeaShow = React.createClass({
         </aside>
 
         <article className='panel panel_main'>
-          <section className='panel_main-header'>
+          <section className='panel_main-header hidden-on-mobile'>
             <h1>{this.state.tea.name}</h1>
             <p className="panel_main-subheading">{subHeading}</p>
           </section>

@@ -38,3 +38,10 @@
   padding-bottom: 10px;
   border-bottom: 1px solid #bfcad2;
 }
+
+@media (max-width: 652px) {
+  .standalone-tea-form {
+    width: 100%;
+    margin: 0 auto;
+  }
+}

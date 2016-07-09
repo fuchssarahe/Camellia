@@ -29,9 +29,9 @@ const Splash = React.createClass({
         <figure className="splash splash--banner" >
           <article className='splash-search'>
             <h2>Explore New Teas and Save your Favorites</h2>
-            <h3>Try searching by tea, type, or region</h3>
+            <h3 className='hidden-on-mobile'>Try searching by tea, type, or region</h3>
             <SearchBar />
-            <h3>Or browse to explore</h3>
+            <h3 className='hidden-on-mobile'>Or browse to explore</h3>
             <button onClick={this._navToBrowse} className='major-button'>Explore</button>
           </article>
         </figure>

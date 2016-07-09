@@ -26056,7 +26056,7 @@
 	          null,
 	          React.createElement(
 	            'button',
-	            { onClick: this._navToCreateTea, className: 'minor-button' },
+	            { onClick: this._navToCreateTea, className: 'minor-button hidden-on-mobile' },
 	            'Add New Tea'
 	          )
 	        ),
@@ -26106,7 +26106,7 @@
 	          null,
 	          React.createElement(
 	            'button',
-	            { onClick: this._loginGuest },
+	            { onClick: this._loginGuest, className: 'hidden-on-mobile' },
 	            'Demo Acount'
 	          )
 	        )
@@ -33211,7 +33211,7 @@
 	    }
 	    return React.createElement(
 	      'div',
-	      { className: 'search-container', onFocus: this._updateFocus, onBlur: this._updateFocus },
+	      { className: 'search-container hidden-on-mobile', onFocus: this._updateFocus, onBlur: this._updateFocus },
 	      React.createElement(
 	        'form',
 	        { className: searchClass, onSubmit: this._searchAndNavAway },
@@ -33697,13 +33697,13 @@
 	          ),
 	          React.createElement(
 	            'h3',
-	            null,
+	            { className: 'hidden-on-mobile' },
 	            'Try searching by tea, type, or region'
 	          ),
 	          React.createElement(SearchBar, null),
 	          React.createElement(
 	            'h3',
-	            null,
+	            { className: 'hidden-on-mobile' },
 	            'Or browse to explore'
 	          ),
 	          React.createElement(
@@ -33789,6 +33789,10 @@
 	    }
 	  },
 	
+	  _loginGuest: function _loginGuest() {
+	    SessionActions.login({ username: 'guest', password: '123456' });
+	  },
+	
 	  _handleFormChange: function _handleFormChange(event, property) {
 	    this.setState(_defineProperty({}, property, event.target.value));
 	  },
@@ -33855,7 +33859,12 @@
 	            },
 	            value: this.state.password,
 	            placeholder: 'Password' }),
-	          React.createElement('input', { type: 'submit', value: buttonText, className: 'submit-input' })
+	          React.createElement('input', { type: 'submit', value: buttonText, className: 'submit-input' }),
+	          React.createElement(
+	            'button',
+	            { onClick: this._loginGuest, className: 'hidden-on-desktop no-left-margin' },
+	            'Demo Acount'
+	          )
 	        )
 	      ),
 	      React.createElement('div', { className: 'modal-screen', onClick: this._closeModal })
@@ -33978,6 +33987,8 @@
 
 	'use strict';
 	
+	var _reactRouter = __webpack_require__(1);
+	
 	var React = __webpack_require__(4),
 	    TeaStore = __webpack_require__(272),
 	    TeaActions = __webpack_require__(265),
@@ -34030,6 +34041,40 @@
 	    if (numOfTeas < 1) {
 	      teaHeader = 'Oh no! No Teas! Click Explore?';
 	    }
+	
+	    var mobileTeaForm = React.createElement(
+	      'div',
+	      { className: 'hidden-on-desktop' },
+	      React.createElement(
+	        'section',
+	        { className: 'panel_section' },
+	        React.createElement(
+	          _reactRouter.Link,
+	          { to: 'teas/new' },
+	          React.createElement(
+	            'h2',
+	            { className: 'panel_section-header' },
+	            'Can\'t find what you\'re looking for? Click to add a new tea!'
+	          )
+	        )
+	      )
+	    );
+	
+	    var desktopTeaForm = React.createElement(
+	      'div',
+	      { className: 'panel panel_right hidden-on-mobile' },
+	      React.createElement(
+	        'section',
+	        { className: 'panel_section' },
+	        React.createElement(
+	          'h2',
+	          { className: 'panel_section-header' },
+	          'Can\'t find what you\'re looking for? Add a new tea to Camellia!'
+	        ),
+	        React.createElement(TeaForm, { className: 'panel_section-content' })
+	      )
+	    );
+	
 	    return React.createElement(
 	      'div',
 	      { className: 'cf container' },
@@ -34047,24 +34092,12 @@
 	          numOfTeas,
 	          ' teas found'
 	        ),
+	        mobileTeaForm,
 	        Object.keys(this.state.teas).map(function (teaId) {
 	          return React.createElement(TeaIndexItem, { key: teaId, tea: _this.state.teas[teaId] });
 	        })
 	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'panel panel_right' },
-	        React.createElement(
-	          'section',
-	          { className: 'panel_section' },
-	          React.createElement(
-	            'h2',
-	            { className: 'panel_section-header' },
-	            'Can\'t find what you\'re looking for? Add a new tea to Camellia!'
-	          ),
-	          React.createElement(TeaForm, { className: 'panel_section-content' })
-	        )
-	      )
+	      desktopTeaForm
 	    );
 	  }
 	});
@@ -34984,6 +35017,20 @@
 	        'aside',
 	        { className: 'panel panel_left' },
 	        React.createElement(
+	          'section',
+	          { className: 'panel_main-header hidden-on-desktop' },
+	          React.createElement(
+	            'h1',
+	            null,
+	            this.state.tea.name
+	          ),
+	          React.createElement(
+	            'p',
+	            { className: 'panel_main-subheading' },
+	            subHeading
+	          )
+	        ),
+	        React.createElement(
 	          'figure',
 	          { className: 'panel_section' },
 	          figureContents
@@ -35023,7 +35070,7 @@
 	        { className: 'panel panel_main' },
 	        React.createElement(
 	          'section',
-	          { className: 'panel_main-header' },
+	          { className: 'panel_main-header hidden-on-mobile' },
 	          React.createElement(
 	            'h1',
 	            null,
@@ -35733,7 +35780,7 @@
 	      { className: 'cf container' },
 	      React.createElement(
 	        'aside',
-	        { className: 'panel panel_left' },
+	        { className: 'panel panel_left hidden-on-mobile' },
 	        React.createElement(
 	          'section',
 	          { className: 'panel_section' },
@@ -35785,6 +35832,24 @@
 	            Object.keys(this.state.ownedTeas).map(function (teaId) {
 	              return React.createElement(OwnedTeaItem, { key: teaId, tea: _this.state.ownedTeas[teaId] });
 	            })
+	          )
+	        )
+	      ),
+	      React.createElement(
+	        'aside',
+	        { className: 'panel panel_left hidden-on-desktop' },
+	        React.createElement(
+	          'section',
+	          { className: 'panel_section' },
+	          React.createElement(
+	            'h2',
+	            { className: 'panel_section-header' },
+	            'Your Reviews'
+	          ),
+	          React.createElement(
+	            'ul',
+	            { className: 'panel_section-content panel_section-content--flex-col' },
+	            fullReviews
 	          )
 	        )
 	      )

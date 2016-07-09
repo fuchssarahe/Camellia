@@ -42,6 +42,10 @@ const AuthForm = React.createClass({
     }
   },
 
+  _loginGuest: function () {
+    SessionActions.login({username: 'guest', password: '123456'});
+  },
+
   _handleFormChange: function (event, property) {
     this.setState({[property]: event.target.value});
   },
@@ -88,6 +92,7 @@ const AuthForm = React.createClass({
                     placeholder="Password"/>
 
              <input type="submit" value={buttonText} className='submit-input'/>
+             <button onClick={this._loginGuest} className='hidden-on-desktop no-left-margin'>Demo Acount</button>
           </form>
         </div>
         <div className="modal-screen" onClick={this._closeModal}></div>
