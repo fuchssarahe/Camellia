@@ -39,7 +39,7 @@
   border-bottom: 1px solid #bfcad2;
 }
 
-@media (max-width: 652px) {
+@media screen and (max-width: 652px) {
   .standalone-tea-form {
     width: 100%;
     margin: 0 auto;
