@@ -39,14 +39,14 @@
   border-bottom: 1px solid #bfcad2;
 }
 
-@media screen and (max-width: 652px) {
+@media (max-width: 41em) {
   .standalone-tea-form {
     width: 100%;
     margin: 0 auto;
   }
 }
 
-@media screen and (max--device-width: 41em) {
+@media (max--device-width: 41em) {
   .standalone-tea-form {
     width: 100%;
     margin: 0 auto;
