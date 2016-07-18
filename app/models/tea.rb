@@ -51,34 +51,37 @@ class Tea < ActiveRecord::Base
   end
 
   def user_rating(user_id)
-    self.reviews.where(user_id: user_id).average(:rating)
+    average = self.reviews.where(user_id: user_id).average(:rating)
+    if average
+      return average
+    end
   end
 
   def avg_steep_time
     average = self.reviews.average(:steep_time)
     if average
-      return averge.round(1)
+      return average.round(1)
     end
   end
 
   def avg_temperature
     average = self.reviews.average(:temperature)
     if average
-      return averge.round
+      return average.round
     end
   end
 
   def avg_leaf_quantity
     average = self.reviews.average(:leaf_quantity)
     if average
-      return averge.round(1)
+      return average.round(1)
     end
   end
 
   def avg_leaf_density
     average = self.reviews.average(:leaf_density)
     if average
-      return averge.round(1)
+      return average.round(1)
     end
   end
 

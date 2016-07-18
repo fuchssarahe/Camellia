@@ -34077,27 +34077,31 @@
 	
 	    return React.createElement(
 	      'div',
-	      { className: 'cf container' },
+	      { className: 'container' },
 	      React.createElement(
-	        'ul',
-	        { className: 'panel panel_main' },
+	        'div',
+	        { className: 'cf container-basket' },
 	        React.createElement(
-	          'div',
-	          { className: 'panel_main-header panel_main-header--white' },
-	          teaHeader
+	          'ul',
+	          { className: 'panel panel_main' },
+	          React.createElement(
+	            'div',
+	            { className: 'panel_main-header panel_main-header--white' },
+	            teaHeader
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'panel_main-divider' },
+	            numOfTeas,
+	            ' teas found'
+	          ),
+	          mobileTeaForm,
+	          Object.keys(this.state.teas).map(function (teaId) {
+	            return React.createElement(TeaIndexItem, { key: teaId, tea: _this.state.teas[teaId] });
+	          })
 	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'panel_main-divider' },
-	          numOfTeas,
-	          ' teas found'
-	        ),
-	        mobileTeaForm,
-	        Object.keys(this.state.teas).map(function (teaId) {
-	          return React.createElement(TeaIndexItem, { key: teaId, tea: _this.state.teas[teaId] });
-	        })
-	      ),
-	      desktopTeaForm
+	        desktopTeaForm
+	      )
 	    );
 	  }
 	});
@@ -35012,220 +35016,224 @@
 	
 	    return React.createElement(
 	      'div',
-	      { className: 'cf container' },
+	      { className: 'container' },
 	      React.createElement(
-	        'aside',
-	        { className: 'panel panel_left' },
+	        'div',
+	        { className: 'cf container-basket' },
 	        React.createElement(
-	          'section',
-	          { className: 'panel_main-header hidden-on-desktop' },
+	          'aside',
+	          { className: 'panel panel_left' },
 	          React.createElement(
-	            'h1',
-	            null,
-	            this.state.tea.name
-	          ),
-	          React.createElement(
-	            'p',
-	            { className: 'panel_main-subheading' },
-	            subHeading
-	          )
-	        ),
-	        React.createElement(
-	          'figure',
-	          { className: 'panel_section' },
-	          figureContents
-	        ),
-	        React.createElement(
-	          'section',
-	          { className: 'panel_section' },
-	          React.createElement(
-	            'h2',
-	            { className: 'panel_section-header' },
-	            'Your Shelf'
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'panel_section-content panel_section-content--flex-col' },
-	            React.createElement(OwnershipButton, { teaId: this.state.tea.id })
-	          )
-	        ),
-	        React.createElement(
-	          'section',
-	          { className: 'panel_section' },
-	          React.createElement(
-	            'h2',
-	            { className: 'panel_section-header' },
-	            'Your Review'
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'panel_section-content panel_section-content--flex-col' },
-	            reviewButton
-	          )
-	        ),
-	        reviewForm
-	      ),
-	      React.createElement(
-	        'article',
-	        { className: 'panel panel_main' },
-	        React.createElement(
-	          'section',
-	          { className: 'panel_main-header hidden-on-mobile' },
-	          React.createElement(
-	            'h1',
-	            null,
-	            this.state.tea.name
-	          ),
-	          React.createElement(
-	            'p',
-	            { className: 'panel_main-subheading' },
-	            subHeading
-	          )
-	        ),
-	        React.createElement(
-	          'section',
-	          { className: 'panel_section' },
-	          React.createElement(
-	            'h2',
-	            { className: 'panel_section-header' },
-	            'Overview'
-	          ),
-	          React.createElement(
-	            'ul',
-	            { className: 'cf panel_section-content' },
+	            'section',
+	            { className: 'panel_main-header hidden-on-desktop' },
 	            React.createElement(
-	              'li',
-	              { className: 'col col-1-2' },
-	              React.createElement(
-	                'ul',
-	                null,
-	                reviewRating,
-	                React.createElement(
-	                  'li',
-	                  null,
-	                  React.createElement('span', { className: 'icon-pencil2' }),
-	                  ' ',
-	                  this.state.tea.description
-	                ),
-	                React.createElement(
-	                  'li',
-	                  null,
-	                  React.createElement('span', { className: 'icon-office' }),
-	                  ' Retailer: ',
-	                  this.state.tea.retailer
-	                )
-	              )
+	              'h1',
+	              null,
+	              this.state.tea.name
 	            ),
 	            React.createElement(
-	              'li',
-	              { className: 'col col-1-2' },
+	              'p',
+	              { className: 'panel_main-subheading' },
+	              subHeading
+	            )
+	          ),
+	          React.createElement(
+	            'figure',
+	            { className: 'panel_section' },
+	            figureContents
+	          ),
+	          React.createElement(
+	            'section',
+	            { className: 'panel_section' },
+	            React.createElement(
+	              'h2',
+	              { className: 'panel_section-header' },
+	              'Your Shelf'
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'panel_section-content panel_section-content--flex-col' },
+	              React.createElement(OwnershipButton, { teaId: this.state.tea.id })
+	            )
+	          ),
+	          React.createElement(
+	            'section',
+	            { className: 'panel_section' },
+	            React.createElement(
+	              'h2',
+	              { className: 'panel_section-header' },
+	              'Your Review'
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'panel_section-content panel_section-content--flex-col' },
+	              reviewButton
+	            )
+	          ),
+	          reviewForm
+	        ),
+	        React.createElement(
+	          'article',
+	          { className: 'panel panel_main' },
+	          React.createElement(
+	            'section',
+	            { className: 'panel_main-header hidden-on-mobile' },
+	            React.createElement(
+	              'h1',
+	              null,
+	              this.state.tea.name
+	            ),
+	            React.createElement(
+	              'p',
+	              { className: 'panel_main-subheading' },
+	              subHeading
+	            )
+	          ),
+	          React.createElement(
+	            'section',
+	            { className: 'panel_section' },
+	            React.createElement(
+	              'h2',
+	              { className: 'panel_section-header' },
+	              'Overview'
+	            ),
+	            React.createElement(
+	              'ul',
+	              { className: 'cf panel_section-content' },
 	              React.createElement(
-	                'ul',
-	                null,
+	                'li',
+	                { className: 'col col-1-2' },
 	                React.createElement(
-	                  'li',
+	                  'ul',
 	                  null,
-	                  React.createElement('span', { className: 'icon-stopwatch' }),
-	                  ' Steep Time: ',
-	                  this.state.tea.steep_time + ' ' + timeUnits
-	                ),
+	                  reviewRating,
+	                  React.createElement(
+	                    'li',
+	                    null,
+	                    React.createElement('span', { className: 'icon-pencil2' }),
+	                    ' ',
+	                    this.state.tea.description
+	                  ),
+	                  React.createElement(
+	                    'li',
+	                    null,
+	                    React.createElement('span', { className: 'icon-office' }),
+	                    ' Retailer: ',
+	                    this.state.tea.retailer
+	                  )
+	                )
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'col col-1-2' },
 	                React.createElement(
-	                  'li',
+	                  'ul',
 	                  null,
-	                  React.createElement('span', { className: 'icon-thermometer-half' }),
-	                  ' Temperature: ',
-	                  this.state.tea.temperature,
-	                  ' °C'
-	                ),
-	                React.createElement(
-	                  'li',
-	                  null,
-	                  React.createElement('span', { className: 'icon-leaf' }),
-	                  ' Leaf Quantity: ',
-	                  this.state.tea.leaf_quantity,
-	                  ' tsp/8oz'
-	                ),
-	                React.createElement(
-	                  'li',
-	                  null,
-	                  React.createElement('span', { className: 'icon-balance-scale' }),
-	                  ' Leaf Density: ',
-	                  this.state.tea.leaf_density,
-	                  ' g/tsp'
+	                  React.createElement(
+	                    'li',
+	                    null,
+	                    React.createElement('span', { className: 'icon-stopwatch' }),
+	                    ' Steep Time: ',
+	                    this.state.tea.steep_time + ' ' + timeUnits
+	                  ),
+	                  React.createElement(
+	                    'li',
+	                    null,
+	                    React.createElement('span', { className: 'icon-thermometer-half' }),
+	                    ' Temperature: ',
+	                    this.state.tea.temperature,
+	                    ' °C'
+	                  ),
+	                  React.createElement(
+	                    'li',
+	                    null,
+	                    React.createElement('span', { className: 'icon-leaf' }),
+	                    ' Leaf Quantity: ',
+	                    this.state.tea.leaf_quantity,
+	                    ' tsp/8oz'
+	                  ),
+	                  React.createElement(
+	                    'li',
+	                    null,
+	                    React.createElement('span', { className: 'icon-balance-scale' }),
+	                    ' Leaf Density: ',
+	                    this.state.tea.leaf_density,
+	                    ' g/tsp'
+	                  )
 	                )
 	              )
 	            )
-	          )
-	        ),
-	        React.createElement(
-	          'section',
-	          { className: 'panel_section' },
-	          React.createElement(
-	            'h2',
-	            { className: 'panel_section-header' },
-	            'User Steep Averages'
 	          ),
 	          React.createElement(
-	            'ul',
-	            { className: 'cf panel_section-content' },
+	            'section',
+	            { className: 'panel_section' },
 	            React.createElement(
-	              'li',
-	              { className: 'col col-1-2' },
-	              React.createElement(
-	                'ul',
-	                null,
-	                React.createElement(
-	                  'li',
-	                  null,
-	                  React.createElement('span', { className: 'icon-stopwatch' }),
-	                  ' Steep Time: ',
-	                  this.state.tea.avg_steep_time + ' ' + timeUnits
-	                ),
-	                React.createElement(
-	                  'li',
-	                  null,
-	                  React.createElement('span', { className: 'icon-thermometer-half' }),
-	                  ' Temperature: ',
-	                  this.state.tea.avg_temperature,
-	                  ' °C'
-	                )
-	              )
+	              'h2',
+	              { className: 'panel_section-header' },
+	              'User Steep Averages'
 	            ),
 	            React.createElement(
-	              'li',
-	              { className: 'col col-1-2' },
+	              'ul',
+	              { className: 'cf panel_section-content' },
 	              React.createElement(
-	                'ul',
-	                null,
+	                'li',
+	                { className: 'col col-1-2' },
 	                React.createElement(
-	                  'li',
+	                  'ul',
 	                  null,
-	                  React.createElement('span', { className: 'icon-leaf' }),
-	                  ' Leaf Quantity: ',
-	                  this.state.tea.avg_leaf_quantity,
-	                  ' tsp/8oz'
-	                ),
+	                  React.createElement(
+	                    'li',
+	                    null,
+	                    React.createElement('span', { className: 'icon-stopwatch' }),
+	                    ' Steep Time: ',
+	                    this.state.tea.avg_steep_time + ' ' + timeUnits
+	                  ),
+	                  React.createElement(
+	                    'li',
+	                    null,
+	                    React.createElement('span', { className: 'icon-thermometer-half' }),
+	                    ' Temperature: ',
+	                    this.state.tea.avg_temperature,
+	                    ' °C'
+	                  )
+	                )
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'col col-1-2' },
 	                React.createElement(
-	                  'li',
+	                  'ul',
 	                  null,
-	                  React.createElement('span', { className: 'icon-balance-scale' }),
-	                  ' Leaf Density: ',
-	                  this.state.tea.avg_leaf_density,
-	                  ' g/tsp'
+	                  React.createElement(
+	                    'li',
+	                    null,
+	                    React.createElement('span', { className: 'icon-leaf' }),
+	                    ' Leaf Quantity: ',
+	                    this.state.tea.avg_leaf_quantity,
+	                    ' tsp/8oz'
+	                  ),
+	                  React.createElement(
+	                    'li',
+	                    null,
+	                    React.createElement('span', { className: 'icon-balance-scale' }),
+	                    ' Leaf Density: ',
+	                    this.state.tea.avg_leaf_density,
+	                    ' g/tsp'
+	                  )
 	                )
 	              )
 	            )
-	          )
-	        ),
-	        React.createElement(
-	          'section',
-	          { className: 'panel_section' },
-	          React.createElement(
-	            'h2',
-	            { className: 'panel_section-header' },
-	            'Reviews'
 	          ),
-	          React.createElement(TeaReviewIndex, { className: 'panel_section-content', teaId: this.props.params.id, onClick: this._mountReviewForm })
+	          React.createElement(
+	            'section',
+	            { className: 'panel_section' },
+	            React.createElement(
+	              'h2',
+	              { className: 'panel_section-header' },
+	              'Reviews'
+	            ),
+	            React.createElement(TeaReviewIndex, { className: 'panel_section-content', teaId: this.props.params.id, onClick: this._mountReviewForm })
+	          )
 	        )
 	      )
 	    );
@@ -35777,79 +35785,83 @@
 	
 	    return React.createElement(
 	      'div',
-	      { className: 'cf container' },
+	      { className: 'container' },
 	      React.createElement(
-	        'aside',
-	        { className: 'panel panel_left hidden-on-mobile' },
+	        'div',
+	        { className: 'cf container-basket' },
 	        React.createElement(
-	          'section',
-	          { className: 'panel_section' },
+	          'aside',
+	          { className: 'panel panel_left hidden-on-mobile' },
 	          React.createElement(
-	            'h2',
-	            { className: 'panel_section-header' },
-	            'Your Reviews'
-	          ),
-	          React.createElement(
-	            'ul',
-	            { className: 'panel_section-content panel_section-content--flex-col' },
-	            fullReviews
-	          )
-	        )
-	      ),
-	      React.createElement(
-	        'article',
-	        { className: 'panel panel_main' },
-	        React.createElement(
-	          'section',
-	          { className: 'panel_main-header' },
-	          React.createElement(
-	            'h1',
-	            null,
-	            'Hello, ',
-	            this.state.currentUser.username,
-	            '!'
-	          ),
-	          React.createElement(
-	            'p',
-	            { className: 'panel_main-subheading' },
-	            'User since: ',
-	            this.state.currentUser.date_joined
+	            'section',
+	            { className: 'panel_section' },
+	            React.createElement(
+	              'h2',
+	              { className: 'panel_section-header' },
+	              'Your Reviews'
+	            ),
+	            React.createElement(
+	              'ul',
+	              { className: 'panel_section-content panel_section-content--flex-col' },
+	              fullReviews
+	            )
 	          )
 	        ),
 	        React.createElement(
-	          'section',
-	          { className: 'panel_section' },
+	          'article',
+	          { className: 'panel panel_main' },
 	          React.createElement(
-	            'h2',
-	            { className: 'panel_section-header' },
-	            'Tea Shelf: ',
-	            Object.keys(this.state.ownedTeas).length,
-	            ' owned teas'
+	            'section',
+	            { className: 'panel_main-header' },
+	            React.createElement(
+	              'h1',
+	              null,
+	              'Hello, ',
+	              this.state.currentUser.username,
+	              '!'
+	            ),
+	            React.createElement(
+	              'p',
+	              { className: 'panel_main-subheading' },
+	              'User since: ',
+	              this.state.currentUser.date_joined
+	            )
 	          ),
 	          React.createElement(
-	            'ul',
-	            { className: 'cf panel_section-content sub-index' },
-	            Object.keys(this.state.ownedTeas).map(function (teaId) {
-	              return React.createElement(OwnedTeaItem, { key: teaId, tea: _this.state.ownedTeas[teaId] });
-	            })
+	            'section',
+	            { className: 'panel_section' },
+	            React.createElement(
+	              'h2',
+	              { className: 'panel_section-header' },
+	              'Tea Shelf: ',
+	              Object.keys(this.state.ownedTeas).length,
+	              ' owned teas'
+	            ),
+	            React.createElement(
+	              'ul',
+	              { className: 'cf panel_section-content sub-index' },
+	              Object.keys(this.state.ownedTeas).map(function (teaId) {
+	                return React.createElement(OwnedTeaItem, { key: teaId, tea: _this.state.ownedTeas[teaId] });
+	              })
+	            )
 	          )
-	        )
-	      ),
-	      React.createElement(
-	        'aside',
-	        { className: 'panel panel_left hidden-on-desktop' },
+	        ),
 	        React.createElement(
-	          'section',
-	          { className: 'panel_section' },
+	          'aside',
+	          { className: 'panel panel_left hidden-on-desktop' },
 	          React.createElement(
-	            'h2',
-	            { className: 'panel_section-header' },
-	            'Your Reviews'
-	          ),
-	          React.createElement(
-	            'ul',
-	            { className: 'panel_section-content panel_section-content--flex-col' },
-	            fullReviews
+	            'section',
+	            { className: 'panel_section' },
+	            React.createElement(
+	              'h2',
+	              { className: 'panel_section-header' },
+	              'Your Reviews'
+	            ),
+	            React.createElement(
+	              'ul',
+	              { className: 'panel_section-content panel_section-content--flex-col' },
+	              fullReviews
+	            )
 	          )
 	        )
 	      )
@@ -35922,18 +35934,22 @@
 	      { className: 'container' },
 	      React.createElement(
 	        'div',
-	        { className: 'standalone-tea-form' },
+	        { className: 'container-basket' },
 	        React.createElement(
-	          'h1',
-	          null,
-	          'Add a new tea to Camellia!'
-	        ),
-	        React.createElement(
-	          'h2',
-	          null,
-	          'As soon as you add a new tea, the tea will belong to the Camellia Tea Shelf. You\'ll have the ability to review the tea or add it to your personal Tea Shelf once it has been added here!'
-	        ),
-	        React.createElement(TeaForm, null)
+	          'div',
+	          { className: 'standalone-tea-form' },
+	          React.createElement(
+	            'h1',
+	            null,
+	            'Add a new tea to Camellia!'
+	          ),
+	          React.createElement(
+	            'h2',
+	            null,
+	            'As soon as you add a new tea, the tea will belong to the Camellia Tea Shelf. You\'ll have the ability to review the tea or add it to your personal Tea Shelf once it has been added here!'
+	          ),
+	          React.createElement(TeaForm, null)
+	        )
 	      )
 	    );
 	  }

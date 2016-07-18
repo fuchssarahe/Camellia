@@ -103,10 +103,17 @@ button:hover {
 
 .container {
   background: #f1efea;
-  padding: 10px calc(100vw - 1300px);
+  padding: 10px 0;
   height: 100%;
   padding-top: 73px;
   min-height: calc(100vh - 82px);
+}
+
+.container-basket {
+  width: 100%;
+  max-width: 1300px;
+  margin: auto;
+  height: 100%;
 }
 
 .cf:after {

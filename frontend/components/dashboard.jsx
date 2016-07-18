@@ -61,7 +61,8 @@ const Dashboard = React.createClass({
     }
 
     return (
-      <div className="cf container">
+      <div className="container">
+        <div className='cf container-basket'>
         <aside className='panel panel_left hidden-on-mobile'>
           <section className='panel_section'>
             <h2 className='panel_section-header'>Your Reviews</h2>
@@ -97,6 +98,7 @@ const Dashboard = React.createClass({
             </ul>
           </section>
         </aside>
+        </div>
       </div>
     )
   }

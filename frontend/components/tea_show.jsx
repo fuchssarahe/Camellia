@@ -96,7 +96,8 @@ const TeaShow = React.createClass({
     }
 
     return (
-      <div className="cf container">
+      <div className="container">
+        <div className='cf container-basket'>
         <aside className='panel panel_left'>
           <section className='panel_main-header hidden-on-desktop'>
             <h1>{this.state.tea.name}</h1>
@@ -173,7 +174,7 @@ const TeaShow = React.createClass({
             <TeaReviewIndex className='panel_section-content' teaId={this.props.params.id} onClick={this._mountReviewForm}/>
           </section>
         </article>
-
+        </div>
       </div>
     )
   }

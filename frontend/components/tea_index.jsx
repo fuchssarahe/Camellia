@@ -69,7 +69,8 @@ const TeaIndex = React.createClass({
     );
 
     return (
-      <div className="cf container">
+      <div className="container">
+        <div className='cf container-basket'>
         <ul className='panel panel_main'>
           <div className="panel_main-header panel_main-header--white">{teaHeader}</div>
           <div className="panel_main-divider">{numOfTeas} teas found</div>
@@ -81,6 +82,7 @@ const TeaIndex = React.createClass({
           }
         </ul>
         {desktopTeaForm}
+        </div>
       </div>
     )
   }
