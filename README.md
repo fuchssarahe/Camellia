@@ -2,7 +2,7 @@
 
 [Camellia Live!][heroku]
 
-[heroku]: https://camellia.io/
+[heroku]: http://www.camellia.io/
 
 Camellia is a web application built using Ruby on Rails and React.js meant for reviewing teas and managing personal tea inventories. The underlying structure of the application is inspired by [Couchsurfing](https://www.couchsurfing.com/), though the functionality is vastly different.
 
