@@ -33397,6 +33397,7 @@
 	            RECEIVE_OWNED_TEAS: 'RECEIVE_OWNED_TEAS',
 	            RECEIVE_OWNED_TEA: 'RECEIVE_OWNED_TEA',
 	            REMOVE_OWNED_TEA: 'REMOVE_OWNED_TEA',
+	            RECEIVE_SIPPED_TEA: 'RECEIVE_SIPPED_TEA',
 	
 	            ALL_TYPES: ['Other', 'Black', 'Red', 'White', 'Dark', 'Yellow', 'Green', 'Oolong', 'Herbal'],
 	
