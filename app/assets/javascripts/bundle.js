@@ -36024,17 +36024,26 @@
 	var SippingButton = React.createClass({
 	  displayName: 'SippingButton',
 	
+	  getInitialState: function getInitialState() {
+	    return { disabled: false };
+	  },
 	
 	  _handleClick: function _handleClick(event) {
 	    event.preventDefault();
 	    SippingActions.createSipping(this.props.teaId);
 	    console.log('sipping button clicked');
+	    this.setState({ disabled: true });
 	  },
 	
 	  render: function render() {
+	    var classes = 'minor-button';
+	    if (this.state.disabled) {
+	      classes += ' minor-button--disabled';
+	    }
+	
 	    return React.createElement(
 	      'button',
-	      { className: 'minor-button', onClick: this._handleClick },
+	      { className: classes, onClick: this._handleClick, disabled: this.state.disabled },
 	      'Log Sipping'
 	    );
 	  }
