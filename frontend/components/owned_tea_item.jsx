@@ -1,7 +1,8 @@
 import { Link } from 'react-router';
 const React = require('react'),
       OwnershipActions = require('../actions/ownership_actions'),
-      OwnershipButton = require('./ownership_button');
+      OwnershipButton = require('./ownership_button'),
+      SippingButton = require('./sipping_button');
 
 const OwnedTeaItem = React.createClass({
   render: function () {
@@ -18,6 +19,7 @@ const OwnedTeaItem = React.createClass({
           <figure>{figureContents}</figure>
           {this.props.tea.name}, {this.props.tea.tea_type}
           <OwnershipButton teaId={this.props.tea.id}/>
+          <SippingButton teaId={this.props.tea.id}/>
         </Link>
       </li>
     )

@@ -1,4 +1,4 @@
-const OwnershipApiUtil = {
+const SippingApiUtil = {
   createSipping: function (teaId, callback, errorCallback) {
     $.ajax({
       url: 'api/teas/' + teaId + '/sipping',
@@ -6,8 +6,8 @@ const OwnershipApiUtil = {
       success: callback,
       error: (resp) => errorCallback('newSipping', resp)
     })
-  },
+  }
 
 };
 
-module.exports = OwnershipApiUtil;
+module.exports = SippingApiUtil;

@@ -35882,7 +35882,8 @@
 	
 	var React = __webpack_require__(4),
 	    OwnershipActions = __webpack_require__(277),
-	    OwnershipButton = __webpack_require__(275);
+	    OwnershipButton = __webpack_require__(275),
+	    SippingButton = __webpack_require__(294);
 	
 	var OwnedTeaItem = React.createClass({
 	  displayName: 'OwnedTeaItem',
@@ -35909,7 +35910,8 @@
 	        this.props.tea.name,
 	        ', ',
 	        this.props.tea.tea_type,
-	        React.createElement(OwnershipButton, { teaId: this.props.tea.id })
+	        React.createElement(OwnershipButton, { teaId: this.props.tea.id }),
+	        React.createElement(SippingButton, { teaId: this.props.tea.id })
 	      )
 	    );
 	  }
@@ -35957,6 +35959,88 @@
 	});
 	
 	module.exports = CreateTea;
+
+/***/ },
+/* 292 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var TeaConstants = __webpack_require__(262),
+	    SippingApiUtil = __webpack_require__(293),
+	    ErrorActions = __webpack_require__(238),
+	    Dispatcher = __webpack_require__(232);
+	
+	var SippedTeaActions = {
+	  createSipping: function createSipping(teaId) {
+	    SippingApiUtil.createSipping(teaId, SippedTeaActions.receiveSingleTea, ErrorActions.setErrors);
+	  },
+	
+	  receiveSingleTea: function receiveSingleTea(tea) {
+	    ErrorActions.clearErrors();
+	    // const payload = {
+	    //   actionType: TeaConstants.RECEIVE_SIPPED_TEA,
+	    //   tea: tea
+	    // }
+	    // Dispatcher.dispatch(payload);
+	    console.log(tea, 'successfully created a sipping!');
+	  }
+	
+	};
+	
+	module.exports = SippedTeaActions;
+
+/***/ },
+/* 293 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var SippingApiUtil = {
+	  createSipping: function createSipping(teaId, callback, errorCallback) {
+	    $.ajax({
+	      url: 'api/teas/' + teaId + '/sipping',
+	      type: 'POST',
+	      success: callback,
+	      error: function error(resp) {
+	        return errorCallback('newSipping', resp);
+	      }
+	    });
+	  }
+	
+	};
+	
+	module.exports = SippingApiUtil;
+
+/***/ },
+/* 294 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(4),
+	    SippingActions = __webpack_require__(292);
+	
+	var SippingButton = React.createClass({
+	  displayName: 'SippingButton',
+	
+	
+	  _handleClick: function _handleClick(event) {
+	    event.preventDefault();
+	    SippingActions.createSipping(this.props.teaId);
+	    console.log('sipping button clicked');
+	  },
+	
+	  render: function render() {
+	    return React.createElement(
+	      'button',
+	      { className: 'minor-button', onClick: this._handleClick },
+	      'Log Sipping'
+	    );
+	  }
+	});
+	
+	module.exports = SippingButton;
 
 /***/ }
 /******/ ]);

@@ -1,5 +1,5 @@
 const TeaConstants = require('../constants/tea_constants'),
-      SippingApiUtil = require('../utils/ownership_api_util'),
+      SippingApiUtil = require('../utils/sipping_api_util'),
       ErrorActions = require('./error_actions'),
       Dispatcher = require('../dispatcher/dispatcher');
 
