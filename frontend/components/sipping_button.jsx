@@ -14,7 +14,8 @@ const SippingButton = React.createClass({
   _onChange: function () {
     if (this.state.disabled) {
       // this updates the button even if the event was triggered by another button - kind of an issue, but a small deal for now
-      this.setState( { disabled: false } );
+      // setTimeout( () => this.setState( { disabled: false } ), 1000);
+      this.setState( {disabled: false} )
     }
   },
 
@@ -30,10 +31,14 @@ const SippingButton = React.createClass({
 
   render: function () {
     let classes = 'minor-button';
-    if (this.state.disabled) { classes += ' minor-button--disabled' }
+    let text = 'Log Sipping'
+    if (this.state.disabled) {
+      classes += ' minor-button--disabled'
+      text = 'Logging...'
+    }
 
     return(
-      <button className={classes} onClick={this._handleClick} disabled={this.state.disabled}>Log Sipping</button>
+      <button className={classes} onClick={this._handleClick} disabled={this.state.disabled}>{text}</button>
     )
   }
 });

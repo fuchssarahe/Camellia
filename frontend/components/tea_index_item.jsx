@@ -3,7 +3,8 @@ const React = require('react'),
       TeaStore = require('../stores/tea_store'),
       OwnershipButton = require('./ownership_button'),
       SessionStore = require('../stores/session_store'),
-      ReviewRating = require('./review_rating');
+      ReviewRating = require('./review_rating'),
+      SippingButton = require('./sipping_button');
 
 const TeaIndexItem = React.createClass({
   _navToShowWithReview: function (event) {
@@ -40,6 +41,7 @@ const TeaIndexItem = React.createClass({
               <p><span className='icon-earth' />Region: {this.props.tea.region}</p>
               <p><span className="icon-office" />Retailer: {this.props.tea.retailer}</p>
               <OwnershipButton teaId={this.props.tea.id}/>
+              <SippingButton teaId={this.props.tea.id} />
             </li>
             <li className="col col-1-2">
               <figure>

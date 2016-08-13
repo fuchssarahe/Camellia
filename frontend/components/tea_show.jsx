@@ -8,7 +8,8 @@ const React = require('react'),
       ReviewRating = require('./review_rating'),
       ReviewStore = require('../stores/review_store'),
       FullUserReview = require('./full_user_review'),
-      SessionStore = require('../stores/session_store');
+      SessionStore = require('../stores/session_store'),
+      SippingButton = require('./sipping_button');
 
 const TeaShow = React.createClass({
   getInitialState: function () {
@@ -111,6 +112,7 @@ const TeaShow = React.createClass({
             <h2 className='panel_section-header'>Your Shelf</h2>
             <div className='panel_section-content panel_section-content--flex-col'>
               <OwnershipButton teaId={this.state.tea.id} />
+              <SippingButton teaId={this.state.tea.id} />
             </div>
           </section>
           <section className='panel_section'>

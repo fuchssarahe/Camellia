@@ -64,13 +64,19 @@ button:hover {
 .minor-button {
   background: white;
   color: #41b866;
-  border: 1px solid #41b866 ;
+  border: 1px solid #41b866;
   white-space: nowrap;
 }
 
 .minor-button:hover {
   background: lighten(#41b866, 20%);
   color: white;
+}
+
+.minor-button--disabled, .minor-button--disabled:hover {
+  background: gray;
+  color: white;
+  border: 1px solid lightgray;
 }
 
 .major-button {

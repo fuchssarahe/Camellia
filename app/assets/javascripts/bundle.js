@@ -34405,7 +34405,8 @@
 	    TeaStore = __webpack_require__(272),
 	    OwnershipButton = __webpack_require__(275),
 	    SessionStore = __webpack_require__(240),
-	    ReviewRating = __webpack_require__(279);
+	    ReviewRating = __webpack_require__(279),
+	    SippingButton = __webpack_require__(294);
 	
 	var TeaIndexItem = React.createClass({
 	  displayName: 'TeaIndexItem',
@@ -34474,7 +34475,8 @@
 	              'Retailer: ',
 	              this.props.tea.retailer
 	            ),
-	            React.createElement(OwnershipButton, { teaId: this.props.tea.id })
+	            React.createElement(OwnershipButton, { teaId: this.props.tea.id }),
+	            React.createElement(SippingButton, { teaId: this.props.tea.id })
 	          ),
 	          React.createElement(
 	            'li',
@@ -34908,7 +34910,8 @@
 	    ReviewRating = __webpack_require__(279),
 	    ReviewStore = __webpack_require__(285),
 	    FullUserReview = __webpack_require__(288),
-	    SessionStore = __webpack_require__(240);
+	    SessionStore = __webpack_require__(240),
+	    SippingButton = __webpack_require__(294);
 	
 	var TeaShow = React.createClass({
 	  displayName: 'TeaShow',
@@ -35053,7 +35056,8 @@
 	            React.createElement(
 	              'div',
 	              { className: 'panel_section-content panel_section-content--flex-col' },
-	              React.createElement(OwnershipButton, { teaId: this.state.tea.id })
+	              React.createElement(OwnershipButton, { teaId: this.state.tea.id }),
+	              React.createElement(SippingButton, { teaId: this.state.tea.id })
 	            )
 	          ),
 	          React.createElement(
@@ -35909,8 +35913,12 @@
 	        this.props.tea.name,
 	        ', ',
 	        this.props.tea.tea_type,
-	        React.createElement(OwnershipButton, { teaId: this.props.tea.id }),
-	        React.createElement(SippingButton, { teaId: this.props.tea.id })
+	        React.createElement(
+	          'div',
+	          { className: 'tea-buttons-wrapper' },
+	          React.createElement(OwnershipButton, { teaId: this.props.tea.id }),
+	          React.createElement(SippingButton, { teaId: this.props.tea.id })
+	        )
 	      )
 	    );
 	  }
@@ -36034,6 +36042,7 @@
 	  _onChange: function _onChange() {
 	    if (this.state.disabled) {
 	      // this updates the button even if the event was triggered by another button - kind of an issue, but a small deal for now
+	      // setTimeout( () => this.setState( { disabled: false } ), 1000);
 	      this.setState({ disabled: false });
 	    }
 	  },
@@ -36050,14 +36059,16 @@
 	
 	  render: function render() {
 	    var classes = 'minor-button';
+	    var text = 'Log Sipping';
 	    if (this.state.disabled) {
 	      classes += ' minor-button--disabled';
+	      text = 'Logging...';
 	    }
 	
 	    return React.createElement(
 	      'button',
 	      { className: classes, onClick: this._handleClick, disabled: this.state.disabled },
-	      'Log Sipping'
+	      text
 	    );
 	  }
 	});
