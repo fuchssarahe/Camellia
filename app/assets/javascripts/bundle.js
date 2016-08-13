@@ -56,11 +56,11 @@
 	    AuthForm = __webpack_require__(268),
 	    SessionStore = __webpack_require__(240),
 	    TeaIndex = __webpack_require__(271),
-	    TeaShow = __webpack_require__(283),
+	    TeaShow = __webpack_require__(286),
 	    TeaForm = __webpack_require__(273),
-	    Dashboard = __webpack_require__(289),
-	    CreateTea = __webpack_require__(291),
-	    ReviewForm = __webpack_require__(287);
+	    Dashboard = __webpack_require__(292),
+	    CreateTea = __webpack_require__(294),
+	    ReviewForm = __webpack_require__(290);
 	
 	var routes = React.createElement(
 	  _reactRouter.Route,
@@ -34406,7 +34406,7 @@
 	    OwnershipButton = __webpack_require__(275),
 	    SessionStore = __webpack_require__(240),
 	    ReviewRating = __webpack_require__(279),
-	    SippingButton = __webpack_require__(294);
+	    SippingButton = __webpack_require__(283);
 	
 	var TeaIndexItem = React.createClass({
 	  displayName: 'TeaIndexItem',
@@ -34903,19 +34903,127 @@
 
 	'use strict';
 	
+	var React = __webpack_require__(4),
+	    SippingActions = __webpack_require__(284),
+	    TeaStore = __webpack_require__(272);
+	
+	var SippingButton = React.createClass({
+	  displayName: 'SippingButton',
+	
+	  getInitialState: function getInitialState() {
+	    return { disabled: false };
+	  },
+	
+	  componentWillMount: function componentWillMount() {
+	    this.listener = TeaStore.addListener(this._onChange);
+	  },
+	
+	  _onChange: function _onChange() {
+	    if (this.state.disabled) {
+	      // this updates the button even if the event was triggered by another button - kind of an issue, but a small deal for now
+	      // setTimeout( () => this.setState( { disabled: false } ), 1000);
+	      this.setState({ disabled: false });
+	    }
+	  },
+	
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.listener.remove();
+	  },
+	
+	  _handleClick: function _handleClick(event) {
+	    event.preventDefault();
+	    SippingActions.createSipping(this.props.teaId);
+	    this.setState({ disabled: true });
+	  },
+	
+	  render: function render() {
+	    var classes = 'minor-button sipping-button';
+	    var text = 'Log Sipping';
+	    if (this.state.disabled) {
+	      classes += ' minor-button--disabled';
+	      text = 'Logging...';
+	    }
+	
+	    return React.createElement(
+	      'button',
+	      { className: classes, onClick: this._handleClick, disabled: this.state.disabled },
+	      text
+	    );
+	  }
+	});
+	
+	module.exports = SippingButton;
+
+/***/ },
+/* 284 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var TeaConstants = __webpack_require__(262),
+	    SippingApiUtil = __webpack_require__(285),
+	    ErrorActions = __webpack_require__(238),
+	    Dispatcher = __webpack_require__(232);
+	
+	var SippedTeaActions = {
+	  createSipping: function createSipping(teaId) {
+	    SippingApiUtil.createSipping(teaId, SippedTeaActions.receiveSingleTea, ErrorActions.setErrors);
+	  },
+	
+	  receiveSingleTea: function receiveSingleTea(tea) {
+	    ErrorActions.clearErrors();
+	    var payload = {
+	      actionType: TeaConstants.RECEIVE_TEA,
+	      tea: tea
+	    };
+	    Dispatcher.dispatch(payload);
+	  }
+	
+	};
+	
+	module.exports = SippedTeaActions;
+
+/***/ },
+/* 285 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	var SippingApiUtil = {
+	  createSipping: function createSipping(teaId, callback, errorCallback) {
+	    $.ajax({
+	      url: 'api/teas/' + teaId + '/sipping',
+	      type: 'POST',
+	      success: callback,
+	      error: function error(resp) {
+	        return errorCallback('newSipping', resp);
+	      }
+	    });
+	  }
+	
+	};
+	
+	module.exports = SippingApiUtil;
+
+/***/ },
+/* 286 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
 	var _reactRouter = __webpack_require__(1);
 	
 	var React = __webpack_require__(4),
 	    TeaStore = __webpack_require__(272),
 	    TeaActions = __webpack_require__(265),
 	    OwnershipButton = __webpack_require__(275),
-	    TeaReviewIndex = __webpack_require__(284),
-	    ReviewForm = __webpack_require__(287),
+	    TeaReviewIndex = __webpack_require__(287),
+	    ReviewForm = __webpack_require__(290),
 	    ReviewRating = __webpack_require__(279),
-	    ReviewStore = __webpack_require__(285),
-	    FullUserReview = __webpack_require__(288),
+	    ReviewStore = __webpack_require__(288),
+	    FullUserReview = __webpack_require__(291),
 	    SessionStore = __webpack_require__(240),
-	    SippingButton = __webpack_require__(294);
+	    SippingButton = __webpack_require__(283);
 	
 	var TeaShow = React.createClass({
 	  displayName: 'TeaShow',
@@ -35255,7 +35363,7 @@
 	module.exports = TeaShow;
 
 /***/ },
-/* 284 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35264,9 +35372,9 @@
 	
 	var React = __webpack_require__(4),
 	    ReviewActions = __webpack_require__(280),
-	    ReviewStore = __webpack_require__(285),
+	    ReviewStore = __webpack_require__(288),
 	    SessionStore = __webpack_require__(240),
-	    ReviewIndexItem = __webpack_require__(286),
+	    ReviewIndexItem = __webpack_require__(289),
 	    ReviewRating = __webpack_require__(279);
 	
 	var TeaReviewIndex = React.createClass({
@@ -35324,7 +35432,7 @@
 	module.exports = TeaReviewIndex;
 
 /***/ },
-/* 285 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35391,7 +35499,7 @@
 	module.exports = ReviewStore;
 
 /***/ },
-/* 286 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35429,7 +35537,7 @@
 	module.exports = ReviewIndexItem;
 
 /***/ },
-/* 287 */
+/* 290 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35442,7 +35550,7 @@
 	    ReviewActions = __webpack_require__(280),
 	    Errors = __webpack_require__(270),
 	    ErrorStore = __webpack_require__(269),
-	    ReviewStore = __webpack_require__(285);
+	    ReviewStore = __webpack_require__(288);
 	
 	var ReviewForm = React.createClass({
 	  displayName: 'ReviewForm',
@@ -35619,7 +35727,7 @@
 	module.exports = ReviewForm;
 
 /***/ },
-/* 288 */
+/* 291 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35719,7 +35827,7 @@
 	module.exports = FullUserReview;
 
 /***/ },
-/* 289 */
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35730,10 +35838,10 @@
 	    SessionStore = __webpack_require__(240),
 	    OwnedTeaStore = __webpack_require__(276),
 	    OwnershipActions = __webpack_require__(277),
-	    OwnedTeaItem = __webpack_require__(290),
-	    ReviewStore = __webpack_require__(285),
+	    OwnedTeaItem = __webpack_require__(293),
+	    ReviewStore = __webpack_require__(288),
 	    ReviewActions = __webpack_require__(280),
-	    FullUserReview = __webpack_require__(288);
+	    FullUserReview = __webpack_require__(291);
 	
 	var Dashboard = React.createClass({
 	  displayName: 'Dashboard',
@@ -35884,7 +35992,7 @@
 	module.exports = Dashboard;
 
 /***/ },
-/* 290 */
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35894,7 +36002,7 @@
 	var React = __webpack_require__(4),
 	    OwnershipActions = __webpack_require__(277),
 	    OwnershipButton = __webpack_require__(275),
-	    SippingButton = __webpack_require__(294);
+	    SippingButton = __webpack_require__(283);
 	
 	var OwnedTeaItem = React.createClass({
 	  displayName: 'OwnedTeaItem',
@@ -35935,7 +36043,7 @@
 	module.exports = OwnedTeaItem;
 
 /***/ },
-/* 291 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35974,114 +36082,6 @@
 	});
 	
 	module.exports = CreateTea;
-
-/***/ },
-/* 292 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var TeaConstants = __webpack_require__(262),
-	    SippingApiUtil = __webpack_require__(293),
-	    ErrorActions = __webpack_require__(238),
-	    Dispatcher = __webpack_require__(232);
-	
-	var SippedTeaActions = {
-	  createSipping: function createSipping(teaId) {
-	    SippingApiUtil.createSipping(teaId, SippedTeaActions.receiveSingleTea, ErrorActions.setErrors);
-	  },
-	
-	  receiveSingleTea: function receiveSingleTea(tea) {
-	    ErrorActions.clearErrors();
-	    var payload = {
-	      actionType: TeaConstants.RECEIVE_TEA,
-	      tea: tea
-	    };
-	    Dispatcher.dispatch(payload);
-	  }
-	
-	};
-	
-	module.exports = SippedTeaActions;
-
-/***/ },
-/* 293 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	var SippingApiUtil = {
-	  createSipping: function createSipping(teaId, callback, errorCallback) {
-	    $.ajax({
-	      url: 'api/teas/' + teaId + '/sipping',
-	      type: 'POST',
-	      success: callback,
-	      error: function error(resp) {
-	        return errorCallback('newSipping', resp);
-	      }
-	    });
-	  }
-	
-	};
-	
-	module.exports = SippingApiUtil;
-
-/***/ },
-/* 294 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(4),
-	    SippingActions = __webpack_require__(292),
-	    TeaStore = __webpack_require__(272);
-	
-	var SippingButton = React.createClass({
-	  displayName: 'SippingButton',
-	
-	  getInitialState: function getInitialState() {
-	    return { disabled: false };
-	  },
-	
-	  componentWillMount: function componentWillMount() {
-	    this.listener = TeaStore.addListener(this._onChange);
-	  },
-	
-	  _onChange: function _onChange() {
-	    if (this.state.disabled) {
-	      // this updates the button even if the event was triggered by another button - kind of an issue, but a small deal for now
-	      // setTimeout( () => this.setState( { disabled: false } ), 1000);
-	      this.setState({ disabled: false });
-	    }
-	  },
-	
-	  componentWillUnmount: function componentWillUnmount() {
-	    this.listener.remove();
-	  },
-	
-	  _handleClick: function _handleClick(event) {
-	    event.preventDefault();
-	    SippingActions.createSipping(this.props.teaId);
-	    this.setState({ disabled: true });
-	  },
-	
-	  render: function render() {
-	    var classes = 'minor-button sipping-button';
-	    var text = 'Log Sipping';
-	    if (this.state.disabled) {
-	      classes += ' minor-button--disabled';
-	      text = 'Logging...';
-	    }
-	
-	    return React.createElement(
-	      'button',
-	      { className: classes, onClick: this._handleClick, disabled: this.state.disabled },
-	      text
-	    );
-	  }
-	});
-	
-	module.exports = SippingButton;
 
 /***/ }
 /******/ ]);

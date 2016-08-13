@@ -23,10 +23,14 @@ class Api::SippingsController < ApplicationController
   #   end
   # end
 
-  def index
-    # returns teas tasted by a particular user_id
-    @teas = current_user.sipped_teas
-    render 'api/teas/index'
-  end
+  # def index
+  #   # returns teas tasted by a particular user_id
+  #   @teas = current_user.sipped_teas
+  #   render 'api/teas/index'
+  # end
+  # 
+  # def index
+  #     @count = Sipping.find_by(tea_id: params[:tea_id]).count
+  # end
 
 end

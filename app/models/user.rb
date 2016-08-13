@@ -4,8 +4,9 @@ class User < ActiveRecord::Base
   has_many :ownerships, dependent: :destroy
   has_many :teas, through: :ownerships
   has_many :reviews
+  has_many :sippings
   has_many :sipped_teas, through: :sippings
-  
+
   after_initialize :ensure_session_token
 
   validates :username, :session_token, :password_digest, presence: true

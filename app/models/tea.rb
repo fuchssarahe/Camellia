@@ -4,6 +4,7 @@ class Tea < ActiveRecord::Base
   has_many :ownerships, dependent: :destroy
   has_many :owners, through: :ownerships, source: :user
   has_many :reviews, dependent: :destroy
+  has_many :sippings, dependent: :destroy
 
   validates :name, uniqueness: true
   validates :name, :tea_type, :region, :steep_time, :temperature, :leaf_quantity, :leaf_density, :retailer, presence: true
@@ -27,7 +28,7 @@ class Tea < ActiveRecord::Base
       parameters.each do |key, value|
         query_string = query_string + 'UPPER(' + key + ')' + ' LIKE ' + "'%#{value.upcase}%'"
       end
-      teas = Tea.where(query_string).includes(:reviews)
+      teas = Tea.where(query_string).includes(:reviews).includes(:sippings)
     end
 
     if limit
@@ -84,6 +85,5 @@ class Tea < ActiveRecord::Base
       return average.round(1)
     end
   end
-
 
 end
