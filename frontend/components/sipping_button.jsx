@@ -1,15 +1,30 @@
 const React = require('react'),
-      SippingActions = require('../actions/sipping_actions');
+      SippingActions = require('../actions/sipping_actions'),
+      TeaStore = require('../stores/tea_store');
 
 const SippingButton = React.createClass({
   getInitialState: function () {
-    return( { disabled: false } )
+    return( { disabled: false } );
+  },
+
+  componentWillMount: function () {
+    this.listener = TeaStore.addListener(this._onChange);
+  },
+
+  _onChange: function () {
+    if (this.state.disabled) {
+      // this updates the button even if the event was triggered by another button - kind of an issue, but a small deal for now
+      this.setState( { disabled: false } );
+    }
+  },
+
+  componentWillUnmount: function () {
+    this.listener.remove();
   },
 
   _handleClick: function (event) {
     event.preventDefault();
     SippingActions.createSipping(this.props.teaId);
-    console.log('sipping button clicked');
     this.setState( { disabled: true } );
   },
 

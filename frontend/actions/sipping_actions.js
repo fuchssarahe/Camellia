@@ -10,12 +10,11 @@ const SippedTeaActions = {
 
   receiveSingleTea: function (tea) {
     ErrorActions.clearErrors();
-    // const payload = {
-    //   actionType: TeaConstants.RECEIVE_SIPPED_TEA,
-    //   tea: tea
-    // }
-    // Dispatcher.dispatch(payload);
-    console.log(tea, 'successfully created a sipping!');
+    const payload = {
+      actionType: TeaConstants.RECEIVE_TEA,
+      tea: tea
+    }
+    Dispatcher.dispatch(payload);
   }
 
 }

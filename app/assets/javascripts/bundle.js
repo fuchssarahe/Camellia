@@ -33397,7 +33397,6 @@
 	            RECEIVE_OWNED_TEAS: 'RECEIVE_OWNED_TEAS',
 	            RECEIVE_OWNED_TEA: 'RECEIVE_OWNED_TEA',
 	            REMOVE_OWNED_TEA: 'REMOVE_OWNED_TEA',
-	            RECEIVE_SIPPED_TEA: 'RECEIVE_SIPPED_TEA',
 	
 	            ALL_TYPES: ['Other', 'Black', 'Red', 'White', 'Dark', 'Yellow', 'Green', 'Oolong', 'Herbal'],
 	
@@ -35978,12 +35977,11 @@
 	
 	  receiveSingleTea: function receiveSingleTea(tea) {
 	    ErrorActions.clearErrors();
-	    // const payload = {
-	    //   actionType: TeaConstants.RECEIVE_SIPPED_TEA,
-	    //   tea: tea
-	    // }
-	    // Dispatcher.dispatch(payload);
-	    console.log(tea, 'successfully created a sipping!');
+	    var payload = {
+	      actionType: TeaConstants.RECEIVE_TEA,
+	      tea: tea
+	    };
+	    Dispatcher.dispatch(payload);
 	  }
 	
 	};
@@ -36019,7 +36017,8 @@
 	'use strict';
 	
 	var React = __webpack_require__(4),
-	    SippingActions = __webpack_require__(292);
+	    SippingActions = __webpack_require__(292),
+	    TeaStore = __webpack_require__(272);
 	
 	var SippingButton = React.createClass({
 	  displayName: 'SippingButton',
@@ -36028,10 +36027,24 @@
 	    return { disabled: false };
 	  },
 	
+	  componentWillMount: function componentWillMount() {
+	    this.listener = TeaStore.addListener(this._onChange);
+	  },
+	
+	  _onChange: function _onChange() {
+	    if (this.state.disabled) {
+	      // this updates the button even if the event was triggered by another button - kind of an issue, but a small deal for now
+	      this.setState({ disabled: false });
+	    }
+	  },
+	
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.listener.remove();
+	  },
+	
 	  _handleClick: function _handleClick(event) {
 	    event.preventDefault();
 	    SippingActions.createSipping(this.props.teaId);
-	    console.log('sipping button clicked');
 	    this.setState({ disabled: true });
 	  },
 	
