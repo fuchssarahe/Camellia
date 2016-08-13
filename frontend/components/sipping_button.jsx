@@ -1,6 +1,7 @@
 const React = require('react'),
       SippingActions = require('../actions/sipping_actions'),
-      TeaStore = require('../stores/tea_store');
+      TeaStore = require('../stores/tea_store'),
+      SessionStore = require('../stores/session_store');
 
 const SippingButton = React.createClass({
   getInitialState: function () {
@@ -30,6 +31,10 @@ const SippingButton = React.createClass({
   },
 
   render: function () {
+    if (!SessionStore.isUserLoggedIn()) {
+      return (<div></div>);
+    }
+
     let classes = 'minor-button sipping-button';
     let text = 'Log Sipping'
     if (this.state.disabled) {

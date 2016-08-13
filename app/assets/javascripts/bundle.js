@@ -34905,7 +34905,8 @@
 	
 	var React = __webpack_require__(4),
 	    SippingActions = __webpack_require__(284),
-	    TeaStore = __webpack_require__(272);
+	    TeaStore = __webpack_require__(272),
+	    SessionStore = __webpack_require__(240);
 	
 	var SippingButton = React.createClass({
 	  displayName: 'SippingButton',
@@ -34937,6 +34938,10 @@
 	  },
 	
 	  render: function render() {
+	    if (!SessionStore.isUserLoggedIn()) {
+	      return React.createElement('div', null);
+	    }
+	
 	    var classes = 'minor-button sipping-button';
 	    var text = 'Log Sipping';
 	    if (this.state.disabled) {
