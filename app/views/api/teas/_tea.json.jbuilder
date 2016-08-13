@@ -12,4 +12,5 @@ json.extract! tea, :id,
                    :rating
 if current_user
   json.current_user_rating tea.user_rating(current_user.id)
+  json.sipping_count tea.sippings.count
 end
