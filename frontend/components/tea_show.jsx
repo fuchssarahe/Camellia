@@ -111,8 +111,10 @@ const TeaShow = React.createClass({
           <section className='panel_section'>
             <h2 className='panel_section-header'>Your Shelf</h2>
             <div className='panel_section-content panel_section-content--flex-col'>
-              <OwnershipButton teaId={this.state.tea.id} />
-              <SippingButton teaId={this.state.tea.id} />
+              <div className='tea-buttons-wrapper--horizontal'>
+                <OwnershipButton teaId={this.state.tea.id} />
+                <SippingButton teaId={this.state.tea.id} />
+              </div>
             </div>
           </section>
           <section className='panel_section'>

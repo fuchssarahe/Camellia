@@ -30,7 +30,7 @@ const SippingButton = React.createClass({
   },
 
   render: function () {
-    let classes = 'minor-button';
+    let classes = 'minor-button sipping-button';
     let text = 'Log Sipping'
     if (this.state.disabled) {
       classes += ' minor-button--disabled'

@@ -34475,8 +34475,12 @@
 	              'Retailer: ',
 	              this.props.tea.retailer
 	            ),
-	            React.createElement(OwnershipButton, { teaId: this.props.tea.id }),
-	            React.createElement(SippingButton, { teaId: this.props.tea.id })
+	            React.createElement(
+	              'div',
+	              { className: 'tea-buttons-wrapper--vertical' },
+	              React.createElement(OwnershipButton, { teaId: this.props.tea.id }),
+	              React.createElement(SippingButton, { teaId: this.props.tea.id })
+	            )
 	          ),
 	          React.createElement(
 	            'li',
@@ -35056,8 +35060,12 @@
 	            React.createElement(
 	              'div',
 	              { className: 'panel_section-content panel_section-content--flex-col' },
-	              React.createElement(OwnershipButton, { teaId: this.state.tea.id }),
-	              React.createElement(SippingButton, { teaId: this.state.tea.id })
+	              React.createElement(
+	                'div',
+	                { className: 'tea-buttons-wrapper--horizontal' },
+	                React.createElement(OwnershipButton, { teaId: this.state.tea.id }),
+	                React.createElement(SippingButton, { teaId: this.state.tea.id })
+	              )
 	            )
 	          ),
 	          React.createElement(
@@ -35915,7 +35923,7 @@
 	        this.props.tea.tea_type,
 	        React.createElement(
 	          'div',
-	          { className: 'tea-buttons-wrapper' },
+	          { className: 'tea-buttons-wrapper--horizontal' },
 	          React.createElement(OwnershipButton, { teaId: this.props.tea.id }),
 	          React.createElement(SippingButton, { teaId: this.props.tea.id })
 	        )
@@ -36058,7 +36066,7 @@
 	  },
 	
 	  render: function render() {
-	    var classes = 'minor-button';
+	    var classes = 'minor-button sipping-button';
 	    var text = 'Log Sipping';
 	    if (this.state.disabled) {
 	      classes += ' minor-button--disabled';

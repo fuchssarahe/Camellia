@@ -2,7 +2,20 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-tea-buttons-wrapper {
+.sipping-button {
+  margin-top: 10px;
+}
+
+.tea-buttons-wrapper--horizontal {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tea-buttons-wrapper--vertical {
   display: flex;
   flex-direction: column;
+}
+
+.tea-buttons-wrapper--vertical > .sipping-button {
+  margin-left: 0;
 }
