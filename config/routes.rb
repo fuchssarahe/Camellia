@@ -6,7 +6,7 @@ Rails.application.routes.draw do
     resource :session, only: [:create, :destroy, :show]
     resources :teas, only: [:create, :show, :index] do
       resource :ownership, only: [:create, :destroy]
-      resources :sipping, only: :create
+      resources :sippings, only: :create
     end
     resources :ownerships, only: [:index]
     resources :reviews, only: [:index, :show, :create, :destroy]

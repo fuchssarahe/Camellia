@@ -34997,7 +34997,7 @@
 	var SippingApiUtil = {
 	  createSipping: function createSipping(teaId, callback, errorCallback) {
 	    $.ajax({
-	      url: 'api/teas/' + teaId + '/sipping',
+	      url: 'api/teas/' + teaId + '/sippings',
 	      type: 'POST',
 	      success: callback,
 	      error: function error(resp) {
@@ -35173,6 +35173,12 @@
 	            React.createElement(
 	              'div',
 	              { className: 'panel_section-content panel_section-content--flex-col' },
+	              React.createElement(
+	                'p',
+	                null,
+	                'Number of times you\'ve had this tea: ',
+	                this.state.tea.sipping_count
+	              ),
 	              React.createElement(
 	                'div',
 	                { className: 'tea-buttons-wrapper--horizontal' },
