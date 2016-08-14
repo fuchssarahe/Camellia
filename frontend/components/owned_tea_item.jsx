@@ -18,6 +18,7 @@ const OwnedTeaItem = React.createClass({
         <Link to={'teas/' + this.props.tea.id}>
           <figure>{figureContents}</figure>
           {this.props.tea.name}, {this.props.tea.tea_type}
+          <p>Number of times you've had this tea: {this.props.tea.sipping_count}</p>
           <div className='tea-buttons-wrapper--horizontal'>
             <OwnershipButton teaId={this.props.tea.id}/>
             <SippingButton teaId={this.props.tea.id}/>

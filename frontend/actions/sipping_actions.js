@@ -11,7 +11,7 @@ const SippedTeaActions = {
   receiveSingleTea: function (tea) {
     ErrorActions.clearErrors();
     const payload = {
-      actionType: TeaConstants.RECEIVE_TEA,
+      actionType: TeaConstants.RECEIVE_SIPPED_TEA,
       tea: tea
     }
     Dispatcher.dispatch(payload);

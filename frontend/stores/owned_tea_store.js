@@ -36,6 +36,12 @@ OwnedTeaStore.__onDispatch = function (payload) {
       delete _teas[payload.tea.id];
       this.__emitChange();
       break;
+    case TeaConstants.RECEIVE_SIPPED_TEA:
+      if (_teas[payload.tea.id]) {
+        _teas[payload.tea.id] = payload.tea;
+        this.__emitChange();
+      }
+      break;
     default:
   }
 };

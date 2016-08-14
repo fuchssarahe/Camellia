@@ -33397,6 +33397,7 @@
 	            RECEIVE_OWNED_TEAS: 'RECEIVE_OWNED_TEAS',
 	            RECEIVE_OWNED_TEA: 'RECEIVE_OWNED_TEA',
 	            REMOVE_OWNED_TEA: 'REMOVE_OWNED_TEA',
+	            RECEIVE_SIPPED_TEA: 'RECEIVE_SIPPED_TEA',
 	
 	            ALL_TYPES: ['Other', 'Black', 'Red', 'White', 'Dark', 'Yellow', 'Green', 'Oolong', 'Herbal'],
 	
@@ -34149,6 +34150,10 @@
 	      _teas[payload.tea.id] = payload.tea;
 	      this.__emitChange();
 	      break;
+	    case TeaConstants.RECEIVE_SIPPED_TEA:
+	      _teas[payload.tea.id] = payload.tea;
+	      this.__emitChange();
+	      break;
 	    case TeaConstants.RECEIVE_NEW_TEA:
 	      _teas[payload.tea.id] = payload.tea;
 	      _newestTeaId = payload.tea.id;
@@ -34618,6 +34623,12 @@
 	      delete _teas[payload.tea.id];
 	      this.__emitChange();
 	      break;
+	    case TeaConstants.RECEIVE_SIPPED_TEA:
+	      if (_teas[payload.tea.id]) {
+	        _teas[payload.tea.id] = payload.tea;
+	        this.__emitChange();
+	      }
+	      break;
 	    default:
 	  }
 	};
@@ -34978,7 +34989,7 @@
 	  receiveSingleTea: function receiveSingleTea(tea) {
 	    ErrorActions.clearErrors();
 	    var payload = {
-	      actionType: TeaConstants.RECEIVE_TEA,
+	      actionType: TeaConstants.RECEIVE_SIPPED_TEA,
 	      tea: tea
 	    };
 	    Dispatcher.dispatch(payload);
@@ -36040,6 +36051,12 @@
 	        this.props.tea.name,
 	        ', ',
 	        this.props.tea.tea_type,
+	        React.createElement(
+	          'p',
+	          null,
+	          'Number of times you\'ve had this tea: ',
+	          this.props.tea.sipping_count
+	        ),
 	        React.createElement(
 	          'div',
 	          { className: 'tea-buttons-wrapper--horizontal' },

@@ -33,6 +33,10 @@ TeaStore.__onDispatch = function (payload) {
       _teas[payload.tea.id] = payload.tea;
       this.__emitChange();
       break;
+    case TeaConstants.RECEIVE_SIPPED_TEA:
+      _teas[payload.tea.id] = payload.tea;
+      this.__emitChange();
+      break;
     case TeaConstants.RECEIVE_NEW_TEA:
       _teas[payload.tea.id] = payload.tea;
       _newestTeaId = payload.tea.id;
